@@ -1,0 +1,25 @@
+@import "./plugins.css";
+@import "./loader.css";
+@import "./main.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.admin-dashboard-btn {
+  transition: transform 0.3s, background-color 0.3s, color 0.3s !important;
+}
+.admin-dashboard-btn:hover {
+  transform: scale(1.05) !important;
+  background-color: #C5A880 !important;
+  color: #000000 !important;
+}
+
+.team-card-hover {
+  transition: border-color 0.3s, transform 0.3s !important;
+}
+.team-card-hover:hover {
+  border-color: #C5A880 !important;
+  transform: translateY(-5px) !important;
+}
+

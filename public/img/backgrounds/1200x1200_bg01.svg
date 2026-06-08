@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Metallic Gold Gradient -->
+    <linearGradient id="gold-metal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8A6421"/>
+      <stop offset="25%" stop-color="#D1B464"/>
+      <stop offset="50%" stop-color="#5D4114"/>
+      <stop offset="75%" stop-color="#F3E5AB"/>
+      <stop offset="100%" stop-color="#8A6421"/>
+    </linearGradient>
+    <radialGradient id="gold-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#D1B464" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="drop-shadow">
+      <feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#000" flood-opacity="0.75"/>
+    </filter>
+  </defs>
+
+  <!-- Ambient Glow -->
+  <circle cx="250" cy="250" r="230" fill="url(#gold-glow)"/>
+
+  <g filter="url(#drop-shadow)">
+    <!-- Outer Rim -->
+    <circle cx="250" cy="250" r="175" fill="none" stroke="url(#gold-metal)" stroke-width="12"/>
+    <circle cx="250" cy="250" r="168" fill="none" stroke="#000000" stroke-width="1.5" opacity="0.4"/>
+    <circle cx="250" cy="250" r="162" fill="none" stroke="url(#gold-metal)" stroke-width="3"/>
+
+    <!-- Inner Core -->
+    <circle cx="250" cy="250" r="55" fill="none" stroke="url(#gold-metal)" stroke-width="6"/>
+    <circle cx="250" cy="250" r="28" fill="url(#gold-metal)"/>
+    <circle cx="250" cy="250" r="8" fill="#000000"/>
+
+    <!-- Film Reel Spokes/Holes (5 holes) -->
+    <!-- Center of holes is at radius 108 -->
+    <!-- Hole radius is 34 -->
+    <circle cx="250" cy="142" r="32" fill="#030303" stroke="url(#gold-metal)" stroke-width="4"/>
+    <circle cx="147" cy="217" r="32" fill="#030303" stroke="url(#gold-metal)" stroke-width="4"/>
+    <circle cx="187" cy="338" r="32" fill="#030303" stroke="url(#gold-metal)" stroke-width="4"/>
+    <circle cx="313" cy="338" r="32" fill="#030303" stroke="url(#gold-metal)" stroke-width="4"/>
+    <circle cx="353" cy="217" r="32" fill="#030303" stroke="url(#gold-metal)" stroke-width="4"/>
+
+    <!-- Spoke Connectors -->
+    <g stroke="url(#gold-metal)" stroke-width="10" stroke-linecap="round" opacity="0.95">
+      <line x1="250" y1="205" x2="250" y2="250"/>
+      <line x1="250" y1="250" x2="210" y2="290"/>
+      <line x1="250" y1="250" x2="290" y2="290"/>
+      <line x1="250" y1="250" x2="178" y2="230"/>
+      <line x1="250" y1="250" x2="322" y2="230"/>
+    </g>
+
+    <!-- Tiny Details: Rim dots representing film markers -->
+    <g fill="url(#gold-metal)">
+      <circle cx="250" cy="82" r="2.5"/>
+      <circle cx="292" cy="86" r="2.5"/>
+      <circle cx="332" cy="98" r="2.5"/>
+      <circle cx="367" cy="117" r="2.5"/>
+      <circle cx="395" cy="144" r="2.5"/>
+      <circle cx="414" cy="178" r="2.5"/>
+      <circle cx="424" cy="217" r="2.5"/>
+      <circle cx="425" cy="258" r="2.5"/>
+      <circle cx="250" cy="418" r="2.5"/>
+      <circle cx="208" cy="414" r="2.5"/>
+      <circle cx="168" cy="402" r="2.5"/>
+      <circle cx="133" cy="383" r="2.5"/>
+      <circle cx="105" cy="356" r="2.5"/>
+      <circle cx="86" cy="322" r="2.5"/>
+      <circle cx="76" cy="283" r="2.5"/>
+      <circle cx="75" cy="242" r="2.5"/>
+    </g>
+  </g>
+</svg>

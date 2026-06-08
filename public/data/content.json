@@ -1,0 +1,222 @@
+{
+  "hero": {
+    "headline": "CINEMATIC MOTION DIRECTION",
+    "subheadline": "Every scroll tells a story. Evolving world-class motion into a cinematic experience.",
+    "primaryBtnText": "Discover Slate",
+    "secondaryBtnText": "Co-Produce",
+    "bgVideoUrl": "https://mixdesign.dev/themeforest/blayden/video/video.mp4",
+    "heroImageUrl": "/img/backgrounds/1200x1200_bg01.png"
+  },
+  "about": {
+    "title": "Our Vision & Craft",
+    "paragraph1": "Pooja Productions is a premier international film studio dedicated to creating high-impact theatrical experiences. Founded with a vision to champion bold storytellers and visionary directors, we blend cutting-edge cinematic technology with deep emotional resonance. Our productions are crafted to inspire, challenge, and endure across generations.",
+    "paragraph2": "Under the visionary leadership of Chairman and Producer Mr. Manikanth Kondapally, Pooja Productions has expanded its global footprint, pioneering large-format IMAX theater productions and securing landmark international co-production slates. Mr. Kondapally's dedication to director-first creative freedom and cutting-edge cinema technology continues to drive the studio’s legacy of award-winning storytelling.",
+    "brochureUrl": "Pooja Production.pdf",
+    "phone": "+91 22-6688-9900",
+    "email": "info@poojaproductions.com",
+    "address": "Mumbai, India",
+    "mapUrl": "https://maps.google.com/?q=Film+City+Goregaon+East+Mumbai",
+    "facebook": "https://facebook.com",
+    "instagram": "https://instagram.com",
+    "twitter": "https://twitter.com",
+    "imdb": "https://imdb.com",
+    "linkedin": "https://linkedin.com"
+  },
+  "leadership": {
+    "name": "Mr. Manikanth Kondapally",
+    "role": "Chairman & Producer",
+    "imageUrl": "img/chairman.png",
+    "quote": "Cinema is a powerful synthesis of technology and human emotion. Our mission is to produce stories that transcend boundaries, leaving an indelible mark on the history of art and storytelling.",
+    "bio1": "Mr. Manikanth Kondapally is the driving visionary force behind Pooja Productions. With a career defined by artistic integrity and bold leadership, he has repositioned the production house as a premier global hub for cinematic innovation. Under his stewardship, the studio has pioneered state-of-the-art IMAX large-format photography, integrated virtual production technologies, and established key partnerships with leading international distributors and studios.",
+    "bio2": "Deeply committed to a director-first philosophy, Mr. Kondapally continues to foster a creative sanctuary for world-class storytellers, ensuring that every project carrying the Pooja Productions name represents the pinnacle of visual luxury, emotional depth, and cinematic perfection."
+  },
+  "films": [
+    {
+      "id": 1,
+      "src": "img/works/1400x1050_w01.webp",
+      "category": "Feature Film | Sci-Fi",
+      "title": "The Last Echo",
+      "description": "A post-apocalyptic drama exploring isolation and hope. Winner of the Golden Palme for Best Cinematography."
+    },
+    {
+      "id": 2,
+      "src": "img/works/1100x1400_w02.webp",
+      "category": "Documentary | Biography",
+      "title": "Chronicles of Silence",
+      "description": "An intimate look into the lives of silent monks in the Swiss Alps. Nominated for Best Documentary Feature."
+    },
+    {
+      "id": 3,
+      "src": "img/works/1400x1400_w03.webp",
+      "category": "Feature Film | Noir Thriller",
+      "title": "Rhythm of Shadows",
+      "description": "A detective's descent into the underbelly of a neon-lit metropolis. A critically acclaimed box-office triumph."
+    },
+    {
+      "id": 4,
+      "src": "img/works/1400x1050_w04.webp",
+      "category": "Feature Film | Adventure Fantasy",
+      "title": "Golden Horizon",
+      "description": "An epic mythological quest across uncharted seas. Winner of five International Film Academy awards."
+    },
+    {
+      "id": 5,
+      "src": "img/works/1400x1050_w05.webp",
+      "category": "Feature Film | Historical Drama",
+      "title": "Whispers of the Wind",
+      "description": "An emotional saga of love and betrayal during the turn of the 19th century. Winner of Best Screenplay."
+    }
+  ],
+  "services": [
+    {
+      "id": 1,
+      "title": "Pre-Production & Development",
+      "iconClass": "ph-thin ph-pencil-line",
+      "description": "We nurture scripts, build visual storyboards, cast international talent, and plan production logistics to turn a script into a cinematic blueprint.",
+      "imgS": "img/services/1200x1000_s01.webp",
+      "imgM": "img/services/800x1000_s01.webp"
+    },
+    {
+      "id": 2,
+      "title": "Principal Photography",
+      "iconClass": "ph-thin ph-video-camera",
+      "description": "Armed with state-of-the-art IMAX cameras and world-renowned cinematographers, we capture stunning principal photography on global locations.",
+      "imgS": "img/services/1200x1000_s02.webp",
+      "imgM": "img/services/800x1000_s02.webp"
+    },
+    {
+      "id": 3,
+      "title": "Post-Production & VFX",
+      "iconClass": "ph-thin ph-film-reel",
+      "description": "Our state-of-the-art editing, color-grading, visual effects, sound design, and musical scoring suites bring final emotional polish to every frame.",
+      "imgS": "img/services/1200x1000_s03.webp",
+      "imgM": "img/services/800x1000_s03.webp"
+    },
+    {
+      "id": 4,
+      "title": "Global Distribution",
+      "iconClass": "ph-thin ph-projector-screen",
+      "description": "We coordinate with theatrical chains, manage international festival slates, and engineer global marketing campaigns to deliver movies to millions.",
+      "imgS": "img/services/1200x1000_s04.webp",
+      "imgM": "img/services/800x1000_s04.webp"
+    }
+  ],
+  "gallery": [
+    {
+      "id": 1,
+      "src": "img/backgrounds/filmset_bg_1780947977263.png",
+      "title": "Main Studio Floor"
+    },
+    {
+      "id": 2,
+      "src": "img/backgrounds/soundstage_bg_1780947958829.png",
+      "title": "Virtual Production Wall"
+    },
+    {
+      "id": 3,
+      "src": "img/backgrounds/filmreel_bg2_1780948009474.png",
+      "title": "Analogue Archiving Vault"
+    }
+  ],
+  "testimonials": [
+    {
+      "id": 1,
+      "avatar": "img/avatars/400x400_t01.webp",
+      "name": "Christopher Nolan",
+      "position": "Director & Collaborator at Syncopy",
+      "rating": 5,
+      "description": "Pooja Productions possesses an unmatched dedication to the craft of celluloid. Their commitment to standardizing IMAX and large-format cinematography in every frame makes them an indispensable partner in the global cinematic landscape.",
+      "imageUrl": "img/testimonials/1400x1200_t01.webp"
+    },
+    {
+      "id": 2,
+      "avatar": "img/avatars/400x400_t02.webp",
+      "name": "Alfonso Cuarón",
+      "position": "Director & Cinematographer at Esperanto Filmoj",
+      "rating": 5,
+      "description": "Working with Pooja Productions was a revelation in how technology and human emotion can merge. Their state-of-the-art virtual production and post-production facilities are among the finest in the world, allowing for pure creative freedom.",
+      "imageUrl": "img/testimonials/1400x1200_t02.webp"
+    }
+  ],
+  "awards": [
+    {
+      "id": 1,
+      "date": "2016",
+      "title": "Palme d'Or Nomination",
+      "source": "Cannes Film Festival",
+      "sourceUrl": "https://www.festival-cannes.com",
+      "description": "Nominated for the prestigious Palme d'Or for our feature film 'The Last Echo', celebrating visual storytelling."
+    },
+    {
+      "id": 2,
+      "date": "2020",
+      "title": "Best International Feature Film",
+      "source": "Academy Awards (Oscars)",
+      "sourceUrl": "https://www.oscars.org",
+      "description": "Awarded Best International Feature Film for 'Chronicles of Silence', recognized by the Academy."
+    },
+    {
+      "id": 3,
+      "date": "2023",
+      "title": "Grand Jury Prize",
+      "source": "Sundance Film Festival",
+      "sourceUrl": "https://www.sundance.org",
+      "description": "Awarded the Grand Jury Prize for cinematography and creative direction in narrative filmmaking."
+    }
+  ],
+  "legacy": [
+    {
+      "id": 1,
+      "date": "1995 - 2005",
+      "title": "The Golden Era of Indie Cinema",
+      "source": "Pooja Studios",
+      "description": "Founded in Mumbai, producing boundary-pushing independent films that achieved critical and commercial acclaim."
+    },
+    {
+      "id": 2,
+      "date": "2005 - 2018",
+      "title": "Global Expansion & Co-Productions",
+      "source": "International Film Partners",
+      "description": "Co-producing major theatrical films with Hollywood, European, and East Asian studios, expanding our global reach."
+    },
+    {
+      "id": 3,
+      "date": "2018 - now",
+      "title": "IMAX & Digital Streaming Era",
+      "source": "Pooja Productions Studios",
+      "description": "Pioneering high-dynamic-range production and local theatrical experiences, alongside direct-to-streaming projects."
+    }
+  ],
+  "tools": [
+    { "name": "IMAX Cameras", "icon": "img/icons/icon-photoshop.svg" },
+    { "name": "ARRI ALEXA", "icon": "img/icons/icon-figma.svg" },
+    { "name": "RED Digital Cinema", "icon": "img/icons/icon-illustrator.svg" },
+    { "name": "DaVinci Resolve", "icon": "img/icons/icon-scketch.svg" },
+    { "name": "Blender VFX", "icon": "img/icons/icon-blender.svg" },
+    { "name": "Avid Composer", "icon": "img/icons/icon-html.svg" },
+    { "name": "Dolby Atmos", "icon": "img/icons/icon-css.svg" },
+    { "name": "Adobe Premiere", "icon": "img/icons/icon-notion.svg" }
+  ],
+  "team": [
+    {
+      "id": 1,
+      "name": "Manikanth Kondapally",
+      "role": "Chairman & Producer",
+      "photo": "img/chairman.png",
+      "bio": "Driving force behind premium cinema development."
+    },
+    {
+      "id": 2,
+      "name": "S. R. Kondapally",
+      "role": "Executive Producer",
+      "photo": "img/avatars/400x400_t01.webp",
+      "bio": "Overseeing financial and distributor operations."
+    }
+  ],
+  "footer": {
+    "copyright": "© 2026 Pooja Productions. All rights reserved.",
+    "links": [
+      { "label": "IMDb", "url": "https://www.imdb.com" }
+    ]
+  }
+}
