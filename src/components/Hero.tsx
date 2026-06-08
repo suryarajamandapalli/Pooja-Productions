@@ -84,76 +84,81 @@ export const Hero: React.FC = () => {
             paddingBottom: "clamp(40px, 6vh, 80px)",
           }}
         >
-          {/* Small subtitle — "Hello! / I am Alex Walker" style */}
-          <div
-            className="loading__item"
-            style={{ marginBottom: "clamp(12px, 2vw, 28px)", lineHeight: 1.5 }}
-          >
-            <span
-              style={{
-                display: "block",
-                fontSize: "clamp(13px, 1.2vw, 18px)",
-                color: "#C5A880",
-                fontWeight: 500,
-                letterSpacing: "0.04em",
-              }}
-            >
-              {subLines[0] || "Cinematic Excellence"}
-            </span>
-            <span
-              style={{
-                display: "block",
-                fontSize: "clamp(13px, 1.2vw, 18px)",
-                color: "rgba(255,255,255,0.6)",
-                fontWeight: 400,
-                letterSpacing: "0.04em",
-              }}
-            >
-              {subLines[1] || "From Pooja Productions"}
-            </span>
-          </div>
+          {/* Wrapper with loading-wrap so GSAP Loader animates children in sequence */}
+          <div id="headline" className="headline loading-wrap d-flex align-items-start flex-column">
 
-          {/* MASSIVE headline — exactly "Digital designer & illustrator" size/weight */}
-          <h1
-            className="loading__item"
-            style={{
-              fontSize: "clamp(60px, 10.5vw, 156px)",
-              fontWeight: 300,
-              lineHeight: 0.92,
-              letterSpacing: "-0.035em",
-              color: "#ffffff",
-              margin: 0,
-              marginBottom: "clamp(24px, 4vw, 52px)",
-            }}
-          >
-            <span style={{ display: "block" }}>Pooja</span>
-            <span style={{ display: "block" }}>Productions</span>
-          </h1>
-
-          {/* "Scroll for more ↘" style CTA */}
-          <div className="loading__item">
-            <a
-              href="#portfolio"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: "clamp(12px, 1.1vw, 16px)",
-                color: "rgba(255,255,255,0.55)",
-                textDecoration: "none",
-                letterSpacing: "0.05em",
-                transition: "color 0.3s",
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.color = "#C5A880")}
-              onMouseOut={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
+            {/* Small subtitle — "Hello! / I am Alex Walker" style */}
+            <p
+              className="headline__subtitle loading__item"
+              style={{ marginBottom: "clamp(12px, 2vw, 28px)", lineHeight: 1.5, margin: "0 0 clamp(12px,2vw,28px) 0" }}
             >
-              {primaryBtnText}
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M7 7h10v10M7 17L17 7" />
-              </svg>
-            </a>
+              <span
+                style={{
+                  display: "block",
+                  fontSize: "clamp(13px, 1.2vw, 18px)",
+                  color: "#C5A880",
+                  fontWeight: 500,
+                  letterSpacing: "0.04em",
+                }}
+              >
+                {subLines[0] || "Cinematic Excellence"}
+              </span>
+              <span
+                style={{
+                  display: "block",
+                  fontSize: "clamp(13px, 1.2vw, 18px)",
+                  color: "rgba(255,255,255,0.6)",
+                  fontWeight: 400,
+                  letterSpacing: "0.04em",
+                }}
+              >
+                {subLines[1] || "From Pooja Productions"}
+              </span>
+            </p>
+
+            {/* MASSIVE headline — exactly "Digital designer & illustrator" size/weight */}
+            <h1
+              className="headline__title loading__item"
+              style={{
+                fontSize: "clamp(60px, 10.5vw, 156px)",
+                fontWeight: 300,
+                lineHeight: 0.92,
+                letterSpacing: "-0.035em",
+                color: "#ffffff",
+                margin: 0,
+                marginBottom: "clamp(24px, 4vw, 52px)",
+              }}
+            >
+              <span style={{ display: "block" }}>Pooja</span>
+              <span style={{ display: "block" }}>Productions</span>
+            </h1>
+
+            {/* "Scroll for more ↘" style CTA */}
+            <div className="headline__btn loading__item">
+              <a
+                className="btn btn-line-small icon-right"
+                href="#portfolio"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontSize: "clamp(12px, 1.1vw, 16px)",
+                  color: "rgba(255,255,255,0.55)",
+                  textDecoration: "none",
+                  letterSpacing: "0.05em",
+                  transition: "color 0.3s",
+                }}
+                onMouseOver={(e) => (e.currentTarget.style.color = "#C5A880")}
+                onMouseOut={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
+              >
+                <span className="btn-caption">{primaryBtnText}</span>
+                <i className="ph ph-arrow-down-right" />
+              </a>
+            </div>
+
           </div>
         </div>
+
       </div>
       {/* ══ END HERO INTRO ══ */}
 
