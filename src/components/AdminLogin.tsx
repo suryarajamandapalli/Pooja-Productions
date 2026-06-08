@@ -50,7 +50,7 @@ export const AdminLogin: React.FC<{ onBackToSite: () => void }> = ({ onBackToSit
         boxShadow: "0 25px 50px -12px rgba(197, 168, 128, 0.25)"
       }}>
         <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-          <img src="/logo.png" alt="Pooja Productions Logo" style={{ height: "6.5rem", marginBottom: "1.5rem" }} />
+          <img src="/logo.png" alt="Pooja Productions Logo" style={{ height: "5rem", width: "auto", maxWidth: "160px", objectFit: "contain", marginBottom: "1.5rem", display: "block", margin: "0 auto 1.5rem auto" }} />
           <h2 style={{ fontSize: "2.4rem", fontWeight: 700, color: "#FFFFFF", margin: 0, letterSpacing: "0.05em" }}>
             STUDIO CONTROL
           </h2>

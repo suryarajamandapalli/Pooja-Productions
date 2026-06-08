@@ -317,9 +317,9 @@ export const Contact: React.FC = () => {
                 {link.label}
               </a>
             ))}
-            <span style={{ color: "rgba(255, 255, 255, 0.15)" }}>|</span>
-            <a href="/admin" style={{ color: "#C5A880", textDecoration: "none", fontWeight: 600, transition: "color 0.3s" }} onMouseOver={(e) => e.currentTarget.style.opacity = "0.8"} onMouseOut={(e) => e.currentTarget.style.opacity = "1"}>
-              Admin Control Center
+            <span style={{ color: "rgba(255, 255, 255, 0.08)" }}>|</span>
+            <a href="/admin" style={{ color: "rgba(255,255,255,0.15)", textDecoration: "none", fontSize: "1rem", letterSpacing: "0.05em", transition: "color 0.3s" }} onMouseOver={(e) => e.currentTarget.style.color = "rgba(197,168,128,0.5)"} onMouseOut={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.15)"}>
+              admin
             </a>
           </div>
         </div>
