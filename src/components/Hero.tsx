@@ -59,13 +59,13 @@ export const Hero: React.FC = () => {
             <div className="col-12 col-xl-8 fullheight-desktop" style={{ zIndex: 2 }}>
               {/* Headline Start */}
               <div id="headline" className="headline d-flex align-items-start flex-column loading-wrap">
-                <p className="headline__subtitle space-bottom loading__item" dangerouslySetInnerHTML={{ __html: hero.subheadline ? hero.subheadline.replace(/\n/g, "<br />") : "Pooja Productions<br />Cinema & Legacy" }}>
+                <p className="headline__subtitle space-bottom loading__item" dangerouslySetInnerHTML={{ __html: hero.subheadline ? hero.subheadline.replace(/\n/g, "<br />") : "Crafting cinematic masterpieces<br />for the world stage." }}>
                 </p>
-                <h1 className="headline__title loading__item" dangerouslySetInnerHTML={{ __html: hero.headline ? hero.headline.replace(/\n/g, "<br />") : "We craft cinematic<br />masterpieces." }}>
+                <h1 className="headline__title loading__item" dangerouslySetInnerHTML={{ __html: hero.headline ? hero.headline.replace(/\n/g, "<br />") : "Pooja<br />Productions" }}>
                 </h1>
                 <div className="headline__btn loading__item">
                   <a className="btn btn-line-small icon-right slide-right-down" href="#portfolio">
-                    <span className="btn-caption">{hero.primaryBtnText || "Explore our slate"}</span>
+                    <span className="btn-caption">{hero.primaryBtnText || "Explore our Slate"}</span>
                     <i className="ph ph-arrow-down-right"></i>
                   </a>
                 </div>
