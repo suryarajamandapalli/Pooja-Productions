@@ -6,67 +6,61 @@ export const Loader: React.FC = () => {
 
   useEffect(() => {
     const obj = { value: 0 };
-    const tl = gsap.timeline();
+    const tl = gsap.timeline({ defaults: { overwrite: "auto" } });
 
-    // 1. Smoothly animate the count value from 0 to 100 with a cinematic ease curve
+    // 1. Ultra-smooth count 0 → 100  (expo.inOut feels cinematic)
     tl.to(obj, {
       value: 100,
-      duration: 2.2, // 2.2 seconds smooth count-up
-      ease: "power1.inOut",
-      onUpdate: () => {
-        setCount(Math.floor(obj.value));
-      }
+      duration: 2.6,
+      ease: "expo.inOut",
+      onUpdate: () => setCount(Math.floor(obj.value)),
     });
 
-    // 2. Pause briefly at 100% for readability, then slide the count text down out of view
+    // 2. Brief pause, then slide count down smoothly
     tl.to(".loader__count", {
-      duration: 0.8,
-      ease: "power2.in",
-      y: "100%",
-    }, "+=0.2");
+      duration: 1.0,
+      ease: "expo.in",
+      y: "110%",
+    }, "+=0.15");
 
-    // 3. Slide the background wrapper up to expose the page (starts overlapping the count exit)
+    // 3. Smooth curtain pull: wrapper slides up (starts during count exit)
     tl.to(".loader__wrapper", {
-      duration: 0.8,
-      ease: "power4.in",
+      duration: 1.1,
+      ease: "expo.inOut",
       y: "-100%",
-    }, "-=0.4");
+    }, "-=0.55");
 
-    // 4. Mark loader as loaded in DOM
+    // 4. Mark loader as done
     tl.add(() => {
       const loader = document.getElementById("loader");
-      if (loader) {
-        loader.classList.add("loaded");
-      }
+      if (loader) loader.classList.add("loaded");
     });
 
-    // 5. Query and stagger slide up the main hero elements
+    // 5. Hero elements blur + slide up in stagger sequence
     const loadingItems = document.querySelectorAll(".loading__item");
-    const fadeInItems = document.querySelectorAll(".loading__fade");
+    const fadeInItems  = document.querySelectorAll(".loading__fade");
 
     gsap.set(loadingItems, { opacity: 0 });
-    gsap.set(fadeInItems, { opacity: 0 });
+    gsap.set(fadeInItems,  { opacity: 0 });
 
     tl.to(loadingItems, {
-      duration: 1.3,
-      ease: "power4.out",
-      startAt: { y: 100, filter: "blur(15px)" },
+      duration: 1.4,
+      ease: "expo.out",
+      startAt: { y: 80, filter: "blur(18px)" },
       y: 0,
       opacity: 1,
       filter: "blur(0px)",
-      stagger: 0.06
-    }, "-=0.6"); // starts sliding as wrapper transitions
+      stagger: 0.08,
+    }, "-=0.65");
 
-    // 6. Fade in floating logo, navigation menu, and color switcher
+    // 6. Fade in nav + logo + color switcher
     tl.to(fadeInItems, {
-      duration: 0.8,
-      ease: "none",
+      duration: 1.0,
+      ease: "power2.out",
       opacity: 1,
-    }, "-=0.4");
+    }, "-=0.5");
 
-    return () => {
-      tl.kill();
-    };
+    return () => { tl.kill(); };
   }, []);
 
   return (

@@ -58,6 +58,7 @@ const MainAppContent: React.FC = () => {
 
   useEffect(() => {
     if (view === "admin") return;
+    if (loading) return; // Wait until CMS data is ready & full site is in DOM
 
     // 1. Initialize Lenis Smooth Scroll
     const lenis = new Lenis();
@@ -105,25 +106,28 @@ const MainAppContent: React.FC = () => {
       }
     });
 
-    // 4. Scroll Animations (animate-in-up)
+    // 4. Scroll Animations (animate-in-up) — blur + slide-up on entering viewport
     const animateInUp = document.querySelectorAll(".animate-in-up");
     animateInUp.forEach((element) => {
       gsap.fromTo(
         element,
-        { opacity: 0, y: 50, filter: "blur(8px)" },
+        { opacity: 0, y: 60, filter: "blur(10px)" },
         {
           y: 0,
           opacity: 1,
           filter: "blur(0px)",
-          duration: 1.2,
-          ease: "power2.out",
+          duration: 1.4,
+          ease: "expo.out",
           scrollTrigger: {
             trigger: element,
+            start: "top 90%",
+            end: "top 50%",
             toggleActions: "play none none reverse",
           },
         }
       );
     });
+
 
     // 5. Grid Card Batch Animations
     // Grid 2x
@@ -286,7 +290,7 @@ const MainAppContent: React.FC = () => {
         el.removeEventListener("mouseout", handleMagnetHover as EventListener);
       });
     };
-  }, [view]);
+  }, [view, loading]); // Re-run when CMS loading completes so GSAP finds all elements
 
   if (loading) {
     return (
