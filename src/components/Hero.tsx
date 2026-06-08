@@ -8,135 +8,83 @@ export const Hero: React.FC = () => {
   const hero = data?.hero;
 
   const subheadline = hero?.subheadline || "Cinematic Excellence\nFrom Pooja Productions";
-  const primaryBtnText = hero?.primaryBtnText || "Explore our Slate";
+  const primaryBtnText = hero?.primaryBtnText || "Scroll for more";
   const subLines = subheadline.split("\n");
 
   return (
     <section id="home" className="main home">
 
-      {/* ══════════════════════════════════════════════
-          HERO — Blayden style
-          - Right image : large, vertically centred, right side
-          - Left image  : small, bottom-left edge (peeking)
-          - Text        : full-width, left-padded, z-index 2
-          - ALL original animation classes preserved
-          ══════════════════════════════════════════════ */}
-      <div
-        className="main__intro"
-        style={{
-          position: "relative",
-          width: "100%",
-          height: "100vh",
-          minHeight: "560px",
-          overflow: "hidden",
-          backgroundColor: "#000",
-        }}
-      >
+      {/* ══════════════════════════════════════════════════════
+          MAIN INTRO  — exact Blayden class structure
+          Images positioned by CSS (.intro-bg-01__01 / __02)
+          Text in Bootstrap col-8, loading-wrap animations
+          ══════════════════════════════════════════════════════ */}
+      <div className="main__intro">
 
-        {/* ─── RIGHT IMAGE: large, vertically centred on right half ─── */}
-        <div
-          data-speed="0.85"
-          style={{
-            position: "absolute",
-            right: 0,
-            top: "50%",
-            transform: "translateY(-50%)",
-            width: "clamp(280px, 46vw, 660px)",
-            zIndex: 1,
-            pointerEvents: "none",
-          }}
-        >
-          <img
-            src="img/backgrounds/1200x1200_bg02.webp"
-            alt=""
-            style={{ width: "100%", height: "auto", display: "block" }}
-          />
+        {/* Background images — CSS classes handle positioning & z-index */}
+        <div className="intro__background intro-bg-01">
+          {/* Left image — film reel, peeking from left edge */}
+          <div className="intro-bg-01__01" data-speed="0.6">
+            <img src="img/backgrounds/1200x1200_bg01.png" alt="Background" />
+            <div className="intro-bg__shadow" />
+          </div>
+          {/* Right image — cameraman, large on right */}
+          <div className="intro-bg-01__02" data-speed="0.8">
+            <img src="img/backgrounds/1200x1200_bg02.webp" alt="Background" />
+            <div className="intro-bg__shadow" />
+          </div>
         </div>
 
-        {/* ─── LEFT IMAGE: small, bottom-left, partially off-screen ─── */}
-        <div
-          data-speed="0.6"
-          style={{
-            position: "absolute",
-            left: "-40px",
-            bottom: "clamp(30px, 6vh, 80px)",
-            width: "clamp(150px, 19vw, 270px)",
-            zIndex: 1,
-            pointerEvents: "none",
-          }}
-        >
-          <img
-            src="img/backgrounds/1200x1200_bg01.png"
-            alt=""
-            style={{ width: "100%", height: "auto", display: "block" }}
-          />
-        </div>
+        {/* Content grid — exact Blayden column structure */}
+        <div className="container-fluid p-0 fullheight-desktop">
+          <div className="row g-0 fullheight-desktop align-items-xl-stretch">
 
-        {/* ─── TEXT: absolute overlay, z-index 2, left-padded ─── */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 2,
-            display: "flex",
-            alignItems: "center",
-            paddingLeft: "clamp(36px, 9vw, 160px)",
-            paddingTop: "80px",
-          }}
-        >
-          {/* loading-wrap triggers the Loader.tsx GSAP stagger animation */}
-          <div
-            id="headline"
-            className="headline loading-wrap d-flex align-items-start flex-column"
-          >
-            {/* 1. Subtitle — animates in first */}
-            <p className="headline__subtitle loading__item" style={{ margin: "0 0 clamp(14px,2.2vw,30px) 0", lineHeight: 1.5 }}>
-              <span style={{ display: "block", fontSize: "clamp(13px,1.2vw,18px)", color: "#C5A880", fontWeight: 500, letterSpacing: "0.04em" }}>
-                {subLines[0] || "Cinematic Excellence"}
-              </span>
-              <span style={{ display: "block", fontSize: "clamp(13px,1.2vw,18px)", color: "rgba(255,255,255,0.6)", fontWeight: 400, letterSpacing: "0.04em" }}>
-                {subLines[1] || "From Pooja Productions"}
-              </span>
-            </p>
+            <div className="col-12 col-xl-2" />
 
-            {/* 2. Main headline — animates in second */}
-            <h1
-              className="headline__title loading__item"
-              style={{
-                fontSize: "clamp(58px,10.5vw,154px)",
-                fontWeight: 300,
-                lineHeight: 0.92,
-                letterSpacing: "-0.035em",
-                color: "#fff",
-                margin: "0 0 clamp(24px,4vw,52px) 0",
-              }}
-            >
-              <span style={{ display: "block" }}>Pooja</span>
-              <span style={{ display: "block" }}>Productions</span>
-            </h1>
+            <div className="col-12 col-xl-8 fullheight-desktop">
+              {/* Headline — loading-wrap triggers Loader.tsx GSAP stagger */}
+              <div id="headline" className="headline d-flex align-items-start flex-column loading-wrap">
 
-            {/* 3. CTA button — animates in third */}
-            <div className="headline__btn loading__item">
-              <a
-                className="btn btn-line-small icon-right slide-right-down"
-                href="#portfolio"
-              >
-                <span className="btn-caption">{primaryBtnText}</span>
-                <i className="ph ph-arrow-down-right" />
-              </a>
+                {/* Subtitle — loading__item #1 (blurs+slides up first) */}
+                <p className="headline__subtitle space-bottom loading__item">
+                  {subLines[0] || "Cinematic Excellence"}
+                  <br />
+                  {subLines[1] || "From Pooja Productions"}
+                </p>
+
+                {/* Headline — loading__item #2 */}
+                <h1 className="headline__title loading__item">
+                  Pooja
+                  <br />
+                  Productions
+                </h1>
+
+                {/* CTA button — loading__item #3 */}
+                <div className="headline__btn loading__item">
+                  <a className="btn btn-line-small icon-right slide-right-down" href="#portfolio">
+                    <span className="btn-caption">{primaryBtnText}</span>
+                    <i className="ph ph-arrow-down-right" />
+                  </a>
+                </div>
+
+              </div>
             </div>
+
+            <div className="col-12 col-xl-2" />
+
           </div>
         </div>
       </div>
-      {/* ══ END HERO INTRO ══ */}
+      {/* ══ END MAIN INTRO ══ */}
 
 
-      {/* ══════════════════════════════════════════════
-          MEDIA / BLOCKQUOTE SECTION (original — untouched)
-          ══════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════════════════
+          MAIN MEDIA  — divider image + blockquote + marquee
+          All scroll animations preserved:
+            • animate-in-up  → blur fade-up on scroll
+            • reveal-type    → character-by-character reveal
+            • SplitText      → splits blockquote into .char spans
+          ══════════════════════════════════════════════════════ */}
       <div className="main__media media-grid-bottom">
         <div className="container-fluid p-0">
           <div className="row g-0">
@@ -152,11 +100,7 @@ export const Hero: React.FC = () => {
                     <div className="col-12">
                       <div
                         className="divider divider-image main-image-1 animate-in-up"
-                        style={
-                          hero?.heroImageUrl
-                            ? { backgroundImage: `url(${hero.heroImageUrl})` }
-                            : undefined
-                        }
+                        style={hero?.heroImageUrl ? { backgroundImage: `url(${hero.heroImageUrl})` } : undefined}
                       />
                     </div>
                   </div>
@@ -251,7 +195,7 @@ export const Hero: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* ══ END MEDIA SECTION ══ */}
+      {/* ══ END MAIN MEDIA ══ */}
 
     </section>
   );
