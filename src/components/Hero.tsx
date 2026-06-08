@@ -14,9 +14,13 @@ export const Hero: React.FC = () => {
   return (
     <section id="home" className="main home">
 
-      {/* ══════════════════════════════════════════
-          HERO INTRO  — Blayden-exact layout
-          ══════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════════
+          HERO — Blayden style
+          - Right image : large, vertically centred, right side
+          - Left image  : small, bottom-left edge (peeking)
+          - Text        : full-width, left-padded, z-index 2
+          - ALL original animation classes preserved
+          ══════════════════════════════════════════════ */}
       <div
         className="main__intro"
         style={{
@@ -28,16 +32,16 @@ export const Hero: React.FC = () => {
           backgroundColor: "#000",
         }}
       >
-        {/* ── RIGHT IMAGE (large, behind text, right side) ── */}
-        {/* Mirrors the big crystal/rock on the right in the reference */}
+
+        {/* ─── RIGHT IMAGE: large, vertically centred on right half ─── */}
         <div
           data-speed="0.85"
           style={{
             position: "absolute",
-            right: "-20px",
+            right: 0,
             top: "50%",
             transform: "translateY(-50%)",
-            width: "clamp(300px, 46vw, 660px)",
+            width: "clamp(280px, 46vw, 660px)",
             zIndex: 1,
             pointerEvents: "none",
           }}
@@ -49,15 +53,14 @@ export const Hero: React.FC = () => {
           />
         </div>
 
-        {/* ── LEFT IMAGE (smaller, bottom-left edge, partially cropped) ── */}
-        {/* Mirrors the smaller crystal on the bottom-left in the reference */}
+        {/* ─── LEFT IMAGE: small, bottom-left, partially off-screen ─── */}
         <div
           data-speed="0.6"
           style={{
             position: "absolute",
-            left: "-50px",
-            bottom: "clamp(40px, 8vh, 100px)",
-            width: "clamp(160px, 20vw, 280px)",
+            left: "-40px",
+            bottom: "clamp(30px, 6vh, 80px)",
+            width: "clamp(150px, 19vw, 270px)",
             zIndex: 1,
             pointerEvents: "none",
           }}
@@ -69,109 +72,80 @@ export const Hero: React.FC = () => {
           />
         </div>
 
-        {/* ── TEXT CONTENT (full width, z-index:2, left-padded) ── */}
-        {/* Exactly as in Blayden — text spans full width, images float behind */}
+        {/* ─── TEXT: absolute overlay, z-index 2, left-padded ─── */}
         <div
           style={{
             position: "absolute",
-            inset: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             zIndex: 2,
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            paddingLeft: "clamp(32px, 9vw, 160px)",
+            alignItems: "center",
+            paddingLeft: "clamp(36px, 9vw, 160px)",
             paddingTop: "80px",
-            paddingBottom: "clamp(40px, 6vh, 80px)",
           }}
         >
-          {/* Wrapper with loading-wrap so GSAP Loader animates children in sequence */}
-          <div id="headline" className="headline loading-wrap d-flex align-items-start flex-column">
-
-            {/* Small subtitle — "Hello! / I am Alex Walker" style */}
-            <p
-              className="headline__subtitle loading__item"
-              style={{ marginBottom: "clamp(12px, 2vw, 28px)", lineHeight: 1.5, margin: "0 0 clamp(12px,2vw,28px) 0" }}
-            >
-              <span
-                style={{
-                  display: "block",
-                  fontSize: "clamp(13px, 1.2vw, 18px)",
-                  color: "#C5A880",
-                  fontWeight: 500,
-                  letterSpacing: "0.04em",
-                }}
-              >
+          {/* loading-wrap triggers the Loader.tsx GSAP stagger animation */}
+          <div
+            id="headline"
+            className="headline loading-wrap d-flex align-items-start flex-column"
+          >
+            {/* 1. Subtitle — animates in first */}
+            <p className="headline__subtitle loading__item" style={{ margin: "0 0 clamp(14px,2.2vw,30px) 0", lineHeight: 1.5 }}>
+              <span style={{ display: "block", fontSize: "clamp(13px,1.2vw,18px)", color: "#C5A880", fontWeight: 500, letterSpacing: "0.04em" }}>
                 {subLines[0] || "Cinematic Excellence"}
               </span>
-              <span
-                style={{
-                  display: "block",
-                  fontSize: "clamp(13px, 1.2vw, 18px)",
-                  color: "rgba(255,255,255,0.6)",
-                  fontWeight: 400,
-                  letterSpacing: "0.04em",
-                }}
-              >
+              <span style={{ display: "block", fontSize: "clamp(13px,1.2vw,18px)", color: "rgba(255,255,255,0.6)", fontWeight: 400, letterSpacing: "0.04em" }}>
                 {subLines[1] || "From Pooja Productions"}
               </span>
             </p>
 
-            {/* MASSIVE headline — exactly "Digital designer & illustrator" size/weight */}
+            {/* 2. Main headline — animates in second */}
             <h1
               className="headline__title loading__item"
               style={{
-                fontSize: "clamp(60px, 10.5vw, 156px)",
+                fontSize: "clamp(58px,10.5vw,154px)",
                 fontWeight: 300,
                 lineHeight: 0.92,
                 letterSpacing: "-0.035em",
-                color: "#ffffff",
-                margin: 0,
-                marginBottom: "clamp(24px, 4vw, 52px)",
+                color: "#fff",
+                margin: "0 0 clamp(24px,4vw,52px) 0",
               }}
             >
               <span style={{ display: "block" }}>Pooja</span>
               <span style={{ display: "block" }}>Productions</span>
             </h1>
 
-            {/* "Scroll for more ↘" style CTA */}
+            {/* 3. CTA button — animates in third */}
             <div className="headline__btn loading__item">
               <a
-                className="btn btn-line-small icon-right"
+                className="btn btn-line-small icon-right slide-right-down"
                 href="#portfolio"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: "clamp(12px, 1.1vw, 16px)",
-                  color: "rgba(255,255,255,0.55)",
-                  textDecoration: "none",
-                  letterSpacing: "0.05em",
-                  transition: "color 0.3s",
-                }}
-                onMouseOver={(e) => (e.currentTarget.style.color = "#C5A880")}
-                onMouseOut={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
               >
                 <span className="btn-caption">{primaryBtnText}</span>
                 <i className="ph ph-arrow-down-right" />
               </a>
             </div>
-
           </div>
         </div>
-
       </div>
       {/* ══ END HERO INTRO ══ */}
 
-      {/* ══════════════════════════════════════════
-          MEDIA / BLOCKQUOTE SECTION  (original)
-          ══════════════════════════════════════════ */}
+
+      {/* ══════════════════════════════════════════════
+          MEDIA / BLOCKQUOTE SECTION (original — untouched)
+          ══════════════════════════════════════════════ */}
       <div className="main__media media-grid-bottom">
         <div className="container-fluid p-0">
           <div className="row g-0">
+
             <div className="col-12 col-xl-2" />
 
             <div className="col-12 col-xl-8">
-              {/* Divider image */}
+
+              {/* Divider image — animate-in-up scroll animation */}
               <div className="content__block">
                 <div className="container-fluid p-0">
                   <div className="row g-0">
@@ -189,7 +163,7 @@ export const Hero: React.FC = () => {
                 </div>
               </div>
 
-              {/* Blockquote */}
+              {/* Blockquote — reveal-type scroll animation via SplitText */}
               <div className="content__block large-text-block">
                 <div className="container-fluid p-0">
                   <div className="row g-0">
@@ -201,6 +175,7 @@ export const Hero: React.FC = () => {
                   </div>
                 </div>
               </div>
+
             </div>
 
             <div className="col-12 col-xl-2" />
@@ -208,6 +183,7 @@ export const Hero: React.FC = () => {
             {/* Marquee strip */}
             <div className="media__fullwidth">
               <Marquee speed={20}>
+
                 <div className="item icon">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 92.3 93.1" fill="currentColor">
                     <g>
@@ -225,9 +201,11 @@ export const Hero: React.FC = () => {
                     </g>
                   </svg>
                 </div>
+
                 <div className="item image image-1">
                   <img src="img/marquee/01.webp" alt="Image" />
                 </div>
+
                 <div className="item icon">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89.2 82.8" fill="currentColor">
                     <g>
@@ -245,9 +223,11 @@ export const Hero: React.FC = () => {
                     </g>
                   </svg>
                 </div>
+
                 <div className="item image image-2">
                   <img src="img/marquee/02.webp" alt="Image" />
                 </div>
+
                 <div className="item icon">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84" fill="currentColor">
                     <g>
@@ -260,14 +240,19 @@ export const Hero: React.FC = () => {
                     </g>
                   </svg>
                 </div>
+
                 <div className="item image image-3">
                   <img src="img/marquee/03.webp" alt="Image" />
                 </div>
+
               </Marquee>
             </div>
+
           </div>
         </div>
       </div>
+      {/* ══ END MEDIA SECTION ══ */}
+
     </section>
   );
 };
