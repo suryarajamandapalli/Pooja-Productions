@@ -125,7 +125,7 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
         zIndex: 1000
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "2rem" }}>
-          <img src="/logo.png" alt="Pooja Productions" style={{ height: "4.5rem" }} />
+          <img src="/logo.png" alt="Pooja Productions" style={{ height: "4rem", width: "auto", objectFit: "contain", display: "block" }} />
           <div style={{ borderLeft: "1px solid rgba(197, 168, 128, 0.3)", paddingLeft: "2rem" }}>
             <h1 style={{ color: "#FFFFFF", fontSize: "2rem", fontWeight: 700, margin: 0, letterSpacing: "0.05em" }}>
               CMS STUDIO CONTROL

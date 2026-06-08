@@ -7,139 +7,166 @@ export const Hero: React.FC = () => {
   const { data } = useCMS();
   const hero = data?.hero;
 
-  const subheadline =
-    hero?.subheadline || "Crafting cinematic masterpieces\nfor the world stage.";
+  const subheadline = hero?.subheadline || "Cinematic Excellence\nFrom Pooja Productions";
   const primaryBtnText = hero?.primaryBtnText || "Explore our Slate";
   const subLines = subheadline.split("\n");
 
   return (
     <section id="home" className="main home">
-      {/* ── HERO INTRO ── */}
-      <div className="main__intro">
 
-        {/* Floating background images — exactly like Blayden reference */}
-        <div className="intro__background intro-bg-01">
-          {/* Left edge image — film reel, partially peeking */}
-          <div
-            className="intro-bg-01__01"
-            data-speed="0.6"
-            style={{
-              position: "absolute",
-              left: "-80px",
-              top: "50%",
-              transform: "translateY(-48%)",
-              width: "clamp(200px, 24vw, 360px)",
-              zIndex: 1,
-              pointerEvents: "none",
-            }}
-          >
-            <img
-              src="img/backgrounds/1200x1200_bg01.png"
-              alt=""
-              style={{ width: "100%", height: "auto", display: "block" }}
-            />
-          </div>
-
-          {/* Right image — cameraman, large and prominent */}
-          <div
-            className="intro-bg-01__02"
-            data-speed="0.8"
-            style={{
-              position: "absolute",
-              right: "-20px",
-              top: "50%",
-              transform: "translateY(-52%)",
-              width: "clamp(320px, 45vw, 680px)",
-              zIndex: 1,
-              pointerEvents: "none",
-            }}
-          >
-            <img
-              src="img/backgrounds/1200x1200_bg02.webp"
-              alt=""
-              style={{ width: "100%", height: "auto", display: "block" }}
-            />
-          </div>
+      {/* ══════════════════════════════════════════
+          HERO INTRO  — Blayden-exact layout
+          ══════════════════════════════════════════ */}
+      <div
+        className="main__intro"
+        style={{
+          position: "relative",
+          width: "100%",
+          height: "100vh",
+          minHeight: "560px",
+          overflow: "hidden",
+          backgroundColor: "#000",
+        }}
+      >
+        {/* ── RIGHT IMAGE (large, behind text, right side) ── */}
+        {/* Mirrors the big crystal/rock on the right in the reference */}
+        <div
+          data-speed="0.85"
+          style={{
+            position: "absolute",
+            right: "-20px",
+            top: "50%",
+            transform: "translateY(-50%)",
+            width: "clamp(300px, 46vw, 660px)",
+            zIndex: 1,
+            pointerEvents: "none",
+          }}
+        >
+          <img
+            src="img/backgrounds/1200x1200_bg02.webp"
+            alt=""
+            style={{ width: "100%", height: "auto", display: "block" }}
+          />
         </div>
 
-        {/* Text column — left side, full height, above images */}
+        {/* ── LEFT IMAGE (smaller, bottom-left edge, partially cropped) ── */}
+        {/* Mirrors the smaller crystal on the bottom-left in the reference */}
         <div
-          className="container-fluid p-0 fullheight-desktop"
-          style={{ position: "relative", zIndex: 2 }}
+          data-speed="0.6"
+          style={{
+            position: "absolute",
+            left: "-50px",
+            bottom: "clamp(40px, 8vh, 100px)",
+            width: "clamp(160px, 20vw, 280px)",
+            zIndex: 1,
+            pointerEvents: "none",
+          }}
         >
-          <div className="row g-0 fullheight-desktop align-items-xl-center">
+          <img
+            src="img/backgrounds/1200x1200_bg01.png"
+            alt=""
+            style={{ width: "100%", height: "auto", display: "block" }}
+          />
+        </div>
 
-            {/* Spacer */}
-            <div className="col-12 col-xl-1" />
-
-            {/* Main text — left half only so right image shows */}
-            <div
-              className="col-12 col-xl-6 fullheight-desktop"
+        {/* ── TEXT CONTENT (full width, z-index:2, left-padded) ── */}
+        {/* Exactly as in Blayden — text spans full width, images float behind */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 2,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            paddingLeft: "clamp(32px, 9vw, 160px)",
+            paddingTop: "80px",
+            paddingBottom: "clamp(40px, 6vh, 80px)",
+          }}
+        >
+          {/* Small subtitle — "Hello! / I am Alex Walker" style */}
+          <div
+            className="loading__item"
+            style={{ marginBottom: "clamp(12px, 2vw, 28px)", lineHeight: 1.5 }}
+          >
+            <span
               style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                padding: "clamp(100px, 12vh, 160px) 0 clamp(60px, 8vh, 100px) 0",
+                display: "block",
+                fontSize: "clamp(13px, 1.2vw, 18px)",
+                color: "#C5A880",
+                fontWeight: 500,
+                letterSpacing: "0.04em",
               }}
             >
-              <div
-                id="headline"
-                className="headline d-flex align-items-start flex-column loading-wrap"
-              >
-                {/* Small subtitle — like "Hello! / I am Alex Walker" */}
-                <div className="loading__item" style={{ marginBottom: "clamp(16px, 2.5vw, 36px)", lineHeight: 1.5 }}>
-                  <span style={{ display: "block", fontSize: "clamp(14px, 1.3vw, 20px)", color: "#C5A880", fontWeight: 500, letterSpacing: "0.05em" }}>
-                    {subLines[0] || "Crafting cinematic masterpieces"}
-                  </span>
-                  <span style={{ display: "block", fontSize: "clamp(14px, 1.3vw, 20px)", color: "rgba(255,255,255,0.65)", fontWeight: 400, letterSpacing: "0.04em" }}>
-                    {subLines[1] || "for the world stage."}
-                  </span>
-                </div>
+              {subLines[0] || "Cinematic Excellence"}
+            </span>
+            <span
+              style={{
+                display: "block",
+                fontSize: "clamp(13px, 1.2vw, 18px)",
+                color: "rgba(255,255,255,0.6)",
+                fontWeight: 400,
+                letterSpacing: "0.04em",
+              }}
+            >
+              {subLines[1] || "From Pooja Productions"}
+            </span>
+          </div>
 
-                {/* MASSIVE headline — like "Digital designer & illustrator" */}
-                <h1
-                  className="headline__title loading__item"
-                  style={{
-                    fontSize: "clamp(56px, 9vw, 140px)",
-                    fontWeight: 300,
-                    lineHeight: 0.95,
-                    letterSpacing: "-0.03em",
-                    margin: 0,
-                    marginBottom: "clamp(28px, 4vw, 56px)",
-                  }}
-                >
-                  <span style={{ display: "block" }}>Pooja</span>
-                  <span style={{ display: "block" }}>Productions</span>
-                </h1>
+          {/* MASSIVE headline — exactly "Digital designer & illustrator" size/weight */}
+          <h1
+            className="loading__item"
+            style={{
+              fontSize: "clamp(60px, 10.5vw, 156px)",
+              fontWeight: 300,
+              lineHeight: 0.92,
+              letterSpacing: "-0.035em",
+              color: "#ffffff",
+              margin: 0,
+              marginBottom: "clamp(24px, 4vw, 52px)",
+            }}
+          >
+            <span style={{ display: "block" }}>Pooja</span>
+            <span style={{ display: "block" }}>Productions</span>
+          </h1>
 
-                {/* CTA — like "Scroll for more ↘" */}
-                <div className="headline__btn loading__item">
-                  <a
-                    className="btn btn-line-small icon-right slide-right-down"
-                    href="#portfolio"
-                  >
-                    <span className="btn-caption">{primaryBtnText}</span>
-                    <i className="ph ph-arrow-down-right" />
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Right columns taken by the floating image — no content needed */}
-            <div className="col-12 col-xl-5" />
+          {/* "Scroll for more ↘" style CTA */}
+          <div className="loading__item">
+            <a
+              href="#portfolio"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                fontSize: "clamp(12px, 1.1vw, 16px)",
+                color: "rgba(255,255,255,0.55)",
+                textDecoration: "none",
+                letterSpacing: "0.05em",
+                transition: "color 0.3s",
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.color = "#C5A880")}
+              onMouseOut={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
+            >
+              {primaryBtnText}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M7 7h10v10M7 17L17 7" />
+              </svg>
+            </a>
           </div>
         </div>
       </div>
-      {/* ── END HERO INTRO ── */}
+      {/* ══ END HERO INTRO ══ */}
 
-      {/* ── MEDIA / BLOCKQUOTE SECTION ── */}
+      {/* ══════════════════════════════════════════
+          MEDIA / BLOCKQUOTE SECTION  (original)
+          ══════════════════════════════════════════ */}
       <div className="main__media media-grid-bottom">
         <div className="container-fluid p-0">
           <div className="row g-0">
             <div className="col-12 col-xl-2" />
 
             <div className="col-12 col-xl-8">
-              {/* Divider Image */}
+              {/* Divider image */}
               <div className="content__block">
                 <div className="container-fluid p-0">
                   <div className="row g-0">
