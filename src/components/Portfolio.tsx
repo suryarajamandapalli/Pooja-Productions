@@ -82,8 +82,22 @@ export const Portfolio: React.FC = () => {
   };
 
   return (
-    <section id="portfolio" className="inner inner-grid-bottom portfolio">
-      <div className="inner__wrapper">
+    <section id="portfolio" className="inner inner-grid-bottom portfolio" style={{ position: "relative" }}>
+      {/* Circular Gradient Glow (Left Bottom) */}
+      <div style={{
+        position: "absolute",
+        bottom: "-5%",
+        left: "-10%",
+        width: "800px",
+        height: "800px",
+        borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, rgba(0,0,0,0) 70%)",
+        zIndex: 0,
+        pointerEvents: "none",
+        filter: "blur(40px)"
+      }} />
+
+      <div className="inner__wrapper" style={{ position: "relative", zIndex: 1 }}>
         <div className="container-fluid p-0">
           <div className="row g-0">
             {/* Inner Section Name Start */}
@@ -144,6 +158,19 @@ export const Portfolio: React.FC = () => {
                                 className="picture"
                                 style={{ backgroundImage: `url(${imageSrc})` }}
                               ></div>
+                              {/* Visible Card Title Overlay */}
+                              <div style={{
+                                position: "absolute",
+                                bottom: 0,
+                                left: 0,
+                                width: "100%",
+                                padding: "40px 20px 20px 20px",
+                                background: "linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%)",
+                                zIndex: 5,
+                                pointerEvents: "none"
+                              }}>
+                                <h3 style={{ margin: 0, color: "#fff", fontSize: "1.5rem", fontWeight: 500, letterSpacing: "-0.02em" }}>{item.title}</h3>
+                              </div>
                             </a>
                             <figcaption className={`gallery__descr ${index % 2 === 1 ? "opposite" : ""}`}>
                               <h5 className={index % 2 === 1 ? "opposite" : ""}>
