@@ -192,6 +192,7 @@ export const About: React.FC = () => {
                 {/* Content Block - Chairman Section End */}
 
                 {/* Content Block - Creative Team Section Start */}
+                {/* 
                 {data?.team && data.team.length > 0 && (
                   <div className="content__block grid-block" style={{ marginTop: "6rem" }}>
                     <div className="resume-divider animate-in-up" style={{ marginBottom: "4rem", height: "1px", backgroundColor: "rgba(255, 255, 255, 0.1)" }}></div>
@@ -240,6 +241,7 @@ export const About: React.FC = () => {
                     </div>
                   </div>
                 )}
+                */}
                 {/* Content Block - Creative Team Section End */}
               </div>
             </div>
