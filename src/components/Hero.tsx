@@ -42,16 +42,7 @@ export const Hero: React.FC = () => {
           {/* Dark Transparency Overlay */}
           <div style={{ position: "absolute", width: "100%", height: "100%", top: 0, left: 0, backgroundColor: "rgba(0, 0, 0, 0.6)", zIndex: 2 }} />
 
-          {/* Left image — film reel, peeking from left edge */}
-          <div className="intro-bg-01__01" data-speed="0.6" style={{ zIndex: 3, position: "relative" }}>
-            <img src="img/backgrounds/gold_diamond1.png" alt="Gold Diamond Background" style={{ mixBlendMode: "screen" }} />
-            <div className="intro-bg__shadow" />
-          </div>
-          {/* Right image — cameraman, large on right */}
-          <div className="intro-bg-01__02" data-speed="0.8" style={{ zIndex: 3, position: "relative" }}>
-            <img src="img/backgrounds/gold_diamond2.png" alt="Gold Diamond Background" style={{ mixBlendMode: "screen" }} />
-            <div className="intro-bg__shadow" />
-          </div>
+          {/* Diamonds moved to the next section */}
         </div>
 
         {/* Content grid — exact Blayden column structure */}
@@ -104,8 +95,21 @@ export const Hero: React.FC = () => {
             • reveal-type    → character-by-character reveal
             • SplitText      → splits blockquote into .char spans
           ══════════════════════════════════════════════════════ */}
-      <div className="main__media media-grid-bottom">
-        <div className="container-fluid p-0">
+      <div className="main__media media-grid-bottom" style={{ position: "relative" }}>
+        
+        {/* Background Diamonds Floating Behind the Content */}
+        <div style={{ position: "absolute", width: "100%", height: "100%", top: 0, left: 0, overflow: "hidden", zIndex: 0, pointerEvents: "none" }}>
+          {/* Left Diamond */}
+          <div className="intro-bg-01__01" data-speed="0.6" style={{ position: "absolute", top: "0%", left: "-15%", zIndex: 1, opacity: 0.9 }}>
+            <img src="img/backgrounds/gold_diamond1.png" alt="Gold Diamond Background" style={{ mixBlendMode: "screen", width: "900px" }} />
+          </div>
+          {/* Right Diamond */}
+          <div className="intro-bg-01__02" data-speed="0.8" style={{ position: "absolute", bottom: "10%", right: "-15%", zIndex: 1, opacity: 0.9 }}>
+            <img src="img/backgrounds/gold_diamond2.png" alt="Gold Diamond Background" style={{ mixBlendMode: "screen", width: "900px" }} />
+          </div>
+        </div>
+
+        <div className="container-fluid p-0" style={{ position: "relative", zIndex: 2 }}>
           <div className="row g-0">
 
             <div className="col-12 col-xl-2" />
