@@ -25,12 +25,12 @@ export const Hero: React.FC = () => {
         <div className="intro__background intro-bg-01">
           {/* Left image — film reel, peeking from left edge */}
           <div className="intro-bg-01__01" data-speed="0.6">
-            <img src="img/backgrounds/gold_diamond1.png" alt="Gold Diamond Background" />
+            <img src="img/backgrounds/gold_diamond1.png" alt="Gold Diamond Background" style={{ mixBlendMode: "screen" }} />
             <div className="intro-bg__shadow" />
           </div>
           {/* Right image — cameraman, large on right */}
           <div className="intro-bg-01__02" data-speed="0.8">
-            <img src="img/backgrounds/gold_diamond2.png" alt="Gold Diamond Background" />
+            <img src="img/backgrounds/gold_diamond2.png" alt="Gold Diamond Background" style={{ mixBlendMode: "screen" }} />
             <div className="intro-bg__shadow" />
           </div>
         </div>

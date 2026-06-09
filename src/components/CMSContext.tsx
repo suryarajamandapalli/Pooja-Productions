@@ -143,9 +143,14 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const res = await fetch("/data/content.json");
-        const json = await res.json();
-        setData(json);
+        const localData = localStorage.getItem("pooja_cmsData");
+        if (localData) {
+          setData(JSON.parse(localData));
+        } else {
+          const res = await fetch("/data/content.json");
+          const json = await res.json();
+          setData(json);
+        }
       } catch (err) {
         console.error("Failed to load CMS content configuration", err);
       } finally {
@@ -275,13 +280,9 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const saveAllChanges = async (): Promise<boolean> => {
     if (!data) return false;
     try {
-      const res = await fetch("/api/save-content", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data, null, 2),
-      });
-      const result = await res.json();
-      return result.success;
+      localStorage.setItem("pooja_cmsData", JSON.stringify(data));
+      await new Promise(resolve => setTimeout(resolve, 600)); // Simulate save delay
+      return true;
     } catch (e) {
       console.error("Save content database request failed", e);
       return false;

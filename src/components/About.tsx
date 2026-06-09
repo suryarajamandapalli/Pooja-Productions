@@ -126,6 +126,7 @@ export const About: React.FC = () => {
                 {/* Content Block - About Me Data End */}
 
                 {/* Content Block - Chairman Section Start */}
+                {/* 
                 <div className="content__block grid-block" style={{ marginTop: "6rem" }}>
                   <div className="resume-divider animate-in-up" style={{ marginBottom: "4rem", height: "1px", backgroundColor: "rgba(255, 255, 255, 0.1)" }}></div>
                   <div className="block__subtitle">
@@ -133,7 +134,6 @@ export const About: React.FC = () => {
                   </div>
                   <div className="container-fluid p-0">
                     <div className="row g-0 justify-content-between">
-                      {/* Chairman Image */}
                       <div className="col-12 col-md-4 grid-item animate-in-up" style={{ paddingRight: "3rem" }}>
                         <div className="chairman-frame" style={{ 
                           position: "relative",
@@ -158,7 +158,6 @@ export const About: React.FC = () => {
                         </div>
                       </div>
                       
-                      {/* Chairman Bio */}
                       <div className="col-12 col-md-8 grid-item pre-grid animate-in-up">
                         <h3 className="reveal-type animate-in-up" style={{ fontSize: "3rem", fontWeight: 700, color: "var(--t-bright)", margin: 0 }}>
                           {leadership.name}
@@ -189,6 +188,7 @@ export const About: React.FC = () => {
                     </div>
                   </div>
                 </div>
+                */}
                 {/* Content Block - Chairman Section End */}
 
                 {/* Content Block - Creative Team Section Start */}
