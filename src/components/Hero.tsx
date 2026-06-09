@@ -21,26 +21,34 @@ export const Hero: React.FC = () => {
           ══════════════════════════════════════════════════════ */}
       <div className="main__intro">
 
-        {/* Background images — CSS classes handle positioning & z-index */}
-        <div className="intro__background intro-bg-01">
-          {/* Background Video with Dark Overlay */}
+        {/* Background video and diamonds */}
+        <div className="intro__background intro-bg-01" style={{ position: "absolute", width: "100%", height: "100%", top: 0, left: 0, overflow: "hidden", zIndex: 0 }}>
           <video 
             src="img/backgrounds/introl_video_1.mp4" 
             autoPlay 
             loop 
             muted 
             playsInline
-            style={{ position: "absolute", width: "100%", height: "100%", objectFit: "cover", top: 0, left: 0 }} 
+            style={{ 
+              position: "absolute",
+              width: "100%", 
+              height: "100%", 
+              objectFit: "cover", 
+              top: 0,
+              left: 0,
+              zIndex: 1
+            }} 
           />
-          <div style={{ position: "absolute", width: "100%", height: "100%", top: 0, left: 0, backgroundColor: "rgba(0, 0, 0, 0.6)" }} />
+          {/* Dark Transparency Overlay */}
+          <div style={{ position: "absolute", width: "100%", height: "100%", top: 0, left: 0, backgroundColor: "rgba(0, 0, 0, 0.6)", zIndex: 2 }} />
 
           {/* Left image — film reel, peeking from left edge */}
-          <div className="intro-bg-01__01" data-speed="0.6">
+          <div className="intro-bg-01__01" data-speed="0.6" style={{ zIndex: 3, position: "relative" }}>
             <img src="img/backgrounds/gold_diamond1.png" alt="Gold Diamond Background" style={{ mixBlendMode: "screen" }} />
             <div className="intro-bg__shadow" />
           </div>
           {/* Right image — cameraman, large on right */}
-          <div className="intro-bg-01__02" data-speed="0.8">
+          <div className="intro-bg-01__02" data-speed="0.8" style={{ zIndex: 3, position: "relative" }}>
             <img src="img/backgrounds/gold_diamond2.png" alt="Gold Diamond Background" style={{ mixBlendMode: "screen" }} />
             <div className="intro-bg__shadow" />
           </div>
