@@ -23,6 +23,17 @@ export const Hero: React.FC = () => {
 
         {/* Background images — CSS classes handle positioning & z-index */}
         <div className="intro__background intro-bg-01">
+          {/* Background Video with Dark Overlay */}
+          <video 
+            src="img/backgrounds/introl_video_1.mp4" 
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+            style={{ position: "absolute", width: "100%", height: "100%", objectFit: "cover", top: 0, left: 0 }} 
+          />
+          <div style={{ position: "absolute", width: "100%", height: "100%", top: 0, left: 0, backgroundColor: "rgba(0, 0, 0, 0.6)" }} />
+
           {/* Left image — film reel, peeking from left edge */}
           <div className="intro-bg-01__01" data-speed="0.6">
             <img src="img/backgrounds/gold_diamond1.png" alt="Gold Diamond Background" style={{ mixBlendMode: "screen" }} />
