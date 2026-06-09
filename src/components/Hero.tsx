@@ -7,7 +7,7 @@ export const Hero: React.FC = () => {
   const { data } = useCMS();
   const hero = data?.hero;
 
-  const subheadline = hero?.subheadline || "Cinematic Excellence\nFrom Pooja Productions";
+  const subheadline = hero?.subheadline || "MR. MK'S PRESENT";
   const primaryBtnText = hero?.primaryBtnText || "Scroll for more";
   const subLines = subheadline.split("\n");
 
@@ -25,12 +25,12 @@ export const Hero: React.FC = () => {
         <div className="intro__background intro-bg-01">
           {/* Left image — film reel, peeking from left edge */}
           <div className="intro-bg-01__01" data-speed="0.6">
-            <img src="img/backgrounds/1200x1200_bg01.png" alt="Background" />
+            <img src="img/backgrounds/rock1.png" alt="Background" />
             <div className="intro-bg__shadow" />
           </div>
           {/* Right image — cameraman, large on right */}
           <div className="intro-bg-01__02" data-speed="0.8">
-            <img src="img/backgrounds/1200x1200_bg02.webp" alt="Background" />
+            <img src="img/backgrounds/rock2.png" alt="Background" />
             <div className="intro-bg__shadow" />
           </div>
         </div>
@@ -46,17 +46,17 @@ export const Hero: React.FC = () => {
               <div id="headline" className="headline d-flex align-items-start flex-column loading-wrap">
 
                 {/* Subtitle — loading__item #1 (blurs+slides up first) */}
-                <p className="headline__subtitle space-bottom loading__item">
-                  {subLines[0] || "Cinematic Excellence"}
-                  <br />
-                  {subLines[1] || "From Pooja Productions"}
+                <p className="headline__subtitle space-bottom loading__item" style={{ fontSize: "2rem", fontWeight: 300, opacity: 0.8 }}>
+                  {subLines[0] || "MR. MK'S PRESENT"}
+                  {subLines[1] && <br />}
+                  {subLines[1] && subLines[1]}
                 </p>
 
                 {/* Headline — loading__item #2 */}
-                <h1 className="headline__title loading__item">
-                  Pooja
+                <h1 className="headline__title loading__item" style={{ fontSize: "6rem", lineHeight: "1.1", fontWeight: 400, letterSpacing: "-0.03em" }}>
+                  POOJA
                   <br />
-                  Productions
+                  PRODUCTIONS
                 </h1>
 
                 {/* CTA button — loading__item #3 */}
