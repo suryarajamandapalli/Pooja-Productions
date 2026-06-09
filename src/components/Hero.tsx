@@ -118,7 +118,7 @@ export const Hero: React.FC = () => {
               <div className="content__block">
                 <div className="container-fluid p-0">
                   <div className="row g-0">
-                    <div className="col-12">
+                    <div className="col-12 col-md-8 ms-auto">
                       <div className="divider divider-video animate-in-up" style={{ position: "relative", width: "100%", paddingBottom: "56.25%", borderRadius: "var(--_radius-m)", overflow: "hidden", marginTop: "4rem" }}>
                         <video 
                           src="img/backgrounds/bg_video_1.mp4"
