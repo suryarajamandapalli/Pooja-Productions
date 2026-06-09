@@ -21,7 +21,7 @@ export const Hero: React.FC = () => {
           ══════════════════════════════════════════════════════ */}
       <div className="main__intro">
 
-        {/* Background video with transparency via mix-blend-mode */}
+        {/* Background video and diamonds */}
         <div className="intro__background intro-bg-01" style={{ position: "absolute", width: "100%", height: "100%", top: 0, left: 0, overflow: "hidden", zIndex: 0 }}>
           <video 
             src="img/backgrounds/introl_video_1.mp4" 
@@ -30,14 +30,28 @@ export const Hero: React.FC = () => {
             muted 
             playsInline
             style={{ 
+              position: "absolute",
               width: "100%", 
               height: "100%", 
               objectFit: "cover", 
-              mixBlendMode: "screen",
-              opacity: 0.85
+              top: 0,
+              left: 0,
+              zIndex: 1
             }} 
           />
-          <div className="intro-bg__shadow" />
+          {/* Dark Transparency Overlay */}
+          <div style={{ position: "absolute", width: "100%", height: "100%", top: 0, left: 0, backgroundColor: "rgba(0, 0, 0, 0.6)", zIndex: 2 }} />
+
+          {/* Left image — film reel, peeking from left edge */}
+          <div className="intro-bg-01__01" data-speed="0.6" style={{ zIndex: 3, position: "relative" }}>
+            <img src="img/backgrounds/gold_diamond1.png" alt="Gold Diamond Background" style={{ mixBlendMode: "screen" }} />
+            <div className="intro-bg__shadow" />
+          </div>
+          {/* Right image — cameraman, large on right */}
+          <div className="intro-bg-01__02" data-speed="0.8" style={{ zIndex: 3, position: "relative" }}>
+            <img src="img/backgrounds/gold_diamond2.png" alt="Gold Diamond Background" style={{ mixBlendMode: "screen" }} />
+            <div className="intro-bg__shadow" />
+          </div>
         </div>
 
         {/* Content grid — exact Blayden column structure */}
@@ -103,10 +117,23 @@ export const Hero: React.FC = () => {
                 <div className="container-fluid p-0">
                   <div className="row g-0">
                     <div className="col-12">
-                      <div
-                        className="divider divider-image main-image-1 animate-in-up"
-                        style={hero?.heroImageUrl ? { backgroundImage: `url(${hero.heroImageUrl})` } : undefined}
-                      />
+                      <div className="divider divider-video animate-in-up" style={{ position: "relative", width: "100%", paddingBottom: "56.25%", borderRadius: "var(--_radius-m)", overflow: "hidden", marginTop: "4rem" }}>
+                        <video 
+                          src="img/backgrounds/bg_video_1.mp4"
+                          autoPlay 
+                          loop 
+                          muted 
+                          playsInline
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover"
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
