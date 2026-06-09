@@ -32,13 +32,6 @@
   },
   "films": [
     {
-      "id": 1,
-      "src": "img/works/1400x1050_w01.webp",
-      "category": "Feature Film | Sci-Fi",
-      "title": "The Last Echo",
-      "description": "A post-apocalyptic drama exploring isolation and hope. Winner of the Golden Palme for Best Cinematography."
-    },
-    {
       "id": 2,
       "src": "img/works/1100x1400_w02.webp",
       "category": "Documentary | Biography",
