@@ -8,12 +8,12 @@ export const Loader: React.FC = () => {
     const obj = { value: 0 };
     const tl = gsap.timeline({ defaults: { overwrite: "auto" } });
 
-    // 1. Ultra-smooth count 0 → 100  (expo.inOut feels cinematic)
+    // 1. Ultra-smooth count 0 → 100
     tl.to(obj, {
       value: 100,
-      duration: 2.6,
-      ease: "expo.inOut",
-      onUpdate: () => setCount(Math.floor(obj.value)),
+      duration: 3.5,
+      ease: "power3.inOut",
+      onUpdate: () => setCount(Math.round(obj.value)),
     });
 
     // 2. Brief pause, then slide count down smoothly

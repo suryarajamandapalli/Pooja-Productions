@@ -127,7 +127,7 @@ export const Hero: React.FC = () => {
 
             {/* Marquee strip */}
             <div className="media__fullwidth">
-              <Marquee speed={20}>
+              <Marquee speed={45}>
 
                 {hero?.marqueeItems?.map((item, idx) => (
                   <div key={item.id} className={`item image image-${idx + 1}`} style={{ position: "relative", overflow: "hidden", borderRadius: "16px" }}>
