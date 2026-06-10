@@ -185,17 +185,17 @@ export const Portfolio: React.FC = () => {
                     </div>
                     {/* Portfolio Gallery End */}
 
-                    {/* External Portfolio Link Start */}
+                    {/* Contact Link Start */}
                     <div className="gallery__btn animate-in-up">
-                      <a href="https://www.imdb.com" target="_blank" rel="noopener noreferrer" className="btn btn-line-circle-icon">
-                        <span className="btn-caption">IMDb Profile</span>
+                      <a href="#contact" className="btn btn-line-circle-icon">
+                        <span className="btn-caption">Get In Touch</span>
                         <span className="circle hover-circle">
                           <em></em>
-                          <i className="ph ph-arrow-right"></i>
+                          <i className="ph ph-envelope-simple"></i>
                         </span>
                       </a>
                     </div>
-                    {/* External Portfolio Link End */}
+                    {/* Contact Link End */}
                   </div>
                 </div>
                 {/* Content Block - Portfolio Gallery Masonry Grid End */}

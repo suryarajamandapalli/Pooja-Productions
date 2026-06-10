@@ -301,7 +301,6 @@ export const Resume: React.FC = () => {
                 <ul className="socials-lines d-flex flex-column">
                   {[
                     { name: "Vimeo", url: "https://vimeo.com/" },
-                    { name: "IMDb", url: "https://www.imdb.com/" },
                     { name: "Instagram", url: "https://www.instagram.com/" },
                     { name: "YouTube", url: "https://www.youtube.com/" },
                     { name: "LinkedIn", url: "https://www.linkedin.com/" }
