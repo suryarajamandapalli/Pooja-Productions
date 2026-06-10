@@ -10,16 +10,31 @@ export const Contact: React.FC = () => {
 
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success">("idle");
   const [formData, setFormData] = useState({
-    name: "",
-    company: "",
-    email: "",
-    phone: "",
-    message: ""
+    firstName: "",
+    lastName: "",
+    mobileNumber: "",
+    emailId: "",
+    previousExperience: "",
+    swaTitle: "",
+    swaNumber: "",
+    swaDate: "",
+    workingTitle: "",
+    genre: "",
+    typeOfFilm: "",
+    logline: "",
+    synopsis: "",
+    agreeTerms: false,
+    agreeCopyright: false
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    if (type === "checkbox") {
+      const checked = (e.target as HTMLInputElement).checked;
+      setFormData((prev) => ({ ...prev, [name]: checked }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -30,11 +45,21 @@ export const Contact: React.FC = () => {
     setTimeout(() => {
       setSubmitStatus("idle");
       setFormData({
-        name: "",
-        company: "",
-        email: "",
-        phone: "",
-        message: ""
+        firstName: "",
+        lastName: "",
+        mobileNumber: "",
+        emailId: "",
+        previousExperience: "",
+        swaTitle: "",
+        swaNumber: "",
+        swaDate: "",
+        workingTitle: "",
+        genre: "",
+        typeOfFilm: "",
+        logline: "",
+        synopsis: "",
+        agreeTerms: false,
+        agreeCopyright: false
       });
     }, 5000);
   };
@@ -42,6 +67,25 @@ export const Contact: React.FC = () => {
   if (!about) {
     return null;
   }
+
+  const inputStyle = {
+    backgroundColor: "transparent",
+    border: "1px solid #4a4a52",
+    borderRadius: "6px",
+    color: "#fff",
+    padding: "12px 16px",
+    width: "100%",
+    fontSize: "14px",
+    marginTop: "8px"
+  };
+
+  const labelStyle = {
+    color: "#a0a0a5",
+    fontSize: "13px",
+    fontWeight: 500,
+    display: "block",
+    textAlign: "left" as const
+  };
 
   return (
     <section id="contact" className="inner contact inner-grid-bottom no-padding-bottom">
@@ -64,22 +108,40 @@ export const Contact: React.FC = () => {
             {/* Inner Section Content Start */}
             <div className="col-12 col-xl-8">
               <div className="inner__content">
-                {/* Content Block - H2 Section Title Start */}
-                <div className="content__block section-form-title">
-                  <div className="block__descr">
-                    <h2 className="reveal-type animate-in-up">
-                      <SplitText text="Pitch Your Vision" />
-                    </h2>
-                    <p className="h2__text text-twothirds type-basic-160lh animate-in-up">
-                      Have a screenplay, co-production proposal, or distribution inquiry? Reach out to our team at Pooja Productions and let's craft something unforgettable.
-                    </p>
-                  </div>
-                </div>
-                {/* Content Block - H2 Section Title End */}
-
                 {/* Content Block - Contact Form Start */}
                 <div className="content__block grid-block pre-grid-items">
-                  <div className="form-container">
+                  <div className="form-container" style={{ 
+                    backgroundColor: "#1e1e24", 
+                    padding: "40px", 
+                    borderRadius: "16px", 
+                    border: "1px solid #333", 
+                    maxWidth: "800px", 
+                    margin: "0 auto",
+                    fontFamily: "'Urbanist', sans-serif"
+                  }}>
+                    <div className="text-center mb-5 animate-in-up" style={{ position: "relative" }}>
+                      <h3 style={{ 
+                        textTransform: "uppercase", 
+                        fontWeight: "800", 
+                        fontSize: "24px",
+                        letterSpacing: "1px",
+                        display: "inline-block",
+                        position: "relative",
+                        zIndex: 1
+                      }}>
+                        STORY PITCH
+                        <span style={{ 
+                          position: "absolute", 
+                          bottom: "6px", 
+                          left: "0", 
+                          width: "100%", 
+                          height: "4px", 
+                          backgroundColor: "#d32f2f",
+                          zIndex: -1
+                        }}></span>
+                      </h3>
+                    </div>
+
                     {/* Reply Messages Start */}
                     <div className={`form__reply centered text-center ${submitStatus === "success" ? "is-visible" : ""}`}>
                       <i className="ph-thin ph-smiley reply__icon"></i>
@@ -95,58 +157,211 @@ export const Contact: React.FC = () => {
                       onSubmit={handleSubmit}
                     >
                       <div className="container-fluid p-0">
-                        <div className="row gx-0">
+                        <div className="row g-4">
                           <div className="col-12 col-md-6 form__item animate-in-up">
+                            <label style={labelStyle}>First Name</label>
                             <input
                               type="text"
-                              name="name"
-                              placeholder="Name / Studio*"
-                              value={formData.name}
+                              name="firstName"
+                              placeholder="Enter your first name"
+                              value={formData.firstName}
                               onChange={handleChange}
+                              style={inputStyle}
                               required
                             />
                           </div>
                           <div className="col-12 col-md-6 form__item animate-in-up">
+                            <label style={labelStyle}>Last Name</label>
                             <input
                               type="text"
-                              name="company"
-                              placeholder="Production Company / Agency"
-                              value={formData.company}
+                              name="lastName"
+                              placeholder="Enter your last name"
+                              value={formData.lastName}
                               onChange={handleChange}
-                            />
-                          </div>
-                          <div className="col-12 col-md-6 form__item animate-in-up">
-                            <input
-                              type="email"
-                              name="email"
-                              placeholder="Email Address*"
-                              value={formData.email}
-                              onChange={handleChange}
+                              style={inputStyle}
                               required
                             />
                           </div>
                           <div className="col-12 col-md-6 form__item animate-in-up">
+                            <label style={labelStyle}>Mobile Number</label>
                             <input
                               type="tel"
-                              name="phone"
-                              placeholder="Contact Number"
-                              value={formData.phone}
+                              name="mobileNumber"
+                              placeholder="Enter your mobile number"
+                              value={formData.mobileNumber}
                               onChange={handleChange}
+                              style={inputStyle}
+                              required
+                            />
+                          </div>
+                          <div className="col-12 col-md-6 form__item animate-in-up">
+                            <label style={labelStyle}>Email Id</label>
+                            <input
+                              type="email"
+                              name="emailId"
+                              placeholder="Enter your Email id"
+                              value={formData.emailId}
+                              onChange={handleChange}
+                              style={inputStyle}
+                              required
                             />
                           </div>
                           <div className="col-12 form__item animate-in-up">
-                            <textarea
-                              name="message"
-                              placeholder="Tell us about your project or pitch (Logline, Genre, Budget)*"
-                              value={formData.message}
+                            <label style={labelStyle}>Previous Experience ( If any )</label>
+                            <input
+                              type="text"
+                              name="previousExperience"
+                              placeholder="Project1 (Title - Duration)"
+                              value={formData.previousExperience}
                               onChange={handleChange}
+                              style={inputStyle}
+                            />
+                          </div>
+                          <div className="col-12 form__item animate-in-up">
+                            <label style={labelStyle}>SWA Registered Title</label>
+                            <input
+                              type="text"
+                              name="swaTitle"
+                              placeholder="Enter SWA Registered Title"
+                              value={formData.swaTitle}
+                              onChange={handleChange}
+                              style={inputStyle}
+                            />
+                          </div>
+                          <div className="col-12 col-md-6 form__item animate-in-up">
+                            <label style={labelStyle}>SWA Registration Number</label>
+                            <input
+                              type="text"
+                              name="swaNumber"
+                              placeholder="Enter Registration Number"
+                              value={formData.swaNumber}
+                              onChange={handleChange}
+                              style={inputStyle}
+                            />
+                          </div>
+                          <div className="col-12 col-md-6 form__item animate-in-up">
+                            <label style={labelStyle}>SWA Registration Date</label>
+                            <input
+                              type="date"
+                              name="swaDate"
+                              value={formData.swaDate}
+                              onChange={handleChange}
+                              style={{...inputStyle, color: formData.swaDate ? "#fff" : "#888", WebkitAppearance: "none"}}
+                            />
+                          </div>
+                          <div className="col-12 form__item animate-in-up">
+                            <label style={labelStyle}>Story Working Title</label>
+                            <input
+                              type="text"
+                              name="workingTitle"
+                              placeholder="Enter story working title"
+                              value={formData.workingTitle}
+                              onChange={handleChange}
+                              style={inputStyle}
+                              required
+                            />
+                          </div>
+                          <div className="col-12 col-md-6 form__item animate-in-up">
+                            <label style={labelStyle}>Genre</label>
+                            <select
+                              name="genre"
+                              value={formData.genre}
+                              onChange={handleChange}
+                              style={{...inputStyle, WebkitAppearance: "none", backgroundImage: "url('data:image/svg+xml;utf8,<svg fill=%22%23fff%22 height=%2224%22 viewBox=%220 0 24 24%22 width=%2224%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M7 10l5 5 5-5z%22/><path d=%22M0 0h24v24H0z%22 fill=%22none%22/></svg>')", backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center", paddingRight: "30px"}}
+                            >
+                              <option value="" disabled hidden>Select Genre</option>
+                              <option value="action">Action</option>
+                              <option value="drama">Drama</option>
+                              <option value="thriller">Thriller</option>
+                              <option value="comedy">Comedy</option>
+                              <option value="scifi">Sci-Fi</option>
+                              <option value="other">Other</option>
+                            </select>
+                          </div>
+                          <div className="col-12 col-md-6 form__item animate-in-up">
+                            <label style={labelStyle}>Type of Film</label>
+                            <select
+                              name="typeOfFilm"
+                              value={formData.typeOfFilm}
+                              onChange={handleChange}
+                              style={{...inputStyle, WebkitAppearance: "none", backgroundImage: "url('data:image/svg+xml;utf8,<svg fill=%22%23fff%22 height=%2224%22 viewBox=%220 0 24 24%22 width=%2224%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M7 10l5 5 5-5z%22/><path d=%22M0 0h24v24H0z%22 fill=%22none%22/></svg>')", backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center", paddingRight: "30px"}}
+                            >
+                              <option value="" disabled hidden>Type of Film</option>
+                              <option value="feature">Feature Film</option>
+                              <option value="short">Short Film</option>
+                              <option value="series">Web Series</option>
+                              <option value="documentary">Documentary</option>
+                            </select>
+                          </div>
+                          <div className="col-12 form__item animate-in-up">
+                            <label style={labelStyle}>Story Logline</label>
+                            <input
+                              type="text"
+                              name="logline"
+                              placeholder="Enter Story Logline"
+                              value={formData.logline}
+                              onChange={handleChange}
+                              style={inputStyle}
+                              required
+                            />
+                          </div>
+                          <div className="col-12 form__item animate-in-up">
+                            <label style={labelStyle}>Story Synopsis / Purpose of Collaboration</label>
+                            <textarea
+                              name="synopsis"
+                              placeholder="Write story synopsis"
+                              value={formData.synopsis}
+                              onChange={handleChange}
+                              style={{...inputStyle, minHeight: "150px", resize: "vertical"}}
                               required
                             ></textarea>
                           </div>
-                          <div className="col-12 form__item animate-in-up">
-                            <button className="btn btn-default hover-default" type="submit">
-                              <em></em>
-                              <span className="btn-caption">Submit Pitch</span>
+
+                          <div className="col-12 form__item animate-in-up" style={{ marginTop: "30px", marginBottom: "15px" }}>
+                            <label style={{ display: "flex", alignItems: "flex-start", gap: "12px", cursor: "pointer" }}>
+                              <input 
+                                type="checkbox" 
+                                name="agreeTerms"
+                                checked={formData.agreeTerms}
+                                onChange={handleChange}
+                                style={{ marginTop: "4px" }}
+                                required
+                              />
+                              <span style={{ fontSize: "12px", color: "#fff", lineHeight: "1.5" }}>
+                                I hereby acknowledge that I have read, understood, and agree to the <span style={{ color: "#d32f2f", cursor: "pointer" }}>Terms & Conditions</span> and <span style={{ color: "#d32f2f", cursor: "pointer" }}>Privacy Policy</span>.
+                              </span>
+                            </label>
+                          </div>
+                          <div className="col-12 form__item animate-in-up" style={{ marginBottom: "30px" }}>
+                            <label style={{ display: "flex", alignItems: "flex-start", gap: "12px", cursor: "pointer" }}>
+                              <input 
+                                type="checkbox" 
+                                name="agreeCopyright"
+                                checked={formData.agreeCopyright}
+                                onChange={handleChange}
+                                style={{ marginTop: "4px" }}
+                                required
+                              />
+                              <span style={{ fontSize: "12px", color: "#fff", lineHeight: "1.5" }}>
+                                I hereby declare that Pooja Productions is not responsible for any copyrights.
+                              </span>
+                            </label>
+                          </div>
+
+                          <div className="col-12 form__item animate-in-up" style={{ textAlign: "center" }}>
+                            <button type="submit" style={{
+                              backgroundColor: "#d32f2f",
+                              color: "#fff",
+                              border: "none",
+                              padding: "12px 32px",
+                              fontSize: "14px",
+                              fontWeight: "bold",
+                              borderRadius: "4px",
+                              cursor: "pointer",
+                              textTransform: "uppercase",
+                              transition: "background-color 0.3s"
+                            }}>
+                              SUBMIT NOW
                             </button>
                           </div>
                         </div>

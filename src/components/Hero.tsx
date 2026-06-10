@@ -13,6 +13,7 @@ export const Hero: React.FC = () => {
   return (
     <section id="home" className="main home">
 
+
       {/* ══════════════════════════════════════════════════════
           MAIN INTRO  — exact Blayden class structure
           Images positioned by CSS (.intro-bg-01__01 / __02)

@@ -88,50 +88,60 @@ const MainAppContent: React.FC = () => {
       },
     });
 
-    // 3. Scroll Reveal type animations (.reveal-type)
-    const revealTypes = document.querySelectorAll(".reveal-type");
-    revealTypes.forEach((el) => {
-      const chars = el.querySelectorAll(".char");
-      if (chars.length > 0) {
+    // 3 & 4. Deferred ScrollTriggers for elements below Hero
+    // We delay this to ensure CinematicSequence pin spacer is fully resolved in the DOM
+    const initScrollTriggers = () => {
+      // 3. Scroll Reveal type animations (.reveal-type)
+      const revealTypes = document.querySelectorAll(".reveal-type");
+      revealTypes.forEach((el) => {
+        const chars = el.querySelectorAll(".char");
+        if (chars.length > 0) {
+          gsap.fromTo(
+            chars,
+            { opacity: 0.15, filter: "blur(5px)" },
+            {
+              opacity: 1,
+              filter: "blur(0px)",
+              stagger: 0.08,
+              scrollTrigger: {
+                trigger: el,
+                start: "top 85%",
+                end: "top 25%",
+                scrub: true,
+              },
+            }
+          );
+        }
+      });
+  
+      // 4. Scroll Animations (animate-in-up) — blur + slide-up on entering viewport
+      const animateInUp = document.querySelectorAll(".animate-in-up");
+      animateInUp.forEach((element) => {
         gsap.fromTo(
-          chars,
-          { opacity: 0.15, filter: "blur(5px)" },
+          element,
+          { opacity: 0, y: 60, filter: "blur(10px)" },
           {
+            y: 0,
             opacity: 1,
             filter: "blur(0px)",
-            stagger: 0.08,
+            duration: 1.4,
+            ease: "expo.out",
             scrollTrigger: {
-              trigger: el,
-              start: "top 85%",
-              end: "top 25%",
-              scrub: true,
+              trigger: element,
+              start: "top 90%",
+              end: "top 50%",
+              toggleActions: "play none none reverse",
             },
           }
         );
-      }
-    });
+      });
 
-    // 4. Scroll Animations (animate-in-up) — blur + slide-up on entering viewport
-    const animateInUp = document.querySelectorAll(".animate-in-up");
-    animateInUp.forEach((element) => {
-      gsap.fromTo(
-        element,
-        { opacity: 0, y: 60, filter: "blur(10px)" },
-        {
-          y: 0,
-          opacity: 1,
-          filter: "blur(0px)",
-          duration: 1.4,
-          ease: "expo.out",
-          scrollTrigger: {
-            trigger: element,
-            start: "top 90%",
-            end: "top 50%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
-    });
+      // Force GSAP to recalculate everything one final time
+      ScrollTrigger.refresh();
+    };
+
+    // Run after 300ms to guarantee all images and pins are in place
+    const triggerTimeout = setTimeout(initScrollTriggers, 300);
 
 
     // 5. Grid Card Batch Animations
@@ -282,10 +292,10 @@ const MainAppContent: React.FC = () => {
     });
 
     return () => {
+      clearTimeout(triggerTimeout);
       lenis.destroy();
-      gsap.ticker.remove((time) => {
-        lenis.raf(time * 1000);
-      });
+      gsap.ticker.remove(lenis.raf);
+      ScrollTrigger.getAll().forEach((t) => t.kill());
       document.removeEventListener("click", handleGlobalClick);
       document.querySelectorAll("img, a").forEach((el) => {
         el.removeEventListener("dragstart", handleDragStart);
