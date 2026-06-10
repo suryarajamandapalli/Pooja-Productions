@@ -21,26 +21,18 @@ export const Hero: React.FC = () => {
           ══════════════════════════════════════════════════════ */}
       <div className="main__intro">
 
-        {/* Background video and diamonds */}
-        <div className="intro__background intro-bg-01" style={{ position: "absolute", width: "100%", height: "100%", top: 0, left: 0, overflow: "hidden", zIndex: 0 }}>
-          <video 
-            src="img/backgrounds/introl_video_1.mp4" 
-            autoPlay 
-            loop 
-            muted 
-            playsInline
-            style={{ 
-              position: "absolute",
-              width: "100%", 
-              height: "100%", 
-              objectFit: "cover", 
-              top: 0,
-              left: 0,
-              zIndex: 1
-            }} 
-          />
-
-          {/* Diamonds moved to the next section */}
+        {/* Background images — CSS classes handle positioning & z-index */}
+        <div className="intro__background intro-bg-01">
+          {/* Left image — film reel, peeking from left edge */}
+          <div className="intro-bg-01__01" data-speed="0.6">
+            <img src="img/backgrounds/gold_diamond1.png" alt="Gold Diamond Background" />
+            <div className="intro-bg__shadow" />
+          </div>
+          {/* Right image — cameraman, large on right */}
+          <div className="intro-bg-01__02" data-speed="0.8">
+            <img src="img/backgrounds/gold_diamond2.png" alt="Gold Diamond Background" />
+            <div className="intro-bg__shadow" />
+          </div>
         </div>
 
         {/* Content grid — exact Blayden column structure */}
@@ -93,21 +85,8 @@ export const Hero: React.FC = () => {
             • reveal-type    → character-by-character reveal
             • SplitText      → splits blockquote into .char spans
           ══════════════════════════════════════════════════════ */}
-      <div className="main__media media-grid-bottom" style={{ position: "relative" }}>
-        
-        {/* Background Diamonds Floating Behind the Content */}
-        <div style={{ position: "absolute", width: "100%", height: "100%", top: 0, left: 0, overflow: "hidden", zIndex: 0, pointerEvents: "none" }}>
-          {/* Left Diamond */}
-          <div className="intro-bg-01__01" data-speed="0.6" style={{ position: "absolute", top: "0%", left: "-15%", zIndex: 1, opacity: 0.9 }}>
-            <img src="img/backgrounds/gold_diamond1.png" alt="Gold Diamond Background" style={{ mixBlendMode: "screen", width: "900px" }} />
-          </div>
-          {/* Right Diamond */}
-          <div className="intro-bg-01__02" data-speed="0.8" style={{ position: "absolute", bottom: "10%", right: "-15%", zIndex: 1, opacity: 0.9 }}>
-            <img src="img/backgrounds/gold_diamond2.png" alt="Gold Diamond Background" style={{ mixBlendMode: "screen", width: "900px" }} />
-          </div>
-        </div>
-
-        <div className="container-fluid p-0" style={{ position: "relative", zIndex: 2 }}>
+      <div className="main__media media-grid-bottom">
+        <div className="container-fluid p-0">
           <div className="row g-0">
 
             <div className="col-12 col-xl-2" />
@@ -118,24 +97,11 @@ export const Hero: React.FC = () => {
               <div className="content__block">
                 <div className="container-fluid p-0">
                   <div className="row g-0">
-                    <div className="col-12 col-md-8 ms-auto">
-                      <div className="divider divider-video animate-in-up" style={{ position: "relative", width: "100%", paddingBottom: "56.25%", borderRadius: "var(--_radius-m)", overflow: "hidden", marginTop: "4rem" }}>
-                        <video 
-                          src="img/backgrounds/bg_video_1.mp4"
-                          autoPlay 
-                          loop 
-                          muted 
-                          playsInline
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover"
-                          }}
-                        />
-                      </div>
+                    <div className="col-12">
+                      <div
+                        className="divider divider-image main-image-1 animate-in-up"
+                        style={hero?.heroImageUrl ? { backgroundImage: `url(${hero.heroImageUrl})` } : undefined}
+                      />
                     </div>
                   </div>
                 </div>
