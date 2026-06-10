@@ -125,7 +125,7 @@ export const CinematicSequence: React.FC = () => {
         width: "100%", 
         height: "100vh", 
         overflow: "hidden",
-        backgroundColor: "#000",
+        backgroundColor: "#141414",
         zIndex: 5 // sits below sticky header but above background
       }}
     >
@@ -140,11 +140,11 @@ export const CinematicSequence: React.FC = () => {
           zIndex: 0
         }} 
       />
-      {/* Dark overlay to make it blend with the site */}
+      {/* Dark overlay to blend top/bottom with the site */}
       <div style={{
         position: "absolute",
         top: 0, left: 0, width: "100%", height: "100%",
-        background: "linear-gradient(to bottom, rgba(10,10,10,1) 0%, rgba(10,10,10,0) 20%, rgba(10,10,10,0) 80%, rgba(10,10,10,1) 100%)",
+        background: "linear-gradient(to bottom, #141414 0%, rgba(20,20,20,0) 18%, rgba(20,20,20,0) 70%, rgba(20,20,20,0.6) 85%, #141414 100%)",
         pointerEvents: "none",
         zIndex: 1
       }}></div>

@@ -24,7 +24,14 @@ export const Services: React.FC = () => {
 
     const initCards = () => {
       animation.clear();
-      cardHeight = cards[0].offsetHeight;
+      let h = cards[0].offsetHeight;
+      if (h <= 0) {
+        if (window.innerWidth >= 1600) h = 700;
+        else if (window.innerWidth >= 1400) h = 600;
+        else if (window.innerWidth >= 768) h = 500;
+        else h = window.innerHeight * 0.65;
+      }
+      cardHeight = h;
       cards.forEach((card, index) => {
         if (index > 0) {
           gsap.set(card, { y: index * cardHeight });
@@ -81,7 +88,7 @@ export const Services: React.FC = () => {
                 {/* Content Block - H2 Section Title Start */}
                 <div className="content__block pre-stack-text-block">
                   <div className="block__descr">
-                    <h2 className="reveal-type animate-in-up">
+                    <h2 className="reveal-type">
                       <SplitText text="Our Production" />
                       <br />
                       <SplitText text="Pillars" />
@@ -102,7 +109,7 @@ export const Services: React.FC = () => {
                         const imageS = card.imgS.startsWith("http") || card.imgS.startsWith("/") ? card.imgS : `/${card.imgS}`;
                         const imageM = card.imgM.startsWith("http") || card.imgM.startsWith("/") ? card.imgM : `/${card.imgM}`;
                         return (
-                          <div className="stack-item" key={index}>
+                          <div className="stack-item" key={index} style={{ zIndex: index + 1 }}>
                             <div className="services-stack__inner">
                               <div className="services-stack__title">
                                 <h3>{card.title}</h3>

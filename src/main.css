@@ -83,10 +83,10 @@
   --t-opp-muted--light: #3E4045;
   --neutral-bright--light: #000000;
   /* dark color scheme (Obsidian/Gold Mode) */
-  --base--dark: #000000;
-  --base-rgb--dark: 0,0,0;
-  --base-shade--dark: #000000;
-  --base-tint--dark: #121212;
+  --base--dark: #141414;
+  --base-rgb--dark: 20,20,20;
+  --base-shade--dark: #101010;
+  --base-tint--dark: #1e1e1e;
   --stroke-controls--dark: #C5A880;
   --stroke-elements--dark: #262626;
   --font-weight-base--dark: 300;
@@ -2450,6 +2450,7 @@ form textarea:required:valid {
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 1;
 }
 .intro__background.intro-bg-01 img, .intro__background.intro-bg-02 img {
   display: block;
@@ -2482,87 +2483,87 @@ form textarea:required:valid {
 }
 
 .intro-bg-01__01 {
-  top: -160px;
-  right: -100px;
-  width: 320px;
-  height: 320px;
+  top: -130px;
+  right: -80px;
+  width: 260px;
+  height: 260px;
 }
 @media only screen and (min-width: 768px) {
   .intro-bg-01__01 {
-    top: -320px;
+    top: -260px;
     right: -20px;
-    width: 500px;
-    height: 500px;
+    width: 400px;
+    height: 400px;
   }
 }
 @media only screen and (min-width: 992px) {
   .intro-bg-01__01 {
-    top: -280px;
+    top: -220px;
   }
 }
 @media only screen and (min-width: 1200px) {
   .intro-bg-01__01 {
-    top: -160px;
-    right: -80px;
-    width: 660px;
-    height: 660px;
+    top: -120px;
+    right: -60px;
+    width: 530px;
+    height: 530px;
   }
 }
 @media only screen and (min-width: 1400px) {
   .intro-bg-01__01 {
-    top: -200px;
+    top: -160px;
     right: 0;
-    width: 770px;
-    height: 770px;
+    width: 620px;
+    height: 620px;
   }
 }
 @media only screen and (min-width: 1600px) {
   .intro-bg-01__01 {
-    top: -300px;
+    top: -240px;
     right: 0;
-    width: 860px;
-    height: 860px;
+    width: 690px;
+    height: 690px;
   }
 }
 
 .intro-bg-01__02 {
-  bottom: -80px;
+  bottom: -60px;
   left: auto;
   right: 0;
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
 }
 @media only screen and (min-width: 768px) {
   .intro-bg-01__02 {
-    bottom: -120px;
+    bottom: -90px;
     left: auto;
     right: 0;
-    width: 240px;
-    height: 240px;
+    width: 190px;
+    height: 190px;
   }
 }
 @media only screen and (min-width: 1200px) {
   .intro-bg-01__02 {
-    bottom: -40px;
-    left: -96px;
-    width: 300px;
-    height: 300px;
+    bottom: -30px;
+    left: -76px;
+    width: 240px;
+    height: 240px;
   }
 }
 @media only screen and (min-width: 1400px) {
   .intro-bg-01__02 {
     bottom: -10px;
-    left: -86px;
-    width: 360px;
-    height: 360px;
+    left: -68px;
+    width: 290px;
+    height: 290px;
   }
 }
 @media only screen and (min-width: 1600px) {
   .intro-bg-01__02 {
-    bottom: -60px;
-    left: -175px;
-    width: 500px;
-    height: 500px;
+    bottom: -45px;
+    left: -140px;
+    width: 400px;
+    height: 400px;
   }
 }
 
@@ -2781,6 +2782,7 @@ form textarea:required:valid {
   position: relative;
   padding: 0 2rem;
   margin-top: 11.2rem;
+  z-index: 2;
 }
 .headline.headline-95-desktop, .headline.headline-centered {
   margin-top: 9.5rem;
@@ -3982,11 +3984,10 @@ form textarea:required:valid {
   width: auto;
   z-index: 11;
   -moz-border-radius: var(--_radius-s);
-  border-radius: var(--_radius-s);
-  background-color: rgba(var(--base-rgb), 0.75) !important;
-  border: 1px solid var(--stroke-elements) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  backdrop-filter: blur(12px) !important;
+       border-radius: var(--_radius-s);
+  background-color: rgba(0, 0, 0, 0.03);
+  -webkit-backdrop-filter: blur(6px);
+          backdrop-filter: blur(6px);
 }
 @media only screen and (min-width: 768px) {
   .header {
@@ -3999,12 +4000,10 @@ form textarea:required:valid {
     position: fixed;
     top: 3rem;
     bottom: auto;
-    left: 13.5rem !important;
-    background-color: rgba(var(--base-rgb), 0.75) !important;
-    border: 1px solid var(--stroke-elements) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    backdrop-filter: blur(12px) !important;
-    z-index: 99;
+    left: -moz-calc(16.66666667% + 3rem);
+    left: calc(16.66666667% + 3rem);
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 9;
   }
 }
 @media only screen and (min-width: 1400px) {
@@ -4012,8 +4011,8 @@ form textarea:required:valid {
     position: fixed;
     top: 3rem;
     bottom: auto;
-    left: 14.5rem !important;
-    z-index: 99;
+    left: -moz-calc(16.66666667% + 2.5rem);
+    left: calc(16.66666667% + 2.5rem);
   }
 }
 
@@ -5873,6 +5872,7 @@ form textarea:required:valid {
     left: 0;
     max-width: 60%;
     margin-bottom: 0;
+    z-index: 2;
   }
 }
 @media only screen and (min-width: 1400px) {
@@ -5900,6 +5900,7 @@ form textarea:required:valid {
     max-width: 46%;
     margin-bottom: 0;
     padding: 2.6rem 3rem;
+    z-index: 2;
   }
 }
 @media only screen and (min-width: 1400px) {
@@ -5938,6 +5939,7 @@ form textarea:required:valid {
     width: 48%;
     height: 100%;
     padding-left: 0;
+    z-index: 1;
   }
   .services-stack__image .service-img {
     position: absolute;
@@ -7009,4 +7011,23 @@ body::after {
 .btn-default:hover em {
   box-shadow: 0 0 30px rgba(197, 168, 128, 0.4);
   filter: blur(2px);
+}
+
+/* 5. Custom About Grid Images */
+.about-grid-large {
+  height: 300px;
+}
+@media only screen and (min-width: 768px) {
+  .about-grid-large {
+    height: 380px;
+  }
+}
+
+.about-grid-small {
+  height: 200px;
+}
+@media only screen and (min-width: 768px) {
+  .about-grid-small {
+    height: 260px;
+  }
 }

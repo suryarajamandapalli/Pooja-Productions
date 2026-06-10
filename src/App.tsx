@@ -11,21 +11,22 @@ import { AdminDashboard } from "./components/AdminDashboard";
 import { Loader } from "./components/Loader";
 import { Header } from "./components/Header";
 import { Logo } from "./components/Logo";
-import { ColorSwitcher } from "./components/ColorSwitcher";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { BottomBackground } from "./components/BottomBackground";
 import { Hero } from "./components/Hero";
 import { Portfolio } from "./components/Portfolio";
-import { About } from "./components/About";
+import { About, Studio } from "./components/About";
 import { Services } from "./components/Services";
 import { Resume } from "./components/Resume";
 import { Contact } from "./components/Contact";
+import { WelcomePopup } from "./components/WelcomePopup";
+import { Team } from "./components/Team";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const MainAppContent: React.FC = () => {
-  const { isAdmin, loading } = useCMS();
+  const { isAdmin, loading, logout } = useCMS();
   const [view, setView] = useState<"site" | "admin">(() => {
     if (typeof window !== "undefined") {
       if (window.location.pathname === "/admin" || window.location.hash === "#admin") {
@@ -40,6 +41,7 @@ const MainAppContent: React.FC = () => {
       if (window.location.pathname === "/admin" || window.location.hash === "#admin") {
         setView("admin");
       } else {
+        logout();
         setView("site");
       }
     };
@@ -49,9 +51,10 @@ const MainAppContent: React.FC = () => {
       window.removeEventListener("popstate", handlePopState);
       window.removeEventListener("hashchange", handlePopState);
     };
-  }, []);
+  }, [logout]);
 
   const navigateToSite = () => {
+    logout();
     window.history.pushState(null, "", "/");
     setView("site");
   };
@@ -73,12 +76,7 @@ const MainAppContent: React.FC = () => {
 
     // 2. Parallax effects ([data-speed])
     gsap.to("[data-speed]", {
-      y: (_, el) => {
-        const speed = parseFloat(el.getAttribute("data-speed") || "1");
-        // Limit the maximum scroll multiplier so massive pinned sections don't throw elements off-screen
-        const effectiveMaxScroll = Math.min(ScrollTrigger.maxScroll(window), 4000);
-        return (1 - speed) * effectiveMaxScroll;
-      },
+      y: (_, el) => (1 - parseFloat(el.getAttribute("data-speed") || "1")) * ScrollTrigger.maxScroll(window),
       ease: "none",
       scrollTrigger: {
         start: 0,
@@ -92,45 +90,46 @@ const MainAppContent: React.FC = () => {
     // We delay this to ensure CinematicSequence pin spacer is fully resolved in the DOM
     const initScrollTriggers = () => {
       // 3. Scroll Reveal type animations (.reveal-type)
+      // Using opacity + y only (no blur) for smooth GPU-composited performance
       const revealTypes = document.querySelectorAll(".reveal-type");
       revealTypes.forEach((el) => {
         const chars = el.querySelectorAll(".char");
         if (chars.length > 0) {
           gsap.fromTo(
             chars,
-            { opacity: 0.15, filter: "blur(5px)" },
+            { opacity: 0.1, y: 12 },
             {
               opacity: 1,
-              filter: "blur(0px)",
-              stagger: 0.08,
+              y: 0,
+              stagger: 0.04,
+              ease: "power2.out",
               scrollTrigger: {
                 trigger: el,
-                start: "top 85%",
-                end: "top 25%",
-                scrub: true,
+                start: "top 88%",
+                end: "top 30%",
+                scrub: 0.6,
               },
             }
           );
         }
       });
   
-      // 4. Scroll Animations (animate-in-up) — blur + slide-up on entering viewport
+      // 4. Scroll Animations (animate-in-up) — opacity + slide-up only (no blur for performance)
       const animateInUp = document.querySelectorAll(".animate-in-up");
       animateInUp.forEach((element) => {
         gsap.fromTo(
           element,
-          { opacity: 0, y: 60, filter: "blur(10px)" },
+          { opacity: 0, y: 50 },
           {
             y: 0,
             opacity: 1,
-            filter: "blur(0px)",
-            duration: 1.4,
-            ease: "expo.out",
+            duration: 1.0,
+            ease: "power3.out",
             scrollTrigger: {
               trigger: element,
-              start: "top 90%",
-              end: "top 50%",
-              toggleActions: "play none none reverse",
+              start: "top 92%",
+              end: "top 60%",
+              toggleActions: "play none none none",
             },
           }
         );
@@ -147,7 +146,7 @@ const MainAppContent: React.FC = () => {
     // 5. Grid Card Batch Animations
     // Grid 2x
     if (document.querySelector(".animate-card-2")) {
-      gsap.set(".animate-card-2", { y: 100, opacity: 0, filter: "blur(12px)" });
+      gsap.set(".animate-card-2", { y: 60, opacity: 0 });
       ScrollTrigger.batch(".animate-card-2", {
         interval: 0.1,
         batchMax: 2,
@@ -156,21 +155,20 @@ const MainAppContent: React.FC = () => {
           gsap.to(batch, {
             opacity: 1,
             y: 0,
-            filter: "blur(0px)",
-            ease: "sine.out",
+            ease: "power3.out",
             stagger: { each: 0.15, grid: [1, 2] },
             overwrite: true,
           }),
-        onLeave: (batch: any) => gsap.set(batch, { opacity: 1, y: 0, filter: "blur(0px)", overwrite: true }),
-        onEnterBack: (batch: any) => gsap.to(batch, { opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.15, overwrite: true }),
-        onLeaveBack: (batch: any) => gsap.set(batch, { opacity: 0, y: 100, filter: "blur(12px)", overwrite: true }),
+        onLeave: (batch: any) => gsap.set(batch, { opacity: 1, y: 0, overwrite: true }),
+        onEnterBack: (batch: any) => gsap.to(batch, { opacity: 1, y: 0, stagger: 0.15, overwrite: true }),
+        onLeaveBack: (batch: any) => gsap.set(batch, { opacity: 0, y: 60, overwrite: true }),
       } as any);
-      ScrollTrigger.addEventListener("refreshInit", () => gsap.set(".animate-card-2", { y: 0, opacity: 1, filter: "blur(0px)" }));
+      ScrollTrigger.addEventListener("refreshInit", () => gsap.set(".animate-card-2", { y: 0, opacity: 1 }));
     }
 
     // Grid 3x
     if (document.querySelector(".animate-card-3")) {
-      gsap.set(".animate-card-3", { y: 50, opacity: 0, filter: "blur(12px)" });
+      gsap.set(".animate-card-3", { y: 50, opacity: 0 });
       ScrollTrigger.batch(".animate-card-3", {
         interval: 0.1,
         batchMax: 3,
@@ -179,21 +177,20 @@ const MainAppContent: React.FC = () => {
           gsap.to(batch, {
             opacity: 1,
             y: 0,
-            filter: "blur(0px)",
-            ease: "sine.out",
+            ease: "power3.out",
             stagger: { each: 0.15, grid: [1, 3] },
             overwrite: true,
           }),
-        onLeave: (batch: any) => gsap.set(batch, { opacity: 1, y: 0, filter: "blur(0px)", overwrite: true }),
-        onEnterBack: (batch: any) => gsap.to(batch, { opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.15, overwrite: true }),
-        onLeaveBack: (batch: any) => gsap.set(batch, { opacity: 0, y: 50, filter: "blur(12px)", overwrite: true }),
+        onLeave: (batch: any) => gsap.set(batch, { opacity: 1, y: 0, overwrite: true }),
+        onEnterBack: (batch: any) => gsap.to(batch, { opacity: 1, y: 0, stagger: 0.15, overwrite: true }),
+        onLeaveBack: (batch: any) => gsap.set(batch, { opacity: 0, y: 50, overwrite: true }),
       } as any);
-      ScrollTrigger.addEventListener("refreshInit", () => gsap.set(".animate-card-3", { y: 0, opacity: 1, filter: "blur(0px)" }));
+      ScrollTrigger.addEventListener("refreshInit", () => gsap.set(".animate-card-3", { y: 0, opacity: 1 }));
     }
 
     // Grid 4x
     if (document.querySelector(".animate-card-4")) {
-      gsap.set(".animate-card-4", { y: 50, opacity: 0, filter: "blur(12px)" });
+      gsap.set(".animate-card-4", { y: 50, opacity: 0 });
       ScrollTrigger.batch(".animate-card-4", {
         interval: 0.1,
         batchMax: 4,
@@ -202,21 +199,20 @@ const MainAppContent: React.FC = () => {
           gsap.to(batch, {
             opacity: 1,
             y: 0,
-            filter: "blur(0px)",
-            ease: "sine.out",
+            ease: "power3.out",
             stagger: { each: 0.15, grid: [1, 4] },
             overwrite: true,
           }),
-        onLeave: (batch: any) => gsap.set(batch, { opacity: 1, y: 0, filter: "blur(0px)", overwrite: true }),
-        onEnterBack: (batch: any) => gsap.to(batch, { opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.15, overwrite: true }),
-        onLeaveBack: (batch: any) => gsap.set(batch, { opacity: 0, y: 50, filter: "blur(12px)", overwrite: true }),
+        onLeave: (batch: any) => gsap.set(batch, { opacity: 1, y: 0, overwrite: true }),
+        onEnterBack: (batch: any) => gsap.to(batch, { opacity: 1, y: 0, stagger: 0.15, overwrite: true }),
+        onLeaveBack: (batch: any) => gsap.set(batch, { opacity: 0, y: 50, overwrite: true }),
       } as any);
-      ScrollTrigger.addEventListener("refreshInit", () => gsap.set(".animate-card-4", { y: 0, opacity: 1, filter: "blur(0px)" }));
+      ScrollTrigger.addEventListener("refreshInit", () => gsap.set(".animate-card-4", { y: 0, opacity: 1 }));
     }
 
     // Grid 5x
     if (document.querySelector(".animate-card-5")) {
-      gsap.set(".animate-card-5", { y: 50, opacity: 0, filter: "blur(12px)" });
+      gsap.set(".animate-card-5", { y: 50, opacity: 0 });
       ScrollTrigger.batch(".animate-card-5", {
         interval: 0.1,
         batchMax: 5,
@@ -225,16 +221,15 @@ const MainAppContent: React.FC = () => {
           gsap.to(batch, {
             opacity: 1,
             y: 0,
-            filter: "blur(0px)",
-            ease: "sine.out",
+            ease: "power3.out",
             stagger: { each: 0.15, grid: [1, 5] },
             overwrite: true,
           }),
-        onLeave: (batch: any) => gsap.set(batch, { opacity: 1, y: 0, filter: "blur(0px)", overwrite: true }),
-        onEnterBack: (batch: any) => gsap.to(batch, { opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.15, overwrite: true }),
-        onLeaveBack: (batch: any) => gsap.set(batch, { opacity: 0, y: 50, filter: "blur(12px)", overwrite: true }),
+        onLeave: (batch: any) => gsap.set(batch, { opacity: 1, y: 0, overwrite: true }),
+        onEnterBack: (batch: any) => gsap.to(batch, { opacity: 1, y: 0, stagger: 0.15, overwrite: true }),
+        onLeaveBack: (batch: any) => gsap.set(batch, { opacity: 0, y: 50, overwrite: true }),
       } as any);
-      ScrollTrigger.addEventListener("refreshInit", () => gsap.set(".animate-card-5", { y: 0, opacity: 1, filter: "blur(0px)" }));
+      ScrollTrigger.addEventListener("refreshInit", () => gsap.set(".animate-card-5", { y: 0, opacity: 1 }));
     }
 
     // 6. Smooth navigation for menu anchor link clicks (using global event delegation)
@@ -243,9 +238,11 @@ const MainAppContent: React.FC = () => {
       if (!target) return;
       const href = target.getAttribute("href");
       if (href && href.startsWith("#") && href !== "#" && href !== "#0") {
-        const targetEl = document.querySelector(href);
+        const scrollTarget = (href === "#lets-pitch" || href === "#lets-connect") ? "#contact" : href;
+        const targetEl = document.querySelector(scrollTarget);
         if (targetEl) {
           e.preventDefault();
+          window.location.hash = href;
           lenis.scrollTo(targetEl as HTMLElement, {
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -327,30 +324,31 @@ const MainAppContent: React.FC = () => {
       {/* 1. Loader screen */}
       <Loader />
 
+      {/* Welcome Popup */}
+      <WelcomePopup />
+
       {/* 2. Brand Identity / Logo */}
       <Logo />
 
       {/* 3. Global Navigation Menu */}
       <Header />
 
-      {/* 4. Color theme selector */}
-      <ColorSwitcher />
-
       {/* 5. Main Scrollable Container */}
       <main id="page-content" className="page-content" style={{ position: "relative" }}>
         <Hero />
-        <Portfolio />
         <About />
+        <Portfolio />
+        <Studio />
         <Services />
         <Resume />
+        <Team />
         <Contact />
+        {/* 6. Page-bottom decorative backdrops */}
+        <BottomBackground />
       </main>
 
       {/* Mobile Menu Bottom Placeholder */}
       <div className="header-offset"></div>
-
-      {/* 6. Page-bottom decorative backdrops */}
-      <BottomBackground />
 
       {/* 7. Scroll-to-top trigger button */}
       <ScrollToTop />

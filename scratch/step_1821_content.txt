@@ -1,0 +1,84 @@
+Created At: 2026-06-10T10:35:23Z
+Completed At: 2026-06-10T10:35:23Z
+File Path: `file:///c:/Users/surya/OneDrive/ONE%20DRIVE/Desktop/POOJA%20PRODUCTIONS/src/components/Contact.tsx`
+Total Lines: 690
+Total Bytes: 36832
+Showing lines 558 to 690
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+558:                 </div>
+559:                 {/* Content Block - Footer Marquee End */}
+560:               </div>
+561:             </div>
+562:           </div>
+563:         </div>
+564: 
+565:         {/* Structured Footer */}
+566:         <div style={{
+567:           borderTop: "1px solid rgba(197, 168, 128, 0.15)",
+568:           marginTop: "4rem",
+569:           padding: "6rem 4rem 3rem 4rem",
+570:           fontFamily: '"Urbanist", sans-serif',
+571:         }}>
+572:           {/* 3-Column Grid */}
+573:           <div style={{
+574:             display: "grid",
+575:             gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+576:             gap: "4rem",
+577:             maxWidth: "1200px",
+578:             margin: "0 auto",
+579:             paddingBottom: "5rem",
+580:           }}>
+581:             {/* Col 1: Brand */}
+582:             <div style={{ display: "flex", flexDirection: "column", gap: "1.8rem" }}>
+583:               <img src="/logo.png" alt="Pooja Productions" style={{ height: "5rem", width: "auto", objectFit: "contain", display: "block", alignSelf: "flex-start" }} />
+584:               <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "1.4rem", lineHeight: 1.7, margin: 0, maxWidth: "280px" }}>
+585:                 Cinema that stands the test of time. Stories born from vision, crafted with passion.
+586:               </p>
+587:               <div style={{ display: "flex", gap: "1.2rem", marginTop: "0.5rem" }}>
+588:                 {[
+589:                   { icon: "ph-instagram-logo", url: about.instagram |
+<truncated 4393 bytes>
+er={(e) => e.currentTarget.style.color = "#C5A880"}
+649:                   onMouseOut={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.5)"}
+650:                 >
+651:                   <i className="ph ph-map-pin" style={{ color: "#C5A880", fontSize: "1.8rem", marginTop: "0.2rem", flexShrink: 0 }}></i>
+652:                   <span>
+653:                     Door No. 7-66/2/216,217,229 & 230/302<br />
+654:                     Raidurgh, Navkhalsa, Serilingampally,<br />
+655:                     Hyderabad, Telangana-500008
+656:                   </span>
+657:                 </a>
+658:               </div>
+659:             </div>
+660:           </div>
+661: 
+662:           {/* Bottom Bar */}
+663:           <div style={{
+664:             borderTop: "1px solid rgba(255,255,255,0.06)",
+665:             padding: "2.5rem 0 0 0",
+666:             display: "flex",
+667:             alignItems: "center",
+668:             justifyContent: "space-between",
+669:             flexWrap: "wrap",
+670:             gap: "1rem",
+671:             maxWidth: "1200px",
+672:             margin: "0 auto",
+673:           }}>
+674:             <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "1.3rem" }}>
+675:               {footer?.copyright || "© 2026 Pooja Productions. All rights reserved."}
+676:             </span>
+677:             <a href="#admin"
+678:               style={{ color: "rgba(255,255,255,0.2)", fontSize: "1.2rem", textDecoration: "none", transition: "color 0.3s", letterSpacing: "0.05em" }}
+679:               onMouseOver={(e) => e.currentTarget.style.color = "#C5A880"}
+680:               onMouseOut={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.2)"}
+681:             >
+682:               Admin Login
+683:             </a>
+684:           </div>
+685:         </div>
+686:       </div>
+687:     </section>
+688:   );
+689: };
+690: 
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.

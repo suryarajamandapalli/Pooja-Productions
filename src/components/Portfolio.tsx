@@ -119,7 +119,7 @@ export const Portfolio: React.FC = () => {
                 {/* Content Block - H2 Section Title Start */}
                 <div className="content__block section-grid-text-title">
                   <div className="block__descr">
-                    <h2 className="reveal-type animate-in-up">
+                    <h2 className="reveal-type">
                       <SplitText text="A Legacy of" />
                       <br />
                       <SplitText text="Feature Films" />

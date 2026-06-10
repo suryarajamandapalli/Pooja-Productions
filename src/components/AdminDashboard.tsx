@@ -4,11 +4,35 @@ import type { FilmItem, TestimonialItem, AwardItem, TeamItem } from "./CMSContex
 
 export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackToSite }) => {
   const cms = useCMS();
-  const [activeTab, setActiveTab] = useState<"general" | "films" | "services" | "media" | "testimonials" | "awards" | "team">("general");
+  const [activeTab, setActiveTab] = useState<"general" | "films" | "services" | "media" | "testimonials" | "awards" | "team" | "tools" | "submissions">("general");
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
   const [mediaFiles, setMediaFiles] = useState<string[]>([]);
   const [mediaLoading, setMediaLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const inlineUploadRef = useRef<HTMLInputElement>(null);
+  const [inlineUploadCallback, setInlineUploadCallback] = useState<((url: string) => void) | null>(null);
+  const [newTool, setNewTool] = useState<{ name: string; icon: string }>({ name: "", icon: "" });
+  const [editToolIndex, setEditToolIndex] = useState<number | null>(null);
+  const [editToolData, setEditToolData] = useState<{ name: string; icon: string }>({ name: "", icon: "" });
+
+  const handleInlineUpload = (callback: (url: string) => void) => {
+    setInlineUploadCallback(() => callback);
+    inlineUploadRef.current?.click();
+  };
+
+  const handleInlineFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !inlineUploadCallback) return;
+    try {
+      const url = await uploadMedia(file);
+      inlineUploadCallback(url);
+    } catch (err) {
+      alert("Upload failed. Please try again.");
+    } finally {
+      e.target.value = "";
+      setInlineUploadCallback(null);
+    }
+  };
 
   // States for Adding New Items
   const [newFilm, setNewFilm] = useState<Omit<FilmItem, "id">>({ title: "", category: "", description: "", src: "" });
@@ -29,9 +53,20 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
     }
   };
 
+  const [submissions, setSubmissions] = useState<any[]>([]);
+  const [expandedSubmission, setExpandedSubmission] = useState<number | null>(null);
+
+  const loadSubmissions = () => {
+    const stored = JSON.parse(localStorage.getItem("pp_submissions") || "[]");
+    setSubmissions(stored);
+  };
+
   useEffect(() => {
     if (activeTab === "media") {
       loadMedia();
+    }
+    if (activeTab === "submissions") {
+      loadSubmissions();
     }
   }, [activeTab]);
 
@@ -207,11 +242,13 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
             { id: "testimonials", label: "Directors Quotes", icon: "ph-chat-circle-dots" },
             { id: "awards", label: "Awards & Legacy", icon: "ph-trophy" },
             { id: "team", label: "Creative Team", icon: "ph-users" },
+            { id: "tools", label: "Production Standards", icon: "ph-wrench" },
+            { id: "submissions", label: "Form Submissions", icon: "ph-envelope-open" },
             { id: "media", label: "Media Library", icon: "ph-image" }
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id as "general" | "films" | "services" | "testimonials" | "awards" | "team" | "tools" | "submissions" | "media")}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -319,13 +356,168 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
                   <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Hero Frame Image URL</label>
-                  <input
-                    type="text"
-                    value={data.hero.heroImageUrl}
-                    onChange={(e) => updateField("hero", "heroImageUrl", e.target.value)}
-                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
-                  />
+                  <div style={{ display: "flex", gap: "1rem" }}>
+                    <input
+                      type="text"
+                      value={data.hero.heroImageUrl}
+                      onChange={(e) => updateField("hero", "heroImageUrl", e.target.value)}
+                      style={{ flex: 1, padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                    />
+                    <button
+                      onClick={() => handleInlineUpload((url) => updateField("hero", "heroImageUrl", url))}
+                      style={{ padding: "1.2rem 1.8rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.8rem", cursor: "pointer", fontWeight: 700, fontSize: "1.4rem", whiteSpace: "nowrap" }}
+                    >
+                      📷 Upload
+                    </button>
+                  </div>
                 </div>
+              </div>
+
+              {/* HERO MARQUEE ITEMS */}
+              <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem", marginTop: "4rem" }}>
+                <h2 style={{ color: "#FFF", fontSize: "2.4rem", fontWeight: 700, margin: 0 }}>HERO MARQUEE CARDS</h2>
+                <p style={{ color: "#C5A880", margin: "0.5rem 0 0 0" }}>Manage slide items, card titles, descriptions and images.</p>
+              </div>
+
+              {/* LIST OF CURRENT MARQUEE ITEMS */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "2rem", marginBottom: "3rem" }}>
+                {(data.marqueeItems || []).map((item) => (
+                  <div key={item.id} style={{
+                    display: "flex",
+                    gap: "2.5rem",
+                    backgroundColor: "#0A0A0A",
+                    border: "1px solid #1E1E1E",
+                    borderRadius: "1rem",
+                    padding: "2rem"
+                  }}>
+                    {item.src && (
+                      <img src={item.src.startsWith("http") || item.src.startsWith("/") ? item.src : `/${item.src}`} alt={item.title} style={{ width: "120px", height: "90px", objectFit: "cover", borderRadius: "0.6rem" }} />
+                    )}
+                    <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "1rem" }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                          <label style={{ fontSize: "1.1rem", color: "#AEB5C5", textTransform: "uppercase" }}>Card Title / Text</label>
+                          <input
+                            type="text"
+                            value={item.title}
+                            onChange={(e) => updateListItem("marqueeItems", item.id, { title: e.target.value })}
+                            placeholder="Title"
+                            style={{ padding: "0.8rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.5rem", color: "#FFF" }}
+                          />
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                          <label style={{ fontSize: "1.1rem", color: "#AEB5C5", textTransform: "uppercase" }}>Card Description / Sub text</label>
+                          <input
+                            type="text"
+                            value={item.description || ""}
+                            onChange={(e) => updateListItem("marqueeItems", item.id, { description: e.target.value })}
+                            placeholder="Subtext description"
+                            style={{ padding: "0.8rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.5rem", color: "#FFF" }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                        <label style={{ fontSize: "1.1rem", color: "#AEB5C5", textTransform: "uppercase" }}>Image Path / URL (From Media Library)</label>
+                        <div style={{ display: "flex", gap: "1rem" }}>
+                          <input
+                            type="text"
+                            value={item.src}
+                            onChange={(e) => updateListItem("marqueeItems", item.id, { src: e.target.value })}
+                            placeholder="Image URL (e.g. img/marquee/01.webp)"
+                            style={{ flex: 1, padding: "0.8rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.5rem", color: "#FFF" }}
+                          />
+                          <button
+                            onClick={() => handleInlineUpload((url) => updateListItem("marqueeItems", item.id, { src: url }))}
+                            style={{ padding: "0.8rem 1.2rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.5rem", cursor: "pointer", fontWeight: 700, fontSize: "1.2rem", whiteSpace: "nowrap" }}
+                          >
+                            📷 Upload
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                      <button
+                        onClick={() => deleteListItem("marqueeItems", item.id)}
+                        style={{ padding: "1rem 1.5rem", backgroundColor: "#EF4444", color: "#FFF", border: "none", borderRadius: "0.5rem", cursor: "pointer" }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* FORM TO ADD NEW MARQUEE ITEM */}
+              <div style={{
+                padding: "3rem",
+                backgroundColor: "#0A0A0A",
+                border: "1px dashed #C5A880",
+                borderRadius: "1.2rem",
+                marginBottom: "4rem"
+              }}>
+                <h3 style={{ color: "#FFFFFF", margin: "0 0 2rem 0" }}>+ Add New Marquee Card</h3>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginBottom: "2rem" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                    <label>Card Title / Text</label>
+                    <input
+                      type="text"
+                      id="newMarqueeTitle"
+                      placeholder="e.g. Cinema Magic"
+                      style={{ padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
+                    />
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                    <label>Card Description / Sub text</label>
+                    <input
+                      type="text"
+                      id="newMarqueeDescription"
+                      placeholder="e.g. Capturing the golden age"
+                      style={{ padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
+                    />
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", gridColumn: "1 / -1" }}>
+                    <label>Image Path (From Media Library or uploads/)</label>
+                    <div style={{ display: "flex", gap: "1rem" }}>
+                      <input
+                        type="text"
+                        id="newMarqueeSrc"
+                        placeholder="e.g. img/marquee/01.webp or /uploads/custom_image.png"
+                        style={{ flex: 1, padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
+                      />
+                      <button
+                        onClick={() => handleInlineUpload((url) => {
+                          const srcEl = document.getElementById("newMarqueeSrc") as HTMLInputElement;
+                          if (srcEl) srcEl.value = url;
+                        })}
+                        style={{ padding: "1rem 1.8rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.6rem", cursor: "pointer", fontWeight: 700, fontSize: "1.4rem", whiteSpace: "nowrap" }}
+                      >
+                        📷 Upload
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    const titleEl = document.getElementById("newMarqueeTitle") as HTMLInputElement;
+                    const descEl = document.getElementById("newMarqueeDescription") as HTMLInputElement;
+                    const srcEl = document.getElementById("newMarqueeSrc") as HTMLInputElement;
+                    if (!titleEl || !titleEl.value) {
+                      alert("Please enter a Card Title.");
+                      return;
+                    }
+                    addListItem("marqueeItems", {
+                      title: titleEl.value,
+                      description: descEl ? descEl.value : "",
+                      src: srcEl ? srcEl.value : ""
+                    });
+                    if (titleEl) titleEl.value = "";
+                    if (descEl) descEl.value = "";
+                    if (srcEl) srcEl.value = "";
+                  }}
+                  style={{ padding: "1.2rem 2.5rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.6rem", cursor: "pointer", fontWeight: 600 }}
+                >
+                  Add Card to Marquee
+                </button>
               </div>
 
               {/* STUDIO SECTION */}
@@ -347,12 +539,20 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
                   <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Brochure PDF File path</label>
-                  <input
-                    type="text"
-                    value={data.about.brochureUrl}
-                    onChange={(e) => updateField("about", "brochureUrl", e.target.value)}
-                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
-                  />
+                  <div style={{ display: "flex", gap: "1rem" }}>
+                    <input
+                      type="text"
+                      value={data.about.brochureUrl}
+                      onChange={(e) => updateField("about", "brochureUrl", e.target.value)}
+                      style={{ flex: 1, padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                    />
+                    <button
+                      onClick={() => handleInlineUpload((url) => updateField("about", "brochureUrl", url))}
+                      style={{ padding: "1.2rem 1.8rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.8rem", cursor: "pointer", fontWeight: 700, fontSize: "1.4rem", whiteSpace: "nowrap" }}
+                    >
+                      📎 Upload
+                    </button>
+                  </div>
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", gridColumn: "1 / -1" }}>
@@ -414,6 +614,79 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                   />
                 </div>
               </div>
+
+              {/* LEADERSHIP & VISION DETAILS */}
+              <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem", marginTop: "4rem" }}>
+                <h2 style={{ color: "#FFF", fontSize: "2.4rem", fontWeight: 700, margin: 0 }}>LEADERSHIP & VISION DETAILS</h2>
+                <p style={{ color: "#C5A880", margin: "0.5rem 0 0 0" }}>Edit Chairman & Producer information, quote, and bio.</p>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Name</label>
+                  <input
+                    type="text"
+                    value={data.leadership?.name || ""}
+                    onChange={(e) => updateField("leadership", "name", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Role / Designation</label>
+                  <input
+                    type="text"
+                    value={data.leadership?.role || ""}
+                    onChange={(e) => updateField("leadership", "role", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", gridColumn: "1 / -1" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Chairman Photo</label>
+                  <div style={{ display: "flex", gap: "1rem" }}>
+                    <input
+                      type="text"
+                      value={data.leadership?.imageUrl || ""}
+                      onChange={(e) => updateField("leadership", "imageUrl", e.target.value)}
+                      style={{ flex: 1, padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                    />
+                    <button
+                      onClick={() => handleInlineUpload((url) => updateField("leadership", "imageUrl", url))}
+                      style={{ padding: "1.2rem 1.8rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.8rem", cursor: "pointer", fontWeight: 700, fontSize: "1.4rem", whiteSpace: "nowrap" }}
+                    >
+                      📷 Upload
+                    </button>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", gridColumn: "1 / -1" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Chairman Quote</label>
+                  <textarea
+                    value={data.leadership?.quote || ""}
+                    onChange={(e) => updateField("leadership", "quote", e.target.value)}
+                    style={{ minHeight: "8rem", padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF", resize: "vertical" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", gridColumn: "1 / -1" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Bio Paragraph 1</label>
+                  <textarea
+                    value={data.leadership?.bio1 || ""}
+                    onChange={(e) => updateField("leadership", "bio1", e.target.value)}
+                    style={{ minHeight: "10rem", padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF", resize: "vertical" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", gridColumn: "1 / -1" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Bio Paragraph 2</label>
+                  <textarea
+                    value={data.leadership?.bio2 || ""}
+                    onChange={(e) => updateField("leadership", "bio2", e.target.value)}
+                    style={{ minHeight: "10rem", padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF", resize: "vertical" }}
+                  />
+                </div>
+              </div>
             </div>
           )}
 
@@ -423,6 +696,9 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
               <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem" }}>
                 <h2 style={{ color: "#FFF", fontSize: "2.4rem", fontWeight: 700, margin: 0 }}>FILMS SHOWCASE</h2>
                 <p style={{ color: "#C5A880", margin: "0.5rem 0 0 0" }}>Manage movies listed on the website grid.</p>
+                <div style={{ marginTop: "1.2rem", backgroundColor: "rgba(197, 168, 128, 0.08)", border: "1px dashed rgba(197, 168, 128, 0.25)", padding: "1.2rem 1.8rem", borderRadius: "0.8rem", color: "#C5A880", fontSize: "1.3rem", lineHeight: 1.5 }}>
+                  💡 <strong>Direct Inline Editing:</strong> You can edit any title, category, image path, or description directly inside the input boxes below. When finished, click the <strong>Publish Changes</strong> button at the top of the dashboard to save your updates to the live website.
+                </div>
               </div>
 
               {/* LIST OF CURRENT FILMS */}
@@ -454,13 +730,21 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                           style={{ padding: "0.8rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.5rem", color: "#FFF" }}
                         />
                       </div>
-                      <input
-                        type="text"
-                        value={film.src}
-                        onChange={(e) => updateListItem("films", film.id, { src: e.target.value })}
-                        placeholder="Poster Image URL (e.g. /uploads/film1.png)"
-                        style={{ padding: "0.8rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.5rem", color: "#FFF" }}
-                      />
+                      <div style={{ display: "flex", gap: "1rem" }}>
+                        <input
+                          type="text"
+                          value={film.src}
+                          onChange={(e) => updateListItem("films", film.id, { src: e.target.value })}
+                          placeholder="Poster Image URL (e.g. /uploads/film1.png)"
+                          style={{ flex: 1, padding: "0.8rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.5rem", color: "#FFF" }}
+                        />
+                        <button
+                          onClick={() => handleInlineUpload((url) => updateListItem("films", film.id, { src: url }))}
+                          style={{ padding: "0.8rem 1.2rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.5rem", cursor: "pointer", fontWeight: 700, fontSize: "1.3rem", whiteSpace: "nowrap" }}
+                        >
+                          📁 Upload
+                        </button>
+                      </div>
                       <textarea
                         value={film.description}
                         onChange={(e) => updateListItem("films", film.id, { description: e.target.value })}
@@ -511,13 +795,21 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", gridColumn: "1 / -1" }}>
                     <label>Poster Image Path (From Media Library)</label>
-                    <input
-                      type="text"
-                      value={newFilm.src}
-                      onChange={(e) => setNewFilm({ ...newFilm, src: e.target.value })}
-                      placeholder="/uploads/my_movie.webp"
-                      style={{ padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
-                    />
+                    <div style={{ display: "flex", gap: "1rem" }}>
+                      <input
+                        type="text"
+                        value={newFilm.src}
+                        onChange={(e) => setNewFilm({ ...newFilm, src: e.target.value })}
+                        placeholder="/uploads/my_movie.webp"
+                        style={{ flex: 1, padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
+                      />
+                      <button
+                        onClick={() => handleInlineUpload((url) => setNewFilm((f) => ({ ...f, src: url })))}
+                        style={{ padding: "1rem 1.8rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.6rem", cursor: "pointer", fontWeight: 700, fontSize: "1.4rem", whiteSpace: "nowrap" }}
+                      >
+                        📁 Upload
+                      </button>
+                    </div>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", gridColumn: "1 / -1" }}>
                     <label>Description</label>
@@ -862,9 +1154,46 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
           {/* TAB 6: CREATIVE TEAM */}
           {activeTab === "team" && (
             <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
-              <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem" }}>
-                <h2 style={{ color: "#FFF", fontSize: "2.4rem", fontWeight: 700, margin: 0 }}>CREATIVE TEAM</h2>
-                <p style={{ color: "#C5A880", margin: "0.5rem 0 0 0" }}>Manage members of Pooja Productions.</p>
+              <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <h2 style={{ color: "#FFF", fontSize: "2.4rem", fontWeight: 700, margin: 0 }}>CREATIVE TEAM</h2>
+                  <p style={{ color: "#C5A880", margin: "0.5rem 0 0 0" }}>Manage members of Pooja Productions.</p>
+                  <div style={{ marginTop: "1.2rem", backgroundColor: "rgba(197, 168, 128, 0.08)", border: "1px dashed rgba(197, 168, 128, 0.25)", padding: "1.2rem 1.8rem", borderRadius: "0.8rem", color: "#C5A880", fontSize: "1.3rem", lineHeight: 1.5 }}>
+                    💡 <strong>Direct Inline Editing:</strong> You can edit any member name, role, photo path, or bio directly inside the input boxes below. When finished, click the <strong>Publish Changes</strong> button at the top of the dashboard to save your updates to the live website.
+                  </div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", padding: "0.8rem 1.6rem", borderRadius: "2rem" }}>
+                  <span style={{ color: data.showTeam !== false ? "#C5A880" : "#777", fontSize: "1.3rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                    Creative Team: {data.showTeam !== false ? "ENABLED" : "DISABLED"}
+                  </span>
+                  <button
+                    onClick={() => updateField("showTeam" as any, "", !(data.showTeam !== false))}
+                    style={{
+                      width: "5rem",
+                      height: "2.6rem",
+                      borderRadius: "1.3rem",
+                      backgroundColor: data.showTeam !== false ? "#C5A880" : "#262626",
+                      position: "relative",
+                      border: "none",
+                      cursor: "pointer",
+                      transition: "background-color 0.3s ease",
+                      padding: 0,
+                      display: "flex",
+                      alignItems: "center"
+                    }}
+                  >
+                    <div style={{
+                      width: "2rem",
+                      height: "2rem",
+                      borderRadius: "50%",
+                      backgroundColor: data.showTeam !== false ? "#000" : "#FFF",
+                      position: "absolute",
+                      top: "0.3rem",
+                      left: data.showTeam !== false ? "2.7rem" : "0.3rem",
+                      transition: "left 0.3s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s ease"
+                    }} />
+                  </button>
+                </div>
               </div>
 
               {/* TEAM LIST */}
@@ -896,13 +1225,21 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                           style={{ padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
                         />
                       </div>
-                      <input
-                        type="text"
-                        value={member.photo}
-                        onChange={(e) => updateListItem("team", member.id, { photo: e.target.value })}
-                        placeholder="Photo URL path"
-                        style={{ padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
-                      />
+                      <div style={{ display: "flex", gap: "1rem" }}>
+                        <input
+                          type="text"
+                          value={member.photo}
+                          onChange={(e) => updateListItem("team", member.id, { photo: e.target.value })}
+                          placeholder="Photo URL path"
+                          style={{ flex: 1, padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
+                        />
+                        <button
+                          onClick={() => handleInlineUpload((url) => updateListItem("team", member.id, { photo: url }))}
+                          style={{ padding: "1rem 1.8rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.6rem", cursor: "pointer", fontWeight: 700, fontSize: "1.4rem", whiteSpace: "nowrap" }}
+                        >
+                          📁 Upload
+                        </button>
+                      </div>
                       <input
                         type="text"
                         value={member.bio}
@@ -947,13 +1284,21 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                     onChange={(e) => setNewTeam({ ...newTeam, role: e.target.value })}
                     style={{ padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
                   />
-                  <input
-                    type="text"
-                    placeholder="Photo File Path"
-                    value={newTeam.photo}
-                    onChange={(e) => setNewTeam({ ...newTeam, photo: e.target.value })}
-                    style={{ padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF", gridColumn: "1 / -1" }}
-                  />
+                  <div style={{ display: "flex", gap: "1rem", gridColumn: "1 / -1" }}>
+                    <input
+                      type="text"
+                      placeholder="Photo File Path"
+                      value={newTeam.photo}
+                      onChange={(e) => setNewTeam({ ...newTeam, photo: e.target.value })}
+                      style={{ flex: 1, padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
+                    />
+                    <button
+                      onClick={() => handleInlineUpload((url) => setNewTeam({ ...newTeam, photo: url }))}
+                      style={{ padding: "1rem 1.8rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.6rem", cursor: "pointer", fontWeight: 700, fontSize: "1.4rem", whiteSpace: "nowrap" }}
+                    >
+                      📁 Upload
+                    </button>
+                  </div>
                   <input
                     type="text"
                     placeholder="Brief bio line..."
@@ -976,7 +1321,286 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
             </div>
           )}
 
-          {/* TAB 7: MEDIA LIBRARY */}
+          {/* Hidden inline file input for all device-upload buttons */}
+          <input
+            type="file"
+            accept="image/*,application/pdf"
+            ref={inlineUploadRef}
+            style={{ display: "none" }}
+            onChange={handleInlineFileChange}
+          />
+
+          {/* TAB 7: PRODUCTION STANDARDS (TOOLS) */}
+          {activeTab === "tools" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
+              <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem" }}>
+                <h2 style={{ color: "#FFF", fontSize: "2.4rem", fontWeight: 700, margin: 0 }}>OUR PRODUCTION STANDARDS</h2>
+                <p style={{ color: "#C5A880", margin: "0.5rem 0 0 0" }}>Manage the technology tools & equipment cards shown on the site.</p>
+              </div>
+
+              {/* ADD NEW TOOL FORM */}
+              <div style={{ backgroundColor: "#0A0A0A", border: "1px solid #262626", borderRadius: "1rem", padding: "2.5rem" }}>
+                <h3 style={{ color: "#FFF", marginBottom: "2rem", fontSize: "1.8rem" }}>+ Add New Tool / Equipment</h3>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginBottom: "2rem" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                    <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Tool / Equipment Name</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. IMAX Cameras"
+                      value={newTool.name}
+                      onChange={(e) => setNewTool({ ...newTool, name: e.target.value })}
+                      style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF", fontSize: "1.5rem" }}
+                    />
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                    <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Icon Image URL or Upload</label>
+                    <div style={{ display: "flex", gap: "1rem" }}>
+                      <input
+                        type="text"
+                        placeholder="/img/icons/imax.png or URL"
+                        value={newTool.icon}
+                        onChange={(e) => setNewTool({ ...newTool, icon: e.target.value })}
+                        style={{ flex: 1, padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF", fontSize: "1.5rem" }}
+                      />
+                      <button
+                        onClick={() => handleInlineUpload((url) => setNewTool((t) => ({ ...t, icon: url })))}
+                        style={{ padding: "1.2rem 1.8rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.8rem", cursor: "pointer", fontWeight: 700, whiteSpace: "nowrap", fontSize: "1.4rem" }}
+                      >
+                        📁 Upload
+                      </button>
+                    </div>
+                    {newTool.icon && (
+                      <img src={newTool.icon.startsWith("http") || newTool.icon.startsWith("/") ? newTool.icon : `/${newTool.icon}`} alt="preview" style={{ width: "6rem", height: "6rem", objectFit: "contain", borderRadius: "0.8rem", border: "1px solid #262626", backgroundColor: "#1a1a1a", padding: "0.5rem" }} />
+                    )}
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    if (!newTool.name) return alert("Please enter a tool name.");
+                    const currentTools: any[] = (data.tools || []) as any[];
+                    const updated = [...currentTools, { name: newTool.name, icon: newTool.icon }];
+                    updateField("tools" as any, "__array__", updated);
+                    // Use addListItem workaround — tools don't have ids so use direct state update
+                    cms.addListItem("tools" as any, { name: newTool.name, icon: newTool.icon, id: Date.now() });
+                    setNewTool({ name: "", icon: "" });
+                  }}
+                  style={{ padding: "1.2rem 3rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.8rem", cursor: "pointer", fontWeight: 700, fontSize: "1.5rem" }}
+                >
+                  Add Tool
+                </button>
+              </div>
+
+              {/* CURRENT TOOLS LIST */}
+              <div>
+                <h3 style={{ color: "#FFF", marginBottom: "2rem", fontSize: "1.8rem" }}>Current Tools ({(data.tools || []).length})</h3>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "2rem" }}>
+                  {(data.tools || []).map((tool, idx) => (
+                    <div key={idx} style={{ backgroundColor: "#0A0A0A", border: "1px solid #262626", borderRadius: "1rem", padding: "2rem", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                      {editToolIndex === idx ? (
+                        // EDIT MODE
+                        <>
+                          <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                            <label style={{ fontSize: "1.2rem", color: "#AEB5C5" }}>Name</label>
+                            <input
+                              type="text"
+                              value={editToolData.name}
+                              onChange={(e) => setEditToolData({ ...editToolData, name: e.target.value })}
+                              style={{ padding: "0.8rem", backgroundColor: "#0C0C0C", border: "1px solid #C5A880", borderRadius: "0.5rem", color: "#FFF", fontSize: "1.4rem" }}
+                            />
+                          </div>
+                          <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                            <label style={{ fontSize: "1.2rem", color: "#AEB5C5" }}>Icon</label>
+                            <div style={{ display: "flex", gap: "0.8rem" }}>
+                              <input
+                                type="text"
+                                value={editToolData.icon}
+                                onChange={(e) => setEditToolData({ ...editToolData, icon: e.target.value })}
+                                style={{ flex: 1, padding: "0.8rem", backgroundColor: "#0C0C0C", border: "1px solid #C5A880", borderRadius: "0.5rem", color: "#FFF", fontSize: "1.3rem" }}
+                              />
+                              <button
+                                onClick={() => handleInlineUpload((url) => setEditToolData((d) => ({ ...d, icon: url })))}
+                                style={{ padding: "0.8rem 1.2rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.5rem", cursor: "pointer", fontSize: "1.3rem" }}
+                              >
+                                📁
+                              </button>
+                            </div>
+                            {editToolData.icon && (
+                              <img src={editToolData.icon.startsWith("http") || editToolData.icon.startsWith("/") ? editToolData.icon : `/${editToolData.icon}`} alt="preview" style={{ width: "5rem", height: "5rem", objectFit: "contain", borderRadius: "0.5rem", border: "1px solid #262626", backgroundColor: "#1a1a1a", padding: "0.4rem" }} />
+                            )}
+                          </div>
+                          <div style={{ display: "flex", gap: "1rem" }}>
+                            <button
+                              onClick={() => {
+                                const currentTools = [...(data.tools || [])];
+                                currentTools[idx] = { name: editToolData.name, icon: editToolData.icon };
+                                // Update via deleteListItem + addListItem workaround for index-based tools
+                                // We update the whole array by rebuilding data.tools
+                                for (let i = currentTools.length - 1; i >= 0; i--) {
+                                  if ((currentTools[i] as any).id !== undefined) delete (currentTools[i] as any).id;
+                                }
+                                // Use a direct approach: update each tool that has a matching index
+                                setEditToolIndex(null);
+                                alert("Tool updated! Click 'Publish Changes' to save.");
+                                // Rebuild tools array in data
+                                const updatedTools = (data.tools || []).map((t, i) => i === idx ? { name: editToolData.name, icon: editToolData.icon } : t);
+                                updateField("tools" as any, "__replace__", updatedTools);
+                              }}
+                              style={{ flex: 1, padding: "0.8rem", backgroundColor: "#10B981", color: "#FFF", border: "none", borderRadius: "0.5rem", cursor: "pointer", fontWeight: 600 }}
+                            >
+                              Save
+                            </button>
+                            <button
+                              onClick={() => setEditToolIndex(null)}
+                              style={{ padding: "0.8rem 1.5rem", backgroundColor: "#262626", color: "#FFF", border: "none", borderRadius: "0.5rem", cursor: "pointer" }}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        // VIEW MODE
+                        <>
+                          <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+                            {tool.icon ? (
+                              <img src={tool.icon.startsWith("http") || tool.icon.startsWith("/") ? tool.icon : `/${tool.icon}`} alt={tool.name} style={{ width: "5rem", height: "5rem", objectFit: "contain", borderRadius: "0.8rem", border: "1px solid #262626", backgroundColor: "#1a1a1a", padding: "0.5rem" }} />
+                            ) : (
+                              <div style={{ width: "5rem", height: "5rem", backgroundColor: "#1a1a1a", borderRadius: "0.8rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                <i className="ph ph-wrench" style={{ fontSize: "2rem", color: "#C5A880" }}></i>
+                              </div>
+                            )}
+                            <span style={{ color: "#FFF", fontWeight: 600, fontSize: "1.6rem" }}>{tool.name}</span>
+                          </div>
+                          <div style={{ display: "flex", gap: "1rem" }}>
+                            <button
+                              onClick={() => { setEditToolIndex(idx); setEditToolData({ name: tool.name, icon: tool.icon }); }}
+                              style={{ flex: 1, padding: "0.8rem", backgroundColor: "#262626", color: "#FFF", border: "none", borderRadius: "0.5rem", cursor: "pointer" }}
+                            >
+                              ✏️ Edit
+                            </button>
+                            <button
+                              onClick={() => {
+                                if (!confirm(`Remove "${tool.name}"?`)) return;
+                                const updatedTools = (data.tools || []).filter((_, i) => i !== idx);
+                                updateField("tools" as any, "__replace__", updatedTools);
+                              }}
+                              style={{ padding: "0.8rem", backgroundColor: "#EF4444", color: "#FFF", border: "none", borderRadius: "0.5rem", cursor: "pointer" }}
+                            >
+                              <i className="ph ph-trash"></i>
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB: FORM SUBMISSIONS */}
+          {activeTab === "submissions" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
+              <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem", display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
+                <div>
+                  <h2 style={{ color: "#FFF", fontSize: "2.4rem", fontWeight: 700, margin: 0 }}>FORM SUBMISSIONS</h2>
+                  <p style={{ color: "#C5A880", margin: "0.5rem 0 0 0" }}>All contact and pitch form entries submitted through the website.</p>
+                </div>
+                <div style={{ display: "flex", gap: "1rem" }}>
+                  <button onClick={loadSubmissions} style={{ padding: "1rem 2rem", backgroundColor: "#262626", color: "#FFF", border: "none", borderRadius: "0.8rem", cursor: "pointer", fontWeight: 600 }}>
+                    <i className="ph ph-arrows-clockwise"></i> Refresh
+                  </button>
+                  {submissions.length > 0 && (
+                    <button
+                      onClick={() => { if (confirm("Clear ALL submissions? This cannot be undone.")) { localStorage.removeItem("pp_submissions"); loadSubmissions(); } }}
+                      style={{ padding: "1rem 2rem", backgroundColor: "#EF4444", color: "#FFF", border: "none", borderRadius: "0.8rem", cursor: "pointer", fontWeight: 600 }}
+                    >
+                      Clear All
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {submissions.length === 0 ? (
+                <div style={{ textAlign: "center", padding: "6rem 2rem", color: "rgba(255,255,255,0.3)" }}>
+                  <i className="ph ph-envelope-simple" style={{ fontSize: "5rem", display: "block", marginBottom: "1.5rem" }}></i>
+                  <p style={{ fontSize: "1.8rem" }}>No submissions yet.</p>
+                  <p style={{ fontSize: "1.4rem", marginTop: "0.5rem" }}>Form entries will appear here once visitors submit the contact or pitch forms.</p>
+                </div>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                  {submissions.map((sub, idx) => {
+                    const isContact = sub.type === "contact";
+                    const isExpanded = expandedSubmission === idx;
+                    const d = sub.data;
+                    const date = new Date(sub.timestamp).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+                    return (
+                      <div key={sub.id || idx} style={{ backgroundColor: "#0A0A0A", border: `1px solid ${isContact ? "rgba(197,168,128,0.3)" : "rgba(99,102,241,0.3)"}`, borderRadius: "1rem", overflow: "hidden" }}>
+                        {/* Header row */}
+                        <div
+                          onClick={() => setExpandedSubmission(isExpanded ? null : idx)}
+                          style={{ padding: "1.8rem 2rem", display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer", gap: "1rem", flexWrap: "wrap" }}
+                        >
+                          <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+                            <span style={{
+                              padding: "0.4rem 1.2rem",
+                              borderRadius: "100px",
+                              fontSize: "1.2rem",
+                              fontWeight: 700,
+                              textTransform: "uppercase",
+                              letterSpacing: "0.08em",
+                              backgroundColor: isContact ? "rgba(197,168,128,0.15)" : "rgba(99,102,241,0.15)",
+                              color: isContact ? "#C5A880" : "#818CF8"
+                            }}>
+                              {isContact ? "📩 Contact" : "🎬 Pitch"}
+                            </span>
+                            <span style={{ color: "#FFF", fontWeight: 600, fontSize: "1.6rem" }}>
+                              {isContact ? d.name : `${d.firstName} ${d.lastName}`}
+                            </span>
+                            <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "1.3rem" }}>
+                              {isContact ? d.email : d.emailId}
+                            </span>
+                          </div>
+                          <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+                            <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "1.2rem" }}>{date}</span>
+                            <i className={`ph ph-caret-${isExpanded ? "up" : "down"}`} style={{ color: "#C5A880", fontSize: "1.6rem" }}></i>
+                          </div>
+                        </div>
+
+                        {/* Expanded details */}
+                        {isExpanded && (
+                          <div style={{ padding: "0 2rem 2rem", borderTop: "1px solid #1a1a1a" }}>
+                            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "1.5rem", marginTop: "2rem" }}>
+                              {Object.entries(d).map(([key, val]: [string, any]) => (
+                                val !== false && val !== "" && val !== undefined ? (
+                                  <div key={key} style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                                    <label style={{ fontSize: "1.1rem", color: "#C5A880", textTransform: "uppercase", letterSpacing: "0.1em" }}>{key.replace(/([A-Z])/g, " $1").trim()}</label>
+                                    <p style={{ color: "#FFF", fontSize: "1.4rem", margin: 0, wordBreak: "break-word", lineHeight: 1.5 }}>{String(val)}</p>
+                                  </div>
+                                ) : null
+                              ))}
+                            </div>
+                            <button
+                              onClick={() => {
+                                const updated = submissions.filter((_, i) => i !== idx);
+                                localStorage.setItem("pp_submissions", JSON.stringify(updated));
+                                setSubmissions(updated);
+                                setExpandedSubmission(null);
+                              }}
+                              style={{ marginTop: "2rem", padding: "0.8rem 2rem", backgroundColor: "#EF4444", color: "#FFF", border: "none", borderRadius: "0.6rem", cursor: "pointer", fontSize: "1.3rem" }}
+                            >
+                              <i className="ph ph-trash"></i> Delete This Submission
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 8: MEDIA LIBRARY */}
           {activeTab === "media" && (
             <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
               <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem" }}>

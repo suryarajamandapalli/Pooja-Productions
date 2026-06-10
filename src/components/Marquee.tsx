@@ -47,14 +47,14 @@ export const Marquee: React.FC<MarqueeProps> = ({ children, speed = 20 }) => {
       paused: true,
     });
 
-    const timeScaleClamp = gsap.utils.clamp(1, 3);
+    const timeScaleClamp = gsap.utils.clamp(1, 12);
 
     const trigger = ScrollTrigger.create({
       start: 0,
       end: "max",
       onUpdate: (self) => {
         // Less sensitive scroll velocity
-        master.timeScale(timeScaleClamp(Math.abs(self.getVelocity() / 400)));
+        master.timeScale(timeScaleClamp(Math.abs(self.getVelocity() / 50)));
         tween.invalidate().restart();
       },
     });

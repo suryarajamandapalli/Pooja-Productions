@@ -1,0 +1,1 @@
+I will modify `src/components/Contact.tsx` to revert the 3-column structured footer to the simple centered one-column layout as requested.

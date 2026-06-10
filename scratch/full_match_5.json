@@ -1,0 +1,8 @@
+{
+  "step_index": 1490,
+  "source": "MODEL",
+  "type": "GREP_SEARCH",
+  "status": "DONE",
+  "created_at": "2026-06-10T10:13:35Z",
+  "content": "Created At: 2026-06-10T10:13:35Z\nCompleted At: 2026-06-10T10:13:35Z\n{\"File\":\"c:/Users/surya/OneDrive/ONE DRIVE/Desktop/POOJA PRODUCTIONS/src/components/Contact.tsx\",\"LineNumber\":8,\"LineContent\":\"  const footer = data?.footer;\"}\n{\"File\":\"c:/Users/surya/OneDrive/ONE DRIVE/Desktop/POOJA PRODUCTIONS/src/components/Contact.tsx\",\"LineNumber\":505,\"LineContent\":\"        {/* Footer Marquee Block */}\"}\n{\"File\":\"c:/Users/surya/OneDrive/ONE DRIVE/Desktop/POOJA PRODUCTIONS/src/components/Contact.tsx\",\"LineNumber\":506,\"LineContent\":\"        \\u003cdiv className=\\\"footer footer-marquee\\\"\\u003e\"}\n{\"File\":\"c:/Users/surya/OneDrive/ONE DRIVE/Desktop/POOJA PRODUCTIONS/src/components/Contact.tsx\",\"LineNumber\":510,\"LineContent\":\"                {/* Content Block - Footer Marquee Start */}\"}\n{\"File\":\"c:/Users/surya/OneDrive/ONE DRIVE/Desktop/POOJA PRODUCTIONS/src/components/Contact.tsx\",\"LineNumber\":559,\"LineContent\":\"                {/* Content Block - Footer Marquee End */}\"}\n{\"File\":\"c:/Users/surya/OneDrive/ONE DRIVE/Desktop/POOJA PRODUCTIONS/src/components/Contact.tsx\",\"LineNumber\":565,\"LineContent\":\"        {/* Structured Footer */}\"}\n{\"File\":\"c:/Users/surya/OneDrive/ONE DRIVE/Desktop/POOJA PRODUCTIONS/src/components/Contact.tsx\",\"LineNumber\":673,\"LineContent\":\"              {footer?.copyright || \\\"\u00a9 2026 Pooja Productions. All rights reserved.\\\"}\"}"
+}

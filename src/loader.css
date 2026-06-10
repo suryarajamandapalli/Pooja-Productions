@@ -45,10 +45,10 @@
   --t-opp-muted--light: #2A2A2A;
   --neutral-bright--light: #C0C0C0;
   /* dark color scheme (Obsidian/Gold Mode) */
-  --base--dark: #000000;
-  --base-rgb--dark: 0,0,0;
-  --base-shade--dark: #000000;
-  --base-tint--dark: #121212;
+  --base--dark: #141414;
+  --base-rgb--dark: 20,20,20;
+  --base-shade--dark: #101010;
+  --base-tint--dark: #1e1e1e;
   --stroke-controls--dark: #C5A880;
   --stroke-elements--dark: #262626;
   --font-weight-base--dark: 300;

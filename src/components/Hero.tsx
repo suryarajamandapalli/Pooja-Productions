@@ -13,72 +13,72 @@ export const Hero: React.FC = () => {
   return (
     <section id="home" className="main home">
 
-
-      {/* ══════════════════════════════════════════════════════
-          MAIN INTRO  — exact Blayden class structure
-          Images positioned by CSS (.intro-bg-01__01 / __02)
-          Text in Bootstrap col-8, loading-wrap animations
-          ══════════════════════════════════════════════════════ */}
+      {/* Main Section Intro Start */}
       <div className="main__intro">
 
-        {/* Background images — CSS classes handle positioning & z-index */}
-        <div className="intro__background intro-bg-01">
-          {/* Left image — film reel, peeking from left edge */}
-          <div className="intro-bg-01__01" data-speed="0.6">
-            <img src="img/backgrounds/cinematic_reel.png" alt="Cinematic Film Reel" style={{ mixBlendMode: "screen", opacity: 0.8 }} />
-            <div className="intro-bg__shadow" />
+        {/* Intro Background Start */}
+        <div className="intro__background intro-bg-01" style={{ zIndex: "auto", position: "absolute", top: 0, left: 0, width: "100%", height: "100%", overflow: "hidden" }}>
+          <video 
+            autoPlay 
+            muted 
+            loop 
+            playsInline 
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              zIndex: 0,
+              opacity: 0.35,
+            }}
+          >
+            <source src="/img/backgrounds/introl_video_1.mp4" type="video/mp4" />
+          </video>
+          <div className="intro-bg-01__01" data-speed="0.6" style={{ zIndex: 2 }}>
+            <img src="img/backgrounds/cinematic_reel.png" alt="Background Objects" />
           </div>
-          {/* Right image — cameraman, large on right */}
-          <div className="intro-bg-01__02" data-speed="0.8">
-            <img src="img/backgrounds/cinematic_camera.png" alt="Cinematic Vintage Camera" style={{ mixBlendMode: "screen", opacity: 0.8 }} />
-            <div className="intro-bg__shadow" />
+          <div className="intro-bg-01__02" data-speed="0.8" style={{ zIndex: 3 }}>
+            <img src="img/backgrounds/cinematic_camera.png" alt="Background Objects" />
           </div>
         </div>
-
-        {/* Content grid — exact Blayden column structure */}
-        <div className="container-fluid p-0 fullheight-desktop">
+        {/* Intro Background End */}
+ 
+        <div className="container-fluid p-0 fullheight-desktop" style={{ position: "relative", zIndex: 2 }}>
           <div className="row g-0 fullheight-desktop align-items-xl-stretch">
-
-            <div className="col-12 col-xl-2" />
-
+ 
+            {/* Intro Data Line #1 (if needed) Start */}
+            <div className="col-12 col-xl-2"></div>
+            {/* Intro Data Line #1 (if needed) End */}
+ 
+            {/* Intro Content Start */}
             <div className="col-12 col-xl-8 fullheight-desktop">
-              {/* Headline — loading-wrap triggers Loader.tsx GSAP stagger */}
+ 
+              {/* Headline Start */}
               <div id="headline" className="headline d-flex align-items-start flex-column loading-wrap">
-
-                {/* Subtitle — loading__item #1 (blurs+slides up first) */}
-                <p className="headline__subtitle space-bottom loading__item" style={{ fontSize: "1.6rem", fontWeight: 300, opacity: 0.8, letterSpacing: "0.4em", textTransform: "uppercase" }}>
-                  HELLO !<br />MR. MK PRESENTS
-                </p>
-
-                {/* Headline — loading__item #2 */}
-                <h1 className="headline__title loading__item" style={{ fontSize: "clamp(6rem, 8vw, 12rem)", lineHeight: "1", fontWeight: 500, letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: "2rem" }}>
-                  POOJA
-                  <br />
-                  PRODUCTIONS
-                </h1>
-                
-                {/* Subtext — loading__item */}
-                <p className="headline__subtitle space-bottom loading__item" style={{ fontSize: "1.8rem", fontWeight: 300, opacity: 0.6, fontStyle: "italic", letterSpacing: "0.1em" }}>
-                  Crafting Stories That Live Forever
-                </p>
-
-                {/* CTA button — loading__item #3 */}
+                <p className="headline__subtitle space-bottom loading__item">HELLO !<br />Mr. MK Presents</p>
+                <h1 className="headline__title loading__item">Pooja<br />Productions</h1>
                 <div className="headline__btn loading__item">
                   <a className="btn btn-line-small icon-right slide-right-down" href="#portfolio">
                     <span className="btn-caption">{primaryBtnText}</span>
-                    <i className="ph ph-arrow-down-right" />
+                    <i className="ph ph-arrow-down-right"></i>
                   </a>
                 </div>
-
               </div>
-            </div>
+              {/* Headline End */}
 
-            <div className="col-12 col-xl-2" />
+            </div>
+            {/* Intro Content End */}
+
+            {/* Intro Data Line #2 (if needed) Start */}
+            <div className="col-12 col-xl-2"></div>
+            {/* Intro Data Line #2 (if needed) End */}
 
           </div>
         </div>
       </div>
-      {/* ══ END MAIN INTRO ══ */}
+      {/* Main Section Intro End */}
 
 
       {/* ══════════════════════════════════════════════════════
@@ -93,7 +93,16 @@ export const Hero: React.FC = () => {
             • reveal-type    → character-by-character reveal
             • SplitText      → splits blockquote into .char spans
           ══════════════════════════════════════════════════════ */}
-      <div className="main__media media-grid-bottom">
+      <div className="main__media media-grid-bottom" style={{ position: "relative" }}>
+        {/* Subtle top-gradient to blend seamlessly from the section above */}
+        <div style={{
+          position: "absolute",
+          top: 0, left: 0, right: 0,
+          height: "120px",
+          background: "linear-gradient(to bottom, #141414 0%, transparent 100%)",
+          pointerEvents: "none",
+          zIndex: 1
+        }} />
         <div className="container-fluid p-0">
           <div className="row g-0">
 
@@ -106,7 +115,7 @@ export const Hero: React.FC = () => {
                 <div className="container-fluid p-0">
                   <div className="row g-0">
                     <div className="col-12">
-                      <blockquote className="reveal-type animate-in-up">
+                      <blockquote className="reveal-type">
                         <SplitText text="Stories that stir the soul, visuals that capture the imagination, and cinema that stands the test of time." />
                       </blockquote>
                     </div>
@@ -120,24 +129,42 @@ export const Hero: React.FC = () => {
 
             {/* Marquee strip */}
             <div className="media__fullwidth">
-              <Marquee speed={45}>
+              <Marquee speed={80}>
 
-                {hero?.marqueeItems?.map((item, idx) => (
-                  <div key={item.id} className={`item image image-${idx + 1}`} style={{ position: "relative", overflow: "hidden", borderRadius: "16px" }}>
-                    <img src={item.src} alt={item.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                {(data?.marqueeItems || []).map((item, idx) => (
+                  <div key={item.id} className={`item image image-${(idx % 6) + 1}`} style={{ position: "relative", overflow: "hidden", borderRadius: "16px" }}>
+                    <img src={item.src.startsWith("http") || item.src.startsWith("/") ? item.src : `/${item.src}`} alt={item.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                     <div style={{
                       position: "absolute",
                       bottom: 0, left: 0, right: 0,
-                      padding: "20px",
-                      background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%)",
+                      padding: "24px 20px 20px 20px",
+                      background: "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)",
                       color: "#fff",
                       fontFamily: '"Urbanist", sans-serif',
-                      fontSize: "1.2rem",
-                      fontWeight: 500,
-                      letterSpacing: "0.05em",
-                      textTransform: "uppercase"
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "4px"
                     }}>
-                      {item.title}
+                      <div style={{
+                        fontSize: "calc(1.8rem + 0.5vw)",
+                        fontWeight: 700,
+                        lineHeight: 1.2,
+                        letterSpacing: "0.03em",
+                        textTransform: "uppercase"
+                      }}>
+                        {item.title}
+                      </div>
+                      {item.description && (
+                        <div style={{
+                          fontSize: "calc(1.1rem + 0.2vw)",
+                          fontWeight: 400,
+                          lineHeight: 1.4,
+                          color: "#C5A880",
+                          letterSpacing: "0.02em"
+                        }}>
+                          {item.description}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}

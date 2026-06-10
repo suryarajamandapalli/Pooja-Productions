@@ -11,7 +11,6 @@ import { useCMS } from "./CMSContext";
 export const Resume: React.FC = () => {
   const { data } = useCMS();
   const awards = data?.awards || [];
-  const legacy = data?.legacy || [];
   const tools = data?.tools || [];
   const testimonials = data?.testimonials || [];
 
@@ -69,7 +68,7 @@ export const Resume: React.FC = () => {
                 {/* Content Block - H2 Section Title Start */}
                 <div className="content__block section-tagline-title">
                   <div className="block__descr">
-                    <h2 className="reveal-type animate-in-up">
+                    <h2 className="reveal-type">
                       <SplitText text="Our Theatrical" />
                       <br />
                       <SplitText text="Legacy" />
@@ -114,42 +113,7 @@ export const Resume: React.FC = () => {
                 </div>
                 {/* Content Block - My Education End */}
 
-                {/* Content Block - Work Experience Start */}
-                <div className="content__block pre-text-items">
-                  <div className="block__subtitle">
-                    <p className="tagline-chapter animate-in-up">Key Production Milestones</p>
-                  </div>
 
-                  <div className="container-fluid p-0 resume-lines">
-                    {legacy.map((item, index) => (
-                      <React.Fragment key={item.id || index}>
-                        <div className="resume-divider animate-in-up"></div>
-                        <div className="row g-0 resume-lines__item">
-                          <div className="col-12 col-md-4 col-lg-2">
-                            <p className="resume-lines__date type-basic-160lh animate-in-up">{item.date}</p>
-                          </div>
-                          <div className="col-12 col-md-4 col-lg-5">
-                            <h4 className="resume-lines__title animate-in-up">{item.title}</h4>
-                            <p className="resume-lines__source small animate-in-up">
-                              at{" "}
-                              <a
-                                className="link-small-underline"
-                                href="#0"
-                              >
-                                {item.source}
-                              </a>
-                            </p>
-                          </div>
-                          <div className="col-12 col-md-4 col-lg-5">
-                            <p className="resume-lines__descr type-basic-160lh animate-in-up">{item.description}</p>
-                          </div>
-                        </div>
-                      </React.Fragment>
-                    ))}
-                    <div className="resume-divider animate-in-up"></div>
-                  </div>
-                </div>
-                {/* Content Block - Work Experience End */}
 
                 {/* Content Block - Tools Cards Start */}
                 <div className="content__block grid-block pre-text-items">

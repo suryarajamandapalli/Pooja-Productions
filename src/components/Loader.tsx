@@ -16,49 +16,51 @@ export const Loader: React.FC = () => {
       onUpdate: () => setCount(Math.round(obj.value)),
     });
 
-    // 2. Brief pause, then slide count down smoothly
-    tl.to(".loader__count", {
-      duration: 1.0,
-      ease: "expo.in",
-      y: "110%",
-    }, "+=0.15");
+    const doneTime = 3.5;
 
-    // 3. Smooth curtain pull: wrapper slides up (starts during count exit)
-    tl.to(".loader__wrapper", {
-      duration: 1.1,
-      ease: "expo.inOut",
-      y: "-100%",
-    }, "-=0.55");
-
-    // 4. Mark loader as done
-    tl.add(() => {
-      const loader = document.getElementById("loader");
-      if (loader) loader.classList.add("loaded");
-    });
-
-    // 5. Hero elements blur + slide up in stagger sequence
+    // 2. Select items to animate
     const loadingItems = document.querySelectorAll(".loading__item");
     const fadeInItems  = document.querySelectorAll(".loading__fade");
 
     gsap.set(loadingItems, { opacity: 0 });
     gsap.set(fadeInItems,  { opacity: 0 });
 
+    // 3. Stagger headline items in (starts at doneTime + 0.8s)
     tl.to(loadingItems, {
-      duration: 1.4,
-      ease: "expo.out",
-      startAt: { y: 80, filter: "blur(18px)" },
+      duration: 1.1,
+      ease: "power4.out",
+      startAt: { y: 120 },
       y: 0,
       opacity: 1,
-      filter: "blur(0px)",
-      stagger: 0.08,
-    }, "-=0.65");
+      stagger: 0.05,
+    }, doneTime + 0.8);
 
-    // 6. Fade in nav + logo + color switcher
+    // 4. Slide loader counter down (starts at doneTime + 1.8s)
+    tl.to(".loader__count", {
+      duration: 0.8,
+      ease: "power2.in",
+      y: "100%",
+    }, doneTime + 1.8);
+
+    // 5. Pull loader curtain up (starts at doneTime + 2.2s)
+    tl.to(".loader__wrapper", {
+      duration: 0.8,
+      ease: "power4.in",
+      y: "-100%",
+    }, doneTime + 2.2);
+
+    // 6. Fade in fixed elements (logo, navigation, etc. starts at doneTime + 3.2s)
     tl.to(fadeInItems, {
-      duration: 1.0,
-      ease: "power2.out",
+      duration: 0.8,
+      ease: "none",
       opacity: 1,
-    }, "-=0.5");
+    }, doneTime + 3.2);
+
+    // 7. Mark loader as loaded (at doneTime + 3.2s)
+    tl.add(() => {
+      const loader = document.getElementById("loader");
+      if (loader) loader.classList.add("loaded");
+    }, doneTime + 3.2);
 
     return () => { tl.kill(); };
   }, []);

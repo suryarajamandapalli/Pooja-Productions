@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from "react";
+import { useCMS } from "./CMSContext";
 
 export const Header: React.FC = () => {
+  const { data } = useCMS();
+  const showTeam = data?.showTeam !== false;
   const [activeSection, setActiveSection] = useState("home");
+  const [activeHash, setActiveHash] = useState("");
 
   useEffect(() => {
-    const sections = ["home", "portfolio", "about", "services", "resume", "contact"];
+    const handleHash = () => {
+      setActiveHash(window.location.hash);
+    };
+    handleHash();
+    window.addEventListener("hashchange", handleHash);
+    return () => window.removeEventListener("hashchange", handleHash);
+  }, []);
+
+  useEffect(() => {
+    const sections = ["home", "about", "portfolio", "studio", "services", "resume", "team", "contact"];
     const observers: { observer: IntersectionObserver; el: HTMLElement }[] = [];
 
     sections.forEach((id) => {
@@ -46,7 +59,12 @@ export const Header: React.FC = () => {
             <li className="menu__item">
               <a
                 className={`menu__link btn ${activeSection === "home" ? "active" : ""}`}
-                href="#home"
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                  window.history.pushState(null, "", window.location.pathname);
+                }}
               >
                 <span className="menu__caption">Home</span>
                 <i className="ph ph-house-simple"></i>
@@ -54,17 +72,26 @@ export const Header: React.FC = () => {
             </li>
             <li className="menu__item">
               <a
+                className={`menu__link btn ${activeSection === "about" ? "active" : ""}`}
+                href="#about"
+              >
+                <span className="menu__caption">About</span>
+                <i className="ph ph-user"></i>
+              </a>
+            </li>
+            <li className="menu__item">
+              <a
                 className={`menu__link btn ${activeSection === "portfolio" ? "active" : ""}`}
                 href="#portfolio"
               >
-                <span className="menu__caption">Films</span>
+                <span className="menu__caption">film</span>
                 <i className="ph ph-clapperboard"></i>
               </a>
             </li>
             <li className="menu__item">
               <a
-                className={`menu__link btn ${activeSection === "about" ? "active" : ""}`}
-                href="#about"
+                className={`menu__link btn ${activeSection === "studio" ? "active" : ""}`}
+                href="#studio"
               >
                 <span className="menu__caption">Studio</span>
                 <i className="ph ph-buildings"></i>
@@ -84,16 +111,36 @@ export const Header: React.FC = () => {
                 className={`menu__link btn ${activeSection === "resume" ? "active" : ""}`}
                 href="#resume"
               >
-                <span className="menu__caption">Legacy</span>
+                <span className="menu__caption">legacy</span>
                 <i className="ph ph-trophy"></i>
+              </a>
+            </li>
+            {showTeam && (
+              <li className="menu__item">
+                <a
+                  className={`menu__link btn ${activeSection === "team" ? "active" : ""}`}
+                  href="#team"
+                >
+                  <span className="menu__caption">Team</span>
+                  <i className="ph ph-users"></i>
+                </a>
+              </li>
+            )}
+            <li className="menu__item">
+              <a
+                className={`menu__link btn ${activeSection === "contact" && (activeHash === "#lets-pitch" || activeHash === "#lets-connect") ? "active" : ""}`}
+                href="#lets-pitch"
+              >
+                <span className="menu__caption">Let's Connect</span>
+                <i className="ph ph-handshake"></i>
               </a>
             </li>
             <li className="menu__item">
               <a
-                className={`menu__link btn ${activeSection === "contact" ? "active" : ""}`}
+                className={`menu__link btn ${activeSection === "contact" && activeHash !== "#lets-pitch" && activeHash !== "#lets-connect" ? "active" : ""}`}
                 href="#contact"
               >
-                <span className="menu__caption">Co-Produce</span>
+                <span className="menu__caption">Contact</span>
                 <i className="ph ph-envelope"></i>
               </a>
             </li>
