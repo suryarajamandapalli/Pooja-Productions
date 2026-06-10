@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { SplitText } from "./SplitText";
 import { Marquee } from "./Marquee";
 import { useCMS } from "./CMSContext";
 
