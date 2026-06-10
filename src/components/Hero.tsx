@@ -51,7 +51,7 @@ export const Hero: React.FC = () => {
                 </p>
 
                 {/* Headline — loading__item #2 */}
-                <h1 className="headline__title loading__item" style={{ fontSize: "7rem", lineHeight: "1.1", fontWeight: 200, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "2rem" }}>
+                <h1 className="headline__title loading__item" style={{ fontSize: "clamp(6rem, 8vw, 12rem)", lineHeight: "1", fontWeight: 500, letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: "2rem" }}>
                   POOJA
                   <br />
                   PRODUCTIONS
