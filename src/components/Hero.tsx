@@ -22,14 +22,14 @@ export const Hero: React.FC = () => {
 
         {/* Background images — CSS classes handle positioning & z-index */}
         <div className="intro__background intro-bg-01">
-          {/* Left image — film reel, peeking from left edge */}
+          {/* Left image */}
           <div className="intro-bg-01__01" data-speed="0.6">
-            <img src="img/backgrounds/cinematic_reel.png" alt="Cinematic Film Reel" style={{ mixBlendMode: "screen", opacity: 0.8 }} />
+            <img src="img/backgrounds/gold_diamond1.png" alt="Golden Diamond" style={{ mixBlendMode: "screen", opacity: 0.8 }} />
             <div className="intro-bg__shadow" />
           </div>
-          {/* Right image — cameraman, large on right */}
+          {/* Right image */}
           <div className="intro-bg-01__02" data-speed="0.8">
-            <img src="img/backgrounds/cinematic_camera.png" alt="Cinematic Vintage Camera" style={{ mixBlendMode: "screen", opacity: 0.8 }} />
+            <img src="img/backgrounds/gold_diamond2.png" alt="Golden Diamond" style={{ mixBlendMode: "screen", opacity: 0.8 }} />
             <div className="intro-bg__shadow" />
           </div>
         </div>

@@ -12,10 +12,6 @@ const currentFrame = (index: number) =>
 export const CanvasSequenceCard: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const text1Ref = useRef<HTMLDivElement>(null);
-  const text2Ref = useRef<HTMLDivElement>(null);
-  const text3Ref = useRef<HTMLDivElement>(null);
-  const text4Ref = useRef<HTMLDivElement>(null);
 
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const renderFrameRef = useRef(0);
@@ -110,24 +106,6 @@ export const CanvasSequenceCard: React.FC = () => {
       onUpdate: () => requestAnimationFrame(() => render(Math.round(frameObj.frame)))
     }, 0);
 
-    // 5. Synchronized Text Overlays
-    // Duration is in "frames" based on timeline
-    
-    // Text 1: HELLO ! (Frames 1-40)
-    tl.fromTo(text1Ref.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 10, ease: "power2.out" }, 1)
-      .to(text1Ref.current, { opacity: 0, y: -20, duration: 10, ease: "power2.in" }, 30);
-
-    // Text 2: Mr. MK Presents (Frames 40-90)
-    tl.fromTo(text2Ref.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 10, ease: "power2.out" }, 40)
-      .to(text2Ref.current, { opacity: 0, y: -20, duration: 10, ease: "power2.in" }, 80);
-
-    // Text 3: POOJA PRODUCTIONS (Frames 90-160)
-    tl.fromTo(text3Ref.current, { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 15, ease: "power2.out" }, 90)
-      .to(text3Ref.current, { opacity: 0, scale: 1.05, duration: 15, ease: "power2.in" }, 145);
-
-    // Text 4: Crafting Stories That Live Forever (Frames 160-208)
-    tl.fromTo(text4Ref.current, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 15, ease: "power2.out" }, 160);
-
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       if (tl.scrollTrigger) tl.scrollTrigger.kill();
@@ -159,37 +137,6 @@ export const CanvasSequenceCard: React.FC = () => {
           zIndex: 0
         }} 
       />
-      
-      {/* Dark gradient overlay for text readability */}
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%)", zIndex: 1 }} />
-
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", zIndex: 2, pointerEvents: "none", padding: "20px" }}>
-        
-        <div ref={text1Ref} style={{ position: "absolute", opacity: 0, textAlign: "center" }}>
-          <h2 style={{ fontSize: "clamp(2rem, 5vw, 4rem)", color: "#fff", textTransform: "uppercase", letterSpacing: "0.2em", margin: 0, fontFamily: '"Urbanist", sans-serif' }}>
-            HELLO !
-          </h2>
-        </div>
-
-        <div ref={text2Ref} style={{ position: "absolute", opacity: 0, textAlign: "center" }}>
-          <h3 style={{ fontSize: "clamp(1.5rem, 3vw, 2.5rem)", color: "#e0e0e0", textTransform: "uppercase", letterSpacing: "0.3em", fontWeight: 300, fontFamily: '"Urbanist", sans-serif' }}>
-            Mr. MK Presents
-          </h3>
-        </div>
-
-        <div ref={text3Ref} style={{ position: "absolute", opacity: 0, textAlign: "center", width: "100%" }}>
-          <h1 style={{ fontSize: "clamp(2.5rem, 6vw, 6rem)", color: "#fff", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700, textShadow: "0 10px 30px rgba(0,0,0,0.5)", fontFamily: '"Urbanist", sans-serif' }}>
-            POOJA PRODUCTIONS
-          </h1>
-        </div>
-
-        <div ref={text4Ref} style={{ position: "absolute", opacity: 0, textAlign: "center" }}>
-          <p style={{ fontSize: "clamp(1.2rem, 2.5vw, 2rem)", color: "#d0d0d0", fontStyle: "italic", letterSpacing: "0.05em", fontWeight: 400, fontFamily: '"Urbanist", sans-serif' }}>
-            Crafting Stories That Live Forever
-          </p>
-        </div>
-
-      </div>
     </div>
   );
 };
