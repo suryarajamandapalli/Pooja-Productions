@@ -105,6 +105,11 @@ export const CinematicSequence: React.FC = () => {
       onUpdate: () => requestAnimationFrame(() => render(Math.round(frameObj.frame)))
     }, 0);
 
+    // Ensure all other scroll animations refresh their positions now that we've added a pinned spacer
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 200);
+
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       if (tl.scrollTrigger) tl.scrollTrigger.kill();

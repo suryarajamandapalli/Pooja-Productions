@@ -73,7 +73,12 @@ const MainAppContent: React.FC = () => {
 
     // 2. Parallax effects ([data-speed])
     gsap.to("[data-speed]", {
-      y: (_, el) => (1 - parseFloat(el.getAttribute("data-speed") || "1")) * ScrollTrigger.maxScroll(window),
+      y: (_, el) => {
+        const speed = parseFloat(el.getAttribute("data-speed") || "1");
+        // Limit the maximum scroll multiplier so massive pinned sections don't throw elements off-screen
+        const effectiveMaxScroll = Math.min(ScrollTrigger.maxScroll(window), 4000);
+        return (1 - speed) * effectiveMaxScroll;
+      },
       ease: "none",
       scrollTrigger: {
         start: 0,
