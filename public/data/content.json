@@ -241,7 +241,7 @@
   "footer": {
     "copyright": "© 2026 Pooja Productions. All rights reserved.",
     "links": [
-      { "label": "IMDb", "url": "https://www.imdb.com" }
+      { "label": "Admin Login", "url": "/admin" }
     ]
   }
 }
