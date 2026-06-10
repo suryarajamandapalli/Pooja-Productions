@@ -7,9 +7,7 @@ export const Hero: React.FC = () => {
   const { data } = useCMS();
   const hero = data?.hero;
 
-  const subheadline = hero?.subheadline || "MR. MK'S PRESENT";
   const primaryBtnText = hero?.primaryBtnText || "Scroll for more";
-  const subLines = subheadline.split("\n");
 
   return (
     <section id="home" className="main home">
