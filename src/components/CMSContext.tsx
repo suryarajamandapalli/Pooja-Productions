@@ -6,8 +6,13 @@ export interface HeroContent {
   subheadline: string;
   primaryBtnText: string;
   secondaryBtnText: string;
-  bgVideoUrl: string;
-  heroImageUrl: string;
+  bgVideoUrl?: string;
+  heroImageUrl?: string;
+  marqueeItems?: {
+    id: number;
+    src: string;
+    title: string;
+  }[];
 }
 
 export interface AboutContent {

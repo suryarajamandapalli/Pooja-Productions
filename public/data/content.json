@@ -5,7 +5,39 @@
     "primaryBtnText": "Explore our Slate",
     "secondaryBtnText": "Co-Produce",
     "bgVideoUrl": "",
-    "heroImageUrl": "/img/backgrounds/1200x1200_bg01.png"
+    "heroImageUrl": "/img/backgrounds/1200x1200_bg01.png",
+    "marqueeItems": [
+      {
+        "id": 1,
+        "src": "img/marquee/01.webp",
+        "title": "On Set"
+      },
+      {
+        "id": 2,
+        "src": "img/marquee/02.webp",
+        "title": "Production"
+      },
+      {
+        "id": 3,
+        "src": "img/marquee/03.webp",
+        "title": "Direction"
+      },
+      {
+        "id": 4,
+        "src": "img/marquee/04.webp",
+        "title": "Post-Production"
+      },
+      {
+        "id": 5,
+        "src": "img/marquee/05.webp",
+        "title": "Premiere"
+      },
+      {
+        "id": 6,
+        "src": "img/marquee/06.webp",
+        "title": "Awards"
+      }
+    ]
   },
   "about": {
     "title": "Our Vision & Craft",
