@@ -2,6 +2,7 @@ import React from "react";
 import { Marquee } from "./Marquee";
 import { SplitText } from "./SplitText";
 import { useCMS } from "./CMSContext";
+import { CinematicSequence } from "./CinematicSequence";
 
 export const Hero: React.FC = () => {
   const { data } = useCMS();
@@ -80,7 +81,12 @@ export const Hero: React.FC = () => {
 
 
       {/* ══════════════════════════════════════════════════════
-          MAIN MEDIA  — divider image + blockquote + marquee
+          CINEMATIC SEQUENCE (Fullscreen Scroll)
+          ══════════════════════════════════════════════════════ */}
+      <CinematicSequence />
+
+      {/* ══════════════════════════════════════════════════════
+          MAIN MEDIA  — blockquote + marquee
           All scroll animations preserved:
             • animate-in-up  → blur fade-up on scroll
             • reveal-type    → character-by-character reveal
@@ -93,20 +99,6 @@ export const Hero: React.FC = () => {
             <div className="col-12 col-xl-2" />
 
             <div className="col-12 col-xl-8">
-
-              {/* Divider image — animate-in-up scroll animation */}
-              <div className="content__block">
-                <div className="container-fluid p-0">
-                  <div className="row g-0">
-                    <div className="col-12">
-                      <div
-                        className="divider divider-image main-image-1 animate-in-up"
-                        style={hero?.heroImageUrl ? { backgroundImage: `url(${hero.heroImageUrl})` } : undefined}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               {/* Blockquote — reveal-type scroll animation via SplitText */}
               <div className="content__block large-text-block">

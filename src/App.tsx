@@ -14,7 +14,6 @@ import { Logo } from "./components/Logo";
 import { ColorSwitcher } from "./components/ColorSwitcher";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { BottomBackground } from "./components/BottomBackground";
-import { CinematicSequence } from "./components/CinematicSequence";
 import { Hero } from "./components/Hero";
 import { Portfolio } from "./components/Portfolio";
 import { About } from "./components/About";
@@ -325,7 +324,6 @@ const MainAppContent: React.FC = () => {
       {/* 5. Main Scrollable Container */}
       <main id="page-content" className="page-content" style={{ position: "relative" }}>
         <Hero />
-        <CinematicSequence />
         <Portfolio />
         <About />
         <Services />
