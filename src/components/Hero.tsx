@@ -25,12 +25,12 @@ export const Hero: React.FC = () => {
         <div className="intro__background intro-bg-01">
           {/* Left image — film reel, peeking from left edge */}
           <div className="intro-bg-01__01" data-speed="0.6">
-            <img src="img/backgrounds/gold_diamond1.png" alt="Gold Diamond Background" />
+            <img src="img/backgrounds/cinematic_reel.png" alt="Cinematic Film Reel" style={{ mixBlendMode: "screen", opacity: 0.8 }} />
             <div className="intro-bg__shadow" />
           </div>
           {/* Right image — cameraman, large on right */}
           <div className="intro-bg-01__02" data-speed="0.8">
-            <img src="img/backgrounds/gold_diamond2.png" alt="Gold Diamond Background" />
+            <img src="img/backgrounds/cinematic_camera.png" alt="Cinematic Vintage Camera" style={{ mixBlendMode: "screen", opacity: 0.8 }} />
             <div className="intro-bg__shadow" />
           </div>
         </div>
@@ -46,18 +46,21 @@ export const Hero: React.FC = () => {
               <div id="headline" className="headline d-flex align-items-start flex-column loading-wrap">
 
                 {/* Subtitle — loading__item #1 (blurs+slides up first) */}
-                <p className="headline__subtitle space-bottom loading__item" style={{ fontSize: "2rem", fontWeight: 300, opacity: 0.8 }}>
-                  {subLines[0] || "MR. MK'S PRESENT"}
-                  {subLines[1] && <br />}
-                  {subLines[1] && subLines[1]}
+                <p className="headline__subtitle space-bottom loading__item" style={{ fontSize: "1.6rem", fontWeight: 300, opacity: 0.8, letterSpacing: "0.4em", textTransform: "uppercase" }}>
+                  HELLO !<br />MR. MK PRESENTS
                 </p>
 
                 {/* Headline — loading__item #2 */}
-                <h1 className="headline__title loading__item" style={{ fontSize: "6rem", lineHeight: "1.1", fontWeight: 400, letterSpacing: "-0.03em" }}>
+                <h1 className="headline__title loading__item" style={{ fontSize: "7rem", lineHeight: "1.1", fontWeight: 200, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "2rem" }}>
                   POOJA
                   <br />
                   PRODUCTIONS
                 </h1>
+                
+                {/* Subtext — loading__item */}
+                <p className="headline__subtitle space-bottom loading__item" style={{ fontSize: "1.8rem", fontWeight: 300, opacity: 0.6, fontStyle: "italic", letterSpacing: "0.1em" }}>
+                  Crafting Stories That Live Forever
+                </p>
 
                 {/* CTA button — loading__item #3 */}
                 <div className="headline__btn loading__item">
