@@ -2,7 +2,6 @@ import React from "react";
 import { Marquee } from "./Marquee";
 import { SplitText } from "./SplitText";
 import { useCMS } from "./CMSContext";
-import { CinematicVideoCard } from "./CinematicVideoCard";
 
 export const Hero: React.FC = () => {
   const { data } = useCMS();
@@ -100,7 +99,10 @@ export const Hero: React.FC = () => {
                 <div className="container-fluid p-0">
                   <div className="row g-0">
                     <div className="col-12">
-                      <CinematicVideoCard />
+                      <div
+                        className="divider divider-image main-image-1 animate-in-up"
+                        style={hero?.heroImageUrl ? { backgroundImage: `url(${hero.heroImageUrl})` } : undefined}
+                      />
                     </div>
                   </div>
                 </div>
