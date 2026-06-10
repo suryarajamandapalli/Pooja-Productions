@@ -23,3 +23,22 @@
   transform: translateY(-5px) !important;
 }
 
+
+.css-floating-diamond {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: screen;
+  opacity: 0.15;
+  animation: floatDiamond 6s ease-in-out infinite alternate;
+}
+.diamond-1 { top: 15%; left: 5%; width: 80px; filter: blur(2px); animation-delay: 0s; }
+.diamond-2 { top: 35%; right: 8%; width: 120px; animation-delay: 1.5s; }
+.diamond-3 { top: 65%; left: 10%; width: 100px; animation-delay: 3s; }
+.diamond-4 { top: 85%; right: 12%; width: 90px; filter: blur(1px); animation-delay: 4.5s; }
+
+@keyframes floatDiamond {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(-40px) rotate(15deg); }
+}
+

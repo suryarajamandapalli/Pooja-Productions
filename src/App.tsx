@@ -14,7 +14,6 @@ import { Logo } from "./components/Logo";
 import { ColorSwitcher } from "./components/ColorSwitcher";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { BottomBackground } from "./components/BottomBackground";
-import { FloatingDiamonds } from "./components/FloatingDiamonds";
 import { Hero } from "./components/Hero";
 import { Portfolio } from "./components/Portfolio";
 import { About } from "./components/About";
@@ -323,8 +322,7 @@ const MainAppContent: React.FC = () => {
       <ColorSwitcher />
 
       {/* 5. Main Scrollable Container */}
-      <main id="page-content" className="page-content" style={{ position: "relative" }}>
-        <FloatingDiamonds />
+      <main id="page-content" className="page-content">
         <Hero />
         <Portfolio />
         <About />
@@ -341,39 +339,6 @@ const MainAppContent: React.FC = () => {
 
       {/* 7. Scroll-to-top trigger button */}
       <ScrollToTop />
-
-      {/* 8. Floating Admin Back-to-Dashboard badge */}
-      {isAdmin && (
-        <button
-          onClick={() => {
-            window.history.pushState(null, "", "/admin");
-            window.dispatchEvent(new PopStateEvent('popstate'));
-          }}
-          style={{
-            position: "fixed",
-            bottom: "3rem",
-            left: "3rem",
-            backgroundColor: "#0A0A0A",
-            border: "1px solid #C5A880",
-            borderRadius: "50px",
-            padding: "1.2rem 2rem",
-            color: "#C5A880",
-            fontFamily: '"Urbanist", sans-serif',
-            fontSize: "1.3rem",
-            fontWeight: 700,
-            cursor: "pointer",
-            zIndex: 100000,
-            display: "flex",
-            alignItems: "center",
-            gap: "1rem",
-            boxShadow: "0 10px 30px rgba(197, 168, 128, 0.25)"
-          }}
-          className="admin-dashboard-btn"
-        >
-          <span style={{ display: "inline-block", width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "currentColor" }}></span>
-          Studio Dashboard
-        </button>
-      )}
     </>
   );
 };

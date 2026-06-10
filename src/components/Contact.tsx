@@ -162,44 +162,38 @@ export const Contact: React.FC = () => {
                   <div className="container-fluid p-0 contact-data">
                     <div className="row g-0">
                       <div className="col-12 col-md-6 col-lg-3 contact-data__item grid-item">
-                        <p className="contact-data__title tagline-chapter animate-in-up">Headquarters</p>
+                        <p className="contact-data__title tagline-chapter animate-in-up">Address</p>
                         <p className="contact-data__text small type-basic-160lh">
                           <a
                             className="link-small-160lh animate-in-up"
-                            href={about.mapUrl || "https://maps.google.com/?q=Film+City+Goregaon+East+Mumbai"}
+                            href="https://maps.google.com/?q=Hyderabad"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            {about.address}
-                            <br />
-                            Film City, Goregaon East, 400065
+                            Door No. 7-66/2/216,217,229&230/302<br />
+                            Raidurgh, Navkhalsa, Serilingampally,<br />
+                            Hyderabad, Telangana-500008
                           </a>
                         </p>
                       </div>
                       <div className="col-12 col-md-6 col-lg-3 contact-data__item grid-item">
-                        <p className="contact-data__title tagline-chapter animate-in-up">International</p>
+                        <p className="contact-data__title tagline-chapter animate-in-up">Website</p>
                         <p className="contact-data__text small type-basic-160lh">
                           <a
                             className="link-small-160lh animate-in-up"
-                            href="https://maps.google.com/?q=Sunset+Boulevard+Beverly+Hills+CA"
+                            href="https://www.poojaproductions.com"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            Los Angeles, USA
-                            <br />
-                            Sunset Blvd, Beverly Hills, CA 90210
+                            www.poojaproductions.com
                           </a>
                         </p>
                       </div>
                       <div className="col-12 col-md-6 col-lg-3 contact-data__item grid-item">
                         <p className="contact-data__title tagline-chapter animate-in-up">Phone</p>
                         <p className="contact-data__text small type-basic-160lh">
-                          <a className="link-small-160lh animate-in-up" href={`tel:${about.phone.replace(/[^+\d]/g, "")}`}>
-                            {about.phone}
-                          </a>
-                          <br />
-                          <a className="link-small-160lh animate-in-up" href="tel:+13105505600">
-                            +1 310-550-5600
+                          <a className="link-small-160lh animate-in-up" href="tel:+919347474144">
+                            +919347474144
                           </a>
                         </p>
                       </div>
@@ -208,16 +202,9 @@ export const Contact: React.FC = () => {
                         <p className="contact-data__text small type-basic-160lh">
                           <a
                             className="link-small-160lh animate-in-up"
-                            href={`mailto:${about.email}?subject=General%20Inquiry`}
+                            href="mailto:poojaproductions70mm@gmail.com"
                           >
-                            {about.email}
-                          </a>
-                          <br />
-                          <a
-                            className="link-small-160lh animate-in-up"
-                            href="mailto:coproductions@poojaproductions.com?subject=Co-production%20Pitch"
-                          >
-                            copro@poojaproductions.com
+                            poojaproductions70mm@gmail.com
                           </a>
                         </p>
                       </div>
@@ -317,10 +304,6 @@ export const Contact: React.FC = () => {
                 {link.label}
               </a>
             ))}
-            <span style={{ color: "rgba(255, 255, 255, 0.08)" }}>|</span>
-            <a href="/admin" style={{ color: "rgba(255,255,255,0.15)", textDecoration: "none", fontSize: "1rem", letterSpacing: "0.05em", transition: "color 0.3s" }} onMouseOver={(e) => e.currentTarget.style.color = "rgba(197,168,128,0.5)"} onMouseOut={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.15)"}>
-              admin
-            </a>
           </div>
         </div>
       </div>
