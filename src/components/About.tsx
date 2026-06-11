@@ -12,14 +12,6 @@ export const About: React.FC = () => {
 
   return (
     <section id="about" className="inner inner-grid-bottom about" style={{ overflow: "hidden" }}>
-      {/* Floating Rocks Parallax Background */}
-      <div className="about-rock-user" data-speed="0.85">
-        <img src="/img/backgrounds/about_rock.png" alt="Floating Rock" />
-      </div>
-      <div className="about-rock-1" data-speed="0.7">
-        <img src="/img/backgrounds/rock1.png" alt="Floating Rock" />
-      </div>
-
       <div className="inner__wrapper" style={{ position: "relative", zIndex: 2 }}>
         <div className="container-fluid p-0">
           <div className="row g-0">
@@ -115,7 +107,15 @@ export const About: React.FC = () => {
             {/* Inner Section Content End */}
 
             {/* Inner Section Aside Start */}
-            <div className="col-12 col-xl-2"></div>
+            <div className="col-12 col-xl-2 d-none d-xl-flex align-items-center justify-content-center">
+              <div className="about-rock-user-container" data-speed="0.85" style={{ width: "100%", padding: "1rem" }}>
+                <img 
+                  src="/img/backgrounds/about_rock.png" 
+                  alt="Decorative Rock" 
+                  style={{ width: "100%", height: "auto", objectFit: "contain", opacity: 0.85 }} 
+                />
+              </div>
+            </div>
             {/* Inner Section Aside End */}
           </div>
         </div>
@@ -139,11 +139,6 @@ export const Studio: React.FC = () => {
 
   return (
     <section id="studio" className="inner inner-grid-bottom about" style={{ overflow: "hidden" }}>
-      {/* Floating Rock Parallax Background */}
-      <div className="about-rock-2" data-speed="0.75">
-        <img src="/img/backgrounds/rock2.png" alt="Floating Rock" />
-      </div>
-
       <div className="inner__wrapper" style={{ position: "relative", zIndex: 2 }}>
         <div className="container-fluid p-0">
           <div className="row g-0">
@@ -258,7 +253,15 @@ export const Studio: React.FC = () => {
             {/* Inner Section Content End */}
 
             {/* Inner Section Aside Start */}
-            <div className="col-12 col-xl-2"></div>
+            <div className="col-12 col-xl-2 d-none d-xl-flex align-items-center justify-content-center">
+              <div className="about-rock-2-container" data-speed="0.75" style={{ width: "100%", padding: "1rem" }}>
+                <img 
+                  src="/img/backgrounds/rock2.png" 
+                  alt="Decorative Rock" 
+                  style={{ width: "100%", height: "auto", objectFit: "contain", opacity: 0.8 }} 
+                />
+              </div>
+            </div>
             {/* Inner Section Aside End */}
           </div>
         </div>
