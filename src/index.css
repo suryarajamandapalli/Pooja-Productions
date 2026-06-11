@@ -259,5 +259,68 @@ form select option {
   pointer-events: none;
 }
 
+/* ══════════════════════════════════════════════════════
+   ABOUT SECTION DECORATIVE ROCKS
+   ══════════════════════════════════════════════════════ */
+.about-rock-user,
+.about-rock-1,
+.about-rock-2 {
+  display: none;
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.about-rock-user img,
+.about-rock-1 img,
+.about-rock-2 img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media only screen and (min-width: 992px) {
+  .about-rock-user {
+    display: block;
+    top: 10%;
+    right: -60px;
+    width: 250px;
+    opacity: 0.18;
+  }
+  .about-rock-1 {
+    display: block;
+    bottom: 5%;
+    left: -80px;
+    width: 300px;
+    opacity: 0.15;
+  }
+  .about-rock-2 {
+    display: block;
+    bottom: -60px;
+    right: -80px;
+    width: 280px;
+    opacity: 0.18;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .about-rock-user {
+    right: -100px;
+    width: 380px;
+    opacity: 0.22;
+  }
+  .about-rock-1 {
+    left: -150px;
+    width: 440px;
+    opacity: 0.18;
+  }
+  .about-rock-2 {
+    right: -120px;
+    width: 420px;
+    opacity: 0.20;
+  }
+}
+
+
 
 

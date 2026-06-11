@@ -11,8 +11,16 @@ export const About: React.FC = () => {
   }
 
   return (
-    <section id="about" className="inner inner-grid-bottom about">
-      <div className="inner__wrapper">
+    <section id="about" className="inner inner-grid-bottom about" style={{ overflow: "hidden" }}>
+      {/* Floating Rocks Parallax Background */}
+      <div className="about-rock-user" data-speed="0.85">
+        <img src="/img/backgrounds/about_rock.png" alt="Floating Rock" />
+      </div>
+      <div className="about-rock-1" data-speed="0.7">
+        <img src="/img/backgrounds/rock1.png" alt="Floating Rock" />
+      </div>
+
+      <div className="inner__wrapper" style={{ position: "relative", zIndex: 2 }}>
         <div className="container-fluid p-0">
           <div className="row g-0">
             {/* Inner Section Name Start */}
@@ -130,8 +138,13 @@ export const Studio: React.FC = () => {
   const titlePart2 = titleParts[1] || "";
 
   return (
-    <section id="studio" className="inner inner-grid-bottom about">
-      <div className="inner__wrapper">
+    <section id="studio" className="inner inner-grid-bottom about" style={{ overflow: "hidden" }}>
+      {/* Floating Rock Parallax Background */}
+      <div className="about-rock-2" data-speed="0.75">
+        <img src="/img/backgrounds/rock2.png" alt="Floating Rock" />
+      </div>
+
+      <div className="inner__wrapper" style={{ position: "relative", zIndex: 2 }}>
         <div className="container-fluid p-0">
           <div className="row g-0">
             {/* Inner Section Name Start */}
