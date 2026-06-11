@@ -100,7 +100,8 @@ form select option {
    ══════════════════════════════════════════════════════ */
 @media only screen and (max-width: 1199px) {
   .main__intro {
-    height: 82vh !important;
+    height: 100vh !important;
+    height: 100dvh !important;
     min-height: 520px !important;
     margin-bottom: 0 !important;
   }
