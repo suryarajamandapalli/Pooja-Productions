@@ -242,10 +242,15 @@ const MainAppContent: React.FC = () => {
         const targetEl = document.querySelector(scrollTarget);
         if (targetEl) {
           e.preventDefault();
-          window.location.hash = href;
+          const isMobileDevice = window.innerWidth < 1200;
+          const scrollOffset = isMobileDevice ? 0 : -90;
           lenis.scrollTo(targetEl as HTMLElement, {
             duration: 1.2,
+            offset: scrollOffset,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            onComplete: () => {
+              window.history.pushState(null, "", href);
+            }
           });
         }
       }

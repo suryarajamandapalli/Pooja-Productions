@@ -59,12 +59,7 @@ export const Header: React.FC = () => {
             <li className="menu__item">
               <a
                 className={`menu__link btn ${activeSection === "home" ? "active" : ""}`}
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                  window.history.pushState(null, "", window.location.pathname);
-                }}
+                href="#home"
               >
                 <span className="menu__caption">Home</span>
                 <i className="ph ph-house-simple"></i>

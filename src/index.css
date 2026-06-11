@@ -95,3 +95,62 @@ form select option {
   transition: background-color 0.3s, border-color 0.3s, color 0.3s !important;
 }
 
+/* ══════════════════════════════════════════════════════
+   HERO MOBILE RESPONSIVENESS OVERRIDES
+   ══════════════════════════════════════════════════════ */
+@media only screen and (max-width: 1199px) {
+  .main__intro {
+    height: 82vh !important;
+    min-height: 520px !important;
+    margin-bottom: 0 !important;
+  }
+  .intro__background {
+    height: 100% !important;
+  }
+  .main__intro .container-fluid,
+  .main__intro .row,
+  .main__intro .col-xl-8 {
+    height: 100% !important;
+  }
+  .main__intro .row {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+  }
+  .headline {
+    margin-top: 0 !important;
+    padding-top: 10rem !important;
+    padding-bottom: 2rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .headline__subtitle {
+    font-size: 1.4rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 1.5rem !important;
+    opacity: 0.8;
+  }
+  .headline__title {
+    font-size: calc(3.6rem + 1vw) !important;
+    line-height: 1.15 !important;
+    margin-bottom: 3rem !important;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .intro-bg-01__01 {
+    width: 180px !important;
+    height: 180px !important;
+    top: -50px !important;
+    right: -30px !important;
+  }
+  .intro-bg-01__02 {
+    width: 90px !important;
+    height: 90px !important;
+    bottom: 20px !important;
+    right: 10px !important;
+  }
+}
+
+
