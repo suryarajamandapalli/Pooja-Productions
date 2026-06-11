@@ -99,6 +99,9 @@ form select option {
    HERO MOBILE RESPONSIVENESS OVERRIDES
    ══════════════════════════════════════════════════════ */
 @media only screen and (max-width: 1199px) {
+  .main.home {
+    padding-top: 0 !important;
+  }
   .main__intro {
     height: 100vh !important;
     height: 100dvh !important;
