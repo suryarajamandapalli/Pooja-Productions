@@ -164,7 +164,7 @@ form select option {
    CINEMATIC LOADER OVERRIDES
    ══════════════════════════════════════════════════════ */
 .loader__wrapper {
-  background: radial-gradient(circle at center, #181512 0%, #0b0907 50%, #030303 100%) !important;
+  background: #000000 !important;
   overflow: hidden !important;
 }
 
@@ -199,22 +199,26 @@ form select option {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: min(45vw, 350px);
-  height: min(45vw, 350px);
+  width: min(55vw, 420px);
+  height: min(55vw, 420px);
   background: radial-gradient(circle, rgba(255, 235, 200, 0.95) 0%, rgba(197, 168, 128, 0.4) 30%, rgba(197, 168, 128, 0.08) 60%, transparent 80%);
-  filter: blur(8px);
+  filter: blur(12px);
   border-radius: 50%;
   pointer-events: none;
-  z-index: 3;
+  z-index: 2; /* behind the logo */
   mix-blend-mode: screen;
   transform-origin: center;
+}
+
+.loader__content {
+  z-index: 3 !important; /* on top of the flare */
 }
 
 .logo-wrapper {
   position: relative;
   overflow: hidden;
   display: block;
-  z-index: 2;
+  z-index: 3;
   border-radius: 8px;
   padding: 1rem;
 }
@@ -225,6 +229,7 @@ form select option {
   object-fit: contain;
   display: block;
   margin: 0 auto;
+  filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.95)) !important;
   will-change: transform, filter, opacity;
 }
 
