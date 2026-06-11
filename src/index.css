@@ -160,4 +160,23 @@ form select option {
   }
 }
 
+/* ══════════════════════════════════════════════════════
+   LOADER LOGO OVERRIDES
+   ══════════════════════════════════════════════════════ */
+.loader__logo {
+  max-width: 240px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  filter: drop-shadow(0 0 30px rgba(197, 168, 128, 0.25));
+}
+
+@media only screen and (min-width: 768px) {
+  .loader__logo {
+    max-width: 380px;
+  }
+}
+
+
 
