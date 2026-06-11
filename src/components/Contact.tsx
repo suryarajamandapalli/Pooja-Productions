@@ -3,12 +3,12 @@ import { Marquee } from "./Marquee";
 import { useCMS } from "./CMSContext";
 
 export const Contact: React.FC = () => {
-  const { data } = useCMS();
+  const { data, addSubmission } = useCMS();
   const about = data?.about;
   const footer = data?.footer;
 
   const [activeForm, setActiveForm] = useState<"hello" | "pitch">("hello");
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success">("idle");
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "submitting">("idle");
 
   React.useEffect(() => {
     const handleHash = () => {
@@ -50,17 +50,10 @@ export const Contact: React.FC = () => {
     agreeCopyright: false
   });
 
-  const handleHelloSubmit = (e: React.FormEvent) => {
+  const handleHelloSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Save submission to localStorage for CMS review
-    const existing = JSON.parse(localStorage.getItem("pp_submissions") || "[]");
-    existing.unshift({
-      id: Date.now(),
-      type: "contact",
-      timestamp: new Date().toISOString(),
-      data: { ...helloData }
-    });
-    localStorage.setItem("pp_submissions", JSON.stringify(existing));
+    setSubmitStatus("submitting");
+    await addSubmission("contact", { ...helloData });
     setSubmitStatus("success");
     setTimeout(() => {
       setSubmitStatus("idle");
@@ -68,17 +61,10 @@ export const Contact: React.FC = () => {
     }, 5000);
   };
 
-  const handlePitchSubmit = (e: React.FormEvent) => {
+  const handlePitchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Save pitch submission to localStorage for CMS review
-    const existing = JSON.parse(localStorage.getItem("pp_submissions") || "[]");
-    existing.unshift({
-      id: Date.now(),
-      type: "pitch",
-      timestamp: new Date().toISOString(),
-      data: { ...pitchData }
-    });
-    localStorage.setItem("pp_submissions", JSON.stringify(existing));
+    setSubmitStatus("submitting");
+    await addSubmission("pitch", { ...pitchData });
     setSubmitStatus("success");
     setTimeout(() => {
       setSubmitStatus("idle");

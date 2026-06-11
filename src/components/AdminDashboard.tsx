@@ -43,9 +43,8 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
   const loadMedia = async () => {
     setMediaLoading(true);
     try {
-      const res = await fetch("/api/list-media");
-      const result = await res.json();
-      setMediaFiles(result.files || []);
+      const files = await listMedia();
+      setMediaFiles(files);
     } catch (e) {
       console.error("Failed to load stored media files", e);
     } finally {
@@ -53,13 +52,7 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
     }
   };
 
-  const [submissions, setSubmissions] = useState<any[]>([]);
   const [expandedSubmission, setExpandedSubmission] = useState<number | null>(null);
-
-  const loadSubmissions = () => {
-    const stored = JSON.parse(localStorage.getItem("pp_submissions") || "[]");
-    setSubmissions(stored);
-  };
 
   useEffect(() => {
     if (activeTab === "media") {
@@ -78,7 +71,22 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
     );
   }
 
-  const { data, updateField, addListItem, updateListItem, deleteListItem, uploadMedia, saveAllChanges, logout } = cms;
+  const {
+    data,
+    updateField,
+    addListItem,
+    updateListItem,
+    deleteListItem,
+    uploadMedia,
+    saveAllChanges,
+    logout,
+    submissions,
+    loadSubmissions,
+    deleteSubmission,
+    clearAllSubmissions,
+    listMedia,
+    deleteMedia
+  } = cms;
 
   const handleSave = async () => {
     setSaveStatus("saving");
@@ -120,16 +128,11 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
     }
   };
 
-  const handleDeleteMedia = async (fileName: string) => {
-    if (!confirm(`Are you sure you want to delete ${fileName}?`)) return;
+  const handleDeleteMedia = async (fileUrlOrName: string) => {
+    if (!confirm(`Are you sure you want to delete this asset?`)) return;
     try {
-      const res = await fetch("/api/delete-media", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName })
-      });
-      const result = await res.json();
-      if (result.success) {
+      const success = await deleteMedia(fileUrlOrName);
+      if (success) {
         loadMedia();
       }
     } catch (e) {
@@ -1509,9 +1512,9 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                   <button onClick={loadSubmissions} style={{ padding: "1rem 2rem", backgroundColor: "#262626", color: "#FFF", border: "none", borderRadius: "0.8rem", cursor: "pointer", fontWeight: 600 }}>
                     <i className="ph ph-arrows-clockwise"></i> Refresh
                   </button>
-                  {submissions.length > 0 && (
+                   {submissions.length > 0 && (
                     <button
-                      onClick={() => { if (confirm("Clear ALL submissions? This cannot be undone.")) { localStorage.removeItem("pp_submissions"); loadSubmissions(); } }}
+                      onClick={async () => { if (confirm("Clear ALL submissions? This cannot be undone.")) { await clearAllSubmissions(); } }}
                       style={{ padding: "1rem 2rem", backgroundColor: "#EF4444", color: "#FFF", border: "none", borderRadius: "0.8rem", cursor: "pointer", fontWeight: 600 }}
                     >
                       Clear All
@@ -1580,11 +1583,11 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                               ))}
                             </div>
                             <button
-                              onClick={() => {
-                                const updated = submissions.filter((_, i) => i !== idx);
-                                localStorage.setItem("pp_submissions", JSON.stringify(updated));
-                                setSubmissions(updated);
-                                setExpandedSubmission(null);
+                              onClick={async () => {
+                                if (confirm("Delete this submission?")) {
+                                  await deleteSubmission(sub.id);
+                                  setExpandedSubmission(null);
+                                }
                               }}
                               style={{ marginTop: "2rem", padding: "0.8rem 2rem", backgroundColor: "#EF4444", color: "#FFF", border: "none", borderRadius: "0.6rem", cursor: "pointer", fontSize: "1.3rem" }}
                             >
@@ -1647,8 +1650,11 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                 ) : (
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "2rem" }}>
                     {mediaFiles.map((file) => {
-                      const isImage = /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(file);
-                      const isVideo = /\.(mp4|webm|mov)$/i.test(file);
+                      const isSupabaseUrl = file.startsWith("http");
+                      const displayUrl = isSupabaseUrl ? file : `/uploads/${file}`;
+                      const displayTitle = isSupabaseUrl ? file.substring(file.lastIndexOf("/") + 1).replace(/^\d+_/, "") : file.replace(/^\d+_/, "");
+                      const isImage = /\.(jpg|jpeg|png|webp|gif|svg)/i.test(displayUrl);
+                      const isVideo = /\.(mp4|webm|mov)/i.test(displayUrl);
                       return (
                         <div key={file} style={{
                           backgroundColor: "#0A0A0A",
@@ -1671,25 +1677,25 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                             justifyContent: "center"
                           }}>
                             {isImage ? (
-                              <img src={`/uploads/${file}`} alt={file} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                              <img src={displayUrl} alt={displayTitle} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                             ) : isVideo ? (
                               <i className="ph ph-video-camera" style={{ fontSize: "4rem", color: "#C5A880" }}></i>
                             ) : (
                               <i className="ph ph-file-text" style={{ fontSize: "4rem", color: "#AEB5C5" }}></i>
                             )}
                           </div>
-                          <div style={{ fontSize: "1.2rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "#FFF" }}>
-                            {file}
+                          <div style={{ fontSize: "1.2rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "#FFF" }} title={displayTitle}>
+                            {displayTitle}
                           </div>
                           <div style={{ display: "flex", gap: "0.5rem" }}>
                             <button
                               onClick={() => {
-                                navigator.clipboard.writeText(`/uploads/${file}`);
-                                alert(`Copied "/uploads/${file}" to clipboard!`);
+                                navigator.clipboard.writeText(displayUrl);
+                                alert(`Copied "${displayUrl}" to clipboard!`);
                               }}
                               style={{ flex: 1, padding: "0.6rem", backgroundColor: "#262626", color: "#FFF", border: "none", borderRadius: "0.4rem", cursor: "pointer", fontSize: "1.1rem" }}
                             >
-                              Copy Path
+                              Copy URL
                             </button>
                             <button
                               onClick={() => handleDeleteMedia(file)}
