@@ -266,7 +266,7 @@ form select option {
 .about-rock-right {
   position: absolute;
   pointer-events: none;
-  z-index: 1;
+  z-index: 5;
   will-change: transform;
 }
 
