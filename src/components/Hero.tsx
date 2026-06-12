@@ -23,6 +23,7 @@ export const Hero: React.FC = () => {
             muted 
             loop 
             playsInline 
+            key={hero?.bgVideoUrl || "/img/backgrounds/introl_video_1.mp4"}
             style={{
               position: "absolute",
               top: 0,
@@ -34,7 +35,7 @@ export const Hero: React.FC = () => {
               opacity: 0.35,
             }}
           >
-            <source src="/img/backgrounds/introl_video_1.mp4" type="video/mp4" />
+            <source src={hero?.bgVideoUrl || "/img/backgrounds/introl_video_1.mp4"} type="video/mp4" />
           </video>
           <div className="intro-bg-01__01" data-speed="0.6" style={{ zIndex: 2 }}>
             <img src="img/backgrounds/cinematic_reel.png" alt="Background Objects" />

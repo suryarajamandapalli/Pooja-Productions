@@ -50,6 +50,18 @@ export const Header: React.FC = () => {
     };
   }, []);
 
+  const nav = data?.navigation || {
+    home: "Home",
+    about: "About",
+    film: "film",
+    studio: "Studio",
+    divisions: "Divisions",
+    legacy: "legacy",
+    team: "Team",
+    letsConnect: "Let's Connect",
+    contact: "Contact",
+  };
+
   return (
     <header id="header" className="header d-flex justify-content-center loading__fade">
       {/* Navigation Menu Start */}
@@ -61,7 +73,7 @@ export const Header: React.FC = () => {
                 className={`menu__link btn ${activeSection === "home" ? "active" : ""}`}
                 href="#home"
               >
-                <span className="menu__caption">Home</span>
+                <span className="menu__caption">{nav.home}</span>
                 <i className="ph ph-house-simple"></i>
               </a>
             </li>
@@ -70,7 +82,7 @@ export const Header: React.FC = () => {
                 className={`menu__link btn ${activeSection === "about" ? "active" : ""}`}
                 href="#about"
               >
-                <span className="menu__caption">About</span>
+                <span className="menu__caption">{nav.about}</span>
                 <i className="ph ph-user"></i>
               </a>
             </li>
@@ -79,7 +91,7 @@ export const Header: React.FC = () => {
                 className={`menu__link btn ${activeSection === "portfolio" ? "active" : ""}`}
                 href="#portfolio"
               >
-                <span className="menu__caption">film</span>
+                <span className="menu__caption">{nav.film}</span>
                 <i className="ph ph-clapperboard"></i>
               </a>
             </li>
@@ -88,7 +100,7 @@ export const Header: React.FC = () => {
                 className={`menu__link btn ${activeSection === "studio" ? "active" : ""}`}
                 href="#studio"
               >
-                <span className="menu__caption">Studio</span>
+                <span className="menu__caption">{nav.studio}</span>
                 <i className="ph ph-buildings"></i>
               </a>
             </li>
@@ -97,7 +109,7 @@ export const Header: React.FC = () => {
                 className={`menu__link btn ${activeSection === "services" ? "active" : ""}`}
                 href="#services"
               >
-                <span className="menu__caption">Divisions</span>
+                <span className="menu__caption">{nav.divisions}</span>
                 <i className="ph ph-film-strip"></i>
               </a>
             </li>
@@ -106,7 +118,7 @@ export const Header: React.FC = () => {
                 className={`menu__link btn ${activeSection === "resume" ? "active" : ""}`}
                 href="#resume"
               >
-                <span className="menu__caption">legacy</span>
+                <span className="menu__caption">{nav.legacy}</span>
                 <i className="ph ph-trophy"></i>
               </a>
             </li>
@@ -116,7 +128,7 @@ export const Header: React.FC = () => {
                   className={`menu__link btn ${activeSection === "team" ? "active" : ""}`}
                   href="#team"
                 >
-                  <span className="menu__caption">Team</span>
+                  <span className="menu__caption">{nav.team}</span>
                   <i className="ph ph-users"></i>
                 </a>
               </li>
@@ -126,7 +138,7 @@ export const Header: React.FC = () => {
                 className={`menu__link btn ${activeSection === "contact" && (activeHash === "#lets-pitch" || activeHash === "#lets-connect") ? "active" : ""}`}
                 href="#lets-pitch"
               >
-                <span className="menu__caption">Let's Connect</span>
+                <span className="menu__caption">{nav.letsConnect}</span>
                 <i className="ph ph-handshake"></i>
               </a>
             </li>
@@ -135,7 +147,7 @@ export const Header: React.FC = () => {
                 className={`menu__link btn ${activeSection === "contact" && activeHash !== "#lets-pitch" && activeHash !== "#lets-connect" ? "active" : ""}`}
                 href="#contact"
               >
-                <span className="menu__caption">Contact</span>
+                <span className="menu__caption">{nav.contact}</span>
                 <i className="ph ph-envelope"></i>
               </a>
             </li>

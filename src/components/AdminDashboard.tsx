@@ -303,7 +303,162 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
           {/* TAB 1: GENERAL COPY */}
           {activeTab === "general" && (
             <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
+              {/* WELCOME POPUP SECTION */}
               <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem" }}>
+                <h2 style={{ color: "#FFF", fontSize: "2.4rem", fontWeight: 700, margin: 0 }}>WELCOME POPUP COPY</h2>
+                <p style={{ color: "#C5A880", margin: "0.5rem 0 0 0" }}>Modify the text and buttons on the initial welcome popup.</p>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Headline</label>
+                  <input
+                    type="text"
+                    value={data.welcomePopup?.headline || ""}
+                    onChange={(e) => updateField("welcomePopup", "headline", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Subheadline</label>
+                  <input
+                    type="text"
+                    value={data.welcomePopup?.subheadline || ""}
+                    onChange={(e) => updateField("welcomePopup", "subheadline", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", gridColumn: "1 / -1" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Description</label>
+                  <textarea
+                    value={data.welcomePopup?.description || ""}
+                    onChange={(e) => updateField("welcomePopup", "description", e.target.value)}
+                    style={{ minHeight: "8rem", padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF", resize: "vertical" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Primary Button Text (Gold)</label>
+                  <input
+                    type="text"
+                    value={data.welcomePopup?.primaryBtnText || ""}
+                    onChange={(e) => updateField("welcomePopup", "primaryBtnText", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Secondary Button Text</label>
+                  <input
+                    type="text"
+                    value={data.welcomePopup?.secondaryBtnText || ""}
+                    onChange={(e) => updateField("welcomePopup", "secondaryBtnText", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+              </div>
+
+              {/* NAVIGATION MENU SECTION */}
+              <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem", marginTop: "2rem" }}>
+                <h2 style={{ color: "#FFF", fontSize: "2.4rem", fontWeight: 700, margin: 0 }}>NAVIGATION MENU COPY</h2>
+                <p style={{ color: "#C5A880", margin: "0.5rem 0 0 0" }}>Modify the labels in the sticky navigation menu.</p>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "3rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Home</label>
+                  <input
+                    type="text"
+                    value={data.navigation?.home || ""}
+                    onChange={(e) => updateField("navigation", "home", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>About</label>
+                  <input
+                    type="text"
+                    value={data.navigation?.about || ""}
+                    onChange={(e) => updateField("navigation", "about", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Film Showcase</label>
+                  <input
+                    type="text"
+                    value={data.navigation?.film || ""}
+                    onChange={(e) => updateField("navigation", "film", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Studio</label>
+                  <input
+                    type="text"
+                    value={data.navigation?.studio || ""}
+                    onChange={(e) => updateField("navigation", "studio", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Divisions</label>
+                  <input
+                    type="text"
+                    value={data.navigation?.divisions || ""}
+                    onChange={(e) => updateField("navigation", "divisions", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Legacy</label>
+                  <input
+                    type="text"
+                    value={data.navigation?.legacy || ""}
+                    onChange={(e) => updateField("navigation", "legacy", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Team</label>
+                  <input
+                    type="text"
+                    value={data.navigation?.team || ""}
+                    onChange={(e) => updateField("navigation", "team", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Let's Connect</label>
+                  <input
+                    type="text"
+                    value={data.navigation?.letsConnect || ""}
+                    onChange={(e) => updateField("navigation", "letsConnect", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Contact</label>
+                  <input
+                    type="text"
+                    value={data.navigation?.contact || ""}
+                    onChange={(e) => updateField("navigation", "contact", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem", marginTop: "2rem" }}>
                 <h2 style={{ color: "#FFF", fontSize: "2.4rem", fontWeight: 700, margin: 0 }}>HERO SECTION COPY</h2>
                 <p style={{ color: "#C5A880", margin: "0.5rem 0 0 0" }}>Modify main cinematic landing copy.</p>
               </div>
@@ -347,14 +502,23 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                   />
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
-                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Background Video URL</label>
-                  <input
-                    type="text"
-                    value={data.hero.bgVideoUrl}
-                    onChange={(e) => updateField("hero", "bgVideoUrl", e.target.value)}
-                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
-                  />
+                 <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Background Video URL (Link / Uploaded)</label>
+                  <div style={{ display: "flex", gap: "1rem" }}>
+                    <input
+                      type="text"
+                      value={data.hero.bgVideoUrl || ""}
+                      onChange={(e) => updateField("hero", "bgVideoUrl", e.target.value)}
+                      placeholder="Insert link or upload video"
+                      style={{ flex: 1, padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                    />
+                    <button
+                      onClick={() => handleInlineUpload((url) => updateField("hero", "bgVideoUrl", url))}
+                      style={{ padding: "1.2rem 1.8rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.8rem", cursor: "pointer", fontWeight: 700, fontSize: "1.4rem", whiteSpace: "nowrap" }}
+                    >
+                      🎥 Upload Video
+                    </button>
+                  </div>
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
@@ -1327,7 +1491,7 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
           {/* Hidden inline file input for all device-upload buttons */}
           <input
             type="file"
-            accept="image/*,application/pdf"
+            accept="image/*,application/pdf,video/*"
             ref={inlineUploadRef}
             style={{ display: "none" }}
             onChange={handleInlineFileChange}

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useCMS } from "./CMSContext";
 
 export const WelcomePopup: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
+  const { data } = useCMS();
 
   useEffect(() => {
     const seen = sessionStorage.getItem("pp_welcome_seen");
@@ -21,6 +23,14 @@ export const WelcomePopup: React.FC = () => {
   };
 
   if (!visible) return null;
+
+  const welcomeData = data?.welcomePopup || {
+    headline: "Welcome to",
+    subheadline: "Pooja Productions",
+    description: "Stories that stir the soul. Visuals that capture the imagination. Cinema that stands the test of time.",
+    primaryBtnText: "Explore Site",
+    secondaryBtnText: "Enter Site",
+  };
 
   return (
     <div
@@ -72,14 +82,14 @@ export const WelcomePopup: React.FC = () => {
         </div>
 
         <h2 style={{ color: "#FFFFFF", fontSize: "2.8rem", fontWeight: 700, margin: "0 0 1.2rem", letterSpacing: "-0.02em", lineHeight: 1.2 }}>
-          Welcome to<br />
+          {welcomeData.headline}<br />
           <span style={{ background: "linear-gradient(135deg, #C5A880, #e8d5b0, #C5A880)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            Pooja Productions
+            {welcomeData.subheadline}
           </span>
         </h2>
 
         <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "1.6rem", lineHeight: 1.7, margin: "0 0 3.5rem" }}>
-          Stories that stir the soul. Visuals that capture the imagination. Cinema that stands the test of time.
+          {welcomeData.description}
         </p>
 
         <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center", flexWrap: "wrap" }}>
@@ -100,7 +110,7 @@ export const WelcomePopup: React.FC = () => {
             onMouseOver={(e) => e.currentTarget.style.opacity = "0.85"}
             onMouseOut={(e) => e.currentTarget.style.opacity = "1"}
           >
-            Explore Our Films
+            {welcomeData.primaryBtnText}
           </a>
           <button
             onClick={close}
@@ -119,7 +129,7 @@ export const WelcomePopup: React.FC = () => {
             onMouseOver={(e) => { e.currentTarget.style.borderColor = "#C5A880"; e.currentTarget.style.color = "#C5A880"; }}
             onMouseOut={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; e.currentTarget.style.color = "rgba(255,255,255,0.6)"; }}
           >
-            Enter Site
+            {welcomeData.secondaryBtnText}
           </button>
         </div>
 

@@ -117,6 +117,26 @@ export interface FooterContent {
   links: Array<{ label: string; url: string }>;
 }
 
+export interface WelcomePopupContent {
+  headline: string;
+  subheadline: string;
+  description: string;
+  primaryBtnText: string;
+  secondaryBtnText: string;
+}
+
+export interface NavItemContent {
+  home: string;
+  about: string;
+  film: string;
+  studio: string;
+  divisions: string;
+  legacy: string;
+  team: string;
+  letsConnect: string;
+  contact: string;
+}
+
 export interface WebsiteData {
   hero: HeroContent;
   about: AboutContent;
@@ -132,6 +152,8 @@ export interface WebsiteData {
   footer: FooterContent;
   marqueeItems: MarqueeItem[];
   showTeam?: boolean;
+  welcomePopup?: WelcomePopupContent;
+  navigation?: NavItemContent;
 }
 
 interface CMSContextType {
@@ -160,6 +182,34 @@ interface CMSContextType {
   deleteMedia: (fileUrlOrName: string) => Promise<boolean>;
 }
 
+const defaultWelcomePopup: WelcomePopupContent = {
+  headline: "Welcome to",
+  subheadline: "Pooja Productions",
+  description: "Stories that stir the soul. Visuals that capture the imagination. Cinema that stands the test of time.",
+  primaryBtnText: "Explore Site",
+  secondaryBtnText: "Enter Site",
+};
+
+const defaultNavigation: NavItemContent = {
+  home: "Home",
+  about: "About",
+  film: "film",
+  studio: "Studio",
+  divisions: "Divisions",
+  legacy: "legacy",
+  team: "Team",
+  letsConnect: "Let's Connect",
+  contact: "Contact",
+};
+
+const ensureDefaults = (loaded: WebsiteData): WebsiteData => {
+  return {
+    ...loaded,
+    welcomePopup: loaded.welcomePopup || defaultWelcomePopup,
+    navigation: loaded.navigation || defaultNavigation,
+  };
+};
+
 const CMSContext = createContext<CMSContextType | undefined>(undefined);
 
 export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -185,15 +235,15 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
 
         if (dbData && dbData.data) {
-          setData(dbData.data as WebsiteData);
+          setData(ensureDefaults(dbData.data as WebsiteData));
         } else {
           // Table exists but no row with id=1, or table is empty
           const res = await fetch("/data/content.json");
           const json = await res.json();
-          setData(json);
+          setData(ensureDefaults(json));
           // Try to seed Supabase with the default content.json
           try {
-            await supabase.from("cms_content").upsert({ id: 1, data: json });
+            await supabase.from("cms_content").upsert({ id: 1, data: ensureDefaults(json) });
           } catch (seedErr) {
             console.warn("Failed to seed default content to Supabase", seedErr);
           }
@@ -203,11 +253,11 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         try {
           const localData = localStorage.getItem("pooja_cmsData");
           if (localData) {
-            setData(JSON.parse(localData));
+            setData(ensureDefaults(JSON.parse(localData)));
           } else {
             const res = await fetch("/data/content.json");
             const json = await res.json();
-            setData(json);
+            setData(ensureDefaults(json));
           }
         } catch (localErr) {
           console.error("Critical fallback failed: ", localErr);
