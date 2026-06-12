@@ -1164,13 +1164,47 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                           style={{ padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
                         />
                       </div>
-                      <input
-                        type="text"
-                        value={test.imageUrl}
-                        onChange={(e) => updateListItem("testimonials", test.id, { imageUrl: e.target.value })}
-                        placeholder="Visual Photo Path"
-                        style={{ padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
-                      />
+                      
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                          <label style={{ fontSize: "1.2rem", color: "#C5A880" }}>Author Avatar Image</label>
+                          <div style={{ display: "flex", gap: "1rem" }}>
+                            <input
+                              type="text"
+                              value={test.avatar || ""}
+                              onChange={(e) => updateListItem("testimonials", test.id, { avatar: e.target.value })}
+                              placeholder="Avatar Path"
+                              style={{ flex: 1, padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
+                            />
+                            <button
+                              onClick={() => handleInlineUpload((url) => updateListItem("testimonials", test.id, { avatar: url }))}
+                              style={{ padding: "1rem 1.5rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.6rem", cursor: "pointer", fontWeight: 700, fontSize: "1.2rem", whiteSpace: "nowrap" }}
+                            >
+                              📷 Upload
+                            </button>
+                          </div>
+                        </div>
+                        
+                        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                          <label style={{ fontSize: "1.2rem", color: "#C5A880" }}>Visual Photo Image</label>
+                          <div style={{ display: "flex", gap: "1rem" }}>
+                            <input
+                              type="text"
+                              value={test.imageUrl}
+                              onChange={(e) => updateListItem("testimonials", test.id, { imageUrl: e.target.value })}
+                              placeholder="Visual Photo Path"
+                              style={{ flex: 1, padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
+                            />
+                            <button
+                              onClick={() => handleInlineUpload((url) => updateListItem("testimonials", test.id, { imageUrl: url }))}
+                              style={{ padding: "1rem 1.5rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.6rem", cursor: "pointer", fontWeight: 700, fontSize: "1.2rem", whiteSpace: "nowrap" }}
+                            >
+                              📷 Upload
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
                       <textarea
                         value={test.description}
                         onChange={(e) => updateListItem("testimonials", test.id, { description: e.target.value })}
@@ -1219,15 +1253,41 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                       style={{ padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
                     />
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", gridColumn: "1 / -1" }}>
-                    <label>Testimonial Image URL</label>
-                    <input
-                      type="text"
-                      value={newTestimonial.imageUrl}
-                      onChange={(e) => setNewTestimonial({ ...newTestimonial, imageUrl: e.target.value })}
-                      placeholder="/uploads/still.webp"
-                      style={{ padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
-                    />
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                    <label>Author Avatar Image</label>
+                    <div style={{ display: "flex", gap: "1rem" }}>
+                      <input
+                        type="text"
+                        value={newTestimonial.avatar}
+                        onChange={(e) => setNewTestimonial({ ...newTestimonial, avatar: e.target.value })}
+                        placeholder="/uploads/avatar.webp"
+                        style={{ flex: 1, padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
+                      />
+                      <button
+                        onClick={() => handleInlineUpload((url) => setNewTestimonial({ ...newTestimonial, avatar: url }))}
+                        style={{ padding: "1rem 1.5rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.6rem", cursor: "pointer", fontWeight: 700, fontSize: "1.2rem", whiteSpace: "nowrap" }}
+                      >
+                        📷 Upload
+                      </button>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                    <label>Visual Photo Image</label>
+                    <div style={{ display: "flex", gap: "1rem" }}>
+                      <input
+                        type="text"
+                        value={newTestimonial.imageUrl}
+                        onChange={(e) => setNewTestimonial({ ...newTestimonial, imageUrl: e.target.value })}
+                        placeholder="/uploads/still.webp"
+                        style={{ flex: 1, padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
+                      />
+                      <button
+                        onClick={() => handleInlineUpload((url) => setNewTestimonial({ ...newTestimonial, imageUrl: url }))}
+                        style={{ padding: "1rem 1.5rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.6rem", cursor: "pointer", fontWeight: 700, fontSize: "1.2rem", whiteSpace: "nowrap" }}
+                      >
+                        📷 Upload
+                      </button>
+                    </div>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", gridColumn: "1 / -1" }}>
                     <label>Quote Content</label>
@@ -1241,7 +1301,7 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                 <button
                   onClick={() => {
                     if (!newTestimonial.name) return;
-                    addListItem("testimonials", { ...newTestimonial, rating: 5, avatar: "img/avatars/400x400_t01.webp" });
+                    addListItem("testimonials", { ...newTestimonial, rating: 5, avatar: newTestimonial.avatar || "img/avatars/400x400_t01.webp" });
                     setNewTestimonial({ name: "", position: "", description: "", rating: 5, avatar: "", imageUrl: "" });
                   }}
                   style={{ padding: "1.2rem 2.5rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.6rem", cursor: "pointer", fontWeight: 600 }}
