@@ -74,39 +74,39 @@ const MainAppContent: React.FC = () => {
 
     gsap.ticker.lagSmoothing(0);
 
-    // 2. Parallax effects ([data-speed])
-    const parallaxElements = document.querySelectorAll("[data-speed]");
-    parallaxElements.forEach((el) => {
-      const speedAttr = el.getAttribute("data-speed") || "1";
-      const speed = parseFloat(speedAttr);
-      if (speed === 1) return;
-
-      const parentSection = el.closest("section") || el.closest(".inner") || document.body;
-      
-      const range = 240;
-      const startY = (1 - speed) * -range;
-      const endY = (1 - speed) * range;
-
-      gsap.fromTo(
-        el,
-        { y: startY },
-        {
-          y: endY,
-          ease: "none",
-          scrollTrigger: {
-            trigger: parentSection,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 0,
-            invalidateOnRefresh: true,
-          },
-        }
-      );
-    });
-
     // 3 & 4. Deferred ScrollTriggers for elements below Hero
     // We delay this to ensure CinematicSequence pin spacer is fully resolved in the DOM
     const initScrollTriggers = () => {
+      // 2. Parallax effects ([data-speed])
+      const parallaxElements = document.querySelectorAll("[data-speed]");
+      parallaxElements.forEach((el) => {
+        const speedAttr = el.getAttribute("data-speed") || "1";
+        const speed = parseFloat(speedAttr);
+        if (speed === 1) return;
+
+        const parentSection = el.closest("section") || el.closest(".inner") || document.body;
+        
+        const range = 240;
+        const startY = (1 - speed) * -range;
+        const endY = (1 - speed) * range;
+
+        gsap.fromTo(
+          el,
+          { y: startY },
+          {
+            y: endY,
+            ease: "none",
+            scrollTrigger: {
+              trigger: parentSection,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+      });
+
       // 3. Scroll Reveal type animations (.reveal-type)
       // Using opacity + y only (no blur) for smooth GPU-composited performance
       const revealTypes = document.querySelectorAll(".reveal-type");
