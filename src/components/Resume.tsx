@@ -264,10 +264,10 @@ export const Resume: React.FC = () => {
 
                 <ul className="socials-lines d-flex flex-column">
                   {[
-                    { name: "Vimeo", url: "https://vimeo.com/" },
-                    { name: "Instagram", url: "https://www.instagram.com/" },
-                    { name: "YouTube", url: "https://www.youtube.com/" },
-                    { name: "LinkedIn", url: "https://www.linkedin.com/" }
+                    { name: "Vimeo", url: data?.about?.vimeo || "https://vimeo.com/" },
+                    { name: "Instagram", url: data?.about?.instagram || "https://www.instagram.com/" },
+                    { name: "YouTube", url: data?.about?.youtube || "https://www.youtube.com/" },
+                    { name: "LinkedIn", url: data?.about?.linkedin || "https://www.linkedin.com/" }
                   ].map((social, index) => (
                     <li className="socials-lines__item" key={index}>
                       {index === 0 && <div className="socials-lines__divider animate-in-up"></div>}

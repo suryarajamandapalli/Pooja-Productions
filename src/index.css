@@ -325,7 +325,21 @@ form select option {
   }
 }
 
+.slow-rotate-left {
+  animation: slow-spin-left 40s linear infinite !important;
+  transform-origin: center center !important;
+}
+.slow-rotate-right {
+  animation: slow-spin-right 50s linear infinite !important;
+  transform-origin: center center !important;
+}
 
+@keyframes slow-spin-left {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
 
-
-
+@keyframes slow-spin-right {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

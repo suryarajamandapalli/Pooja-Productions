@@ -38,6 +38,8 @@ export interface AboutContent {
   twitter?: string;
   imdb?: string;
   linkedin?: string;
+  vimeo?: string;
+  youtube?: string;
 }
 
 export interface LeadershipContent {

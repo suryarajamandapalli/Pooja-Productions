@@ -837,6 +837,55 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                 </div>
               </div>
 
+              {/* STUDIO NETWORK & SOCIALS */}
+              <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem", marginTop: "4rem" }}>
+                <h2 style={{ color: "#FFF", fontSize: "2.4rem", fontWeight: 700, margin: 0 }}>STUDIO NETWORK & SOCIALS</h2>
+                <p style={{ color: "#C5A880", margin: "0.5rem 0 0 0" }}>Edit links for Vimeo, Instagram, YouTube, and LinkedIn.</p>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Vimeo URL</label>
+                  <input
+                    type="text"
+                    value={data.about.vimeo || ""}
+                    onChange={(e) => updateField("about", "vimeo", e.target.value)}
+                    placeholder="https://vimeo.com/username"
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Instagram URL</label>
+                  <input
+                    type="text"
+                    value={data.about.instagram || ""}
+                    onChange={(e) => updateField("about", "instagram", e.target.value)}
+                    placeholder="https://instagram.com/username"
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>YouTube URL</label>
+                  <input
+                    type="text"
+                    value={data.about.youtube || ""}
+                    onChange={(e) => updateField("about", "youtube", e.target.value)}
+                    placeholder="https://youtube.com/c/username"
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>LinkedIn URL</label>
+                  <input
+                    type="text"
+                    value={data.about.linkedin || ""}
+                    onChange={(e) => updateField("about", "linkedin", e.target.value)}
+                    placeholder="https://linkedin.com/company/username"
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+              </div>
+
               {/* LEADERSHIP & VISION DETAILS */}
               <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem", marginTop: "4rem" }}>
                 <h2 style={{ color: "#FFF", fontSize: "2.4rem", fontWeight: 700, margin: 0 }}>LEADERSHIP & VISION DETAILS</h2>
