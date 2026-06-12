@@ -430,13 +430,38 @@ export const Contact: React.FC = () => {
                         <p className="contact-data__text small type-basic-160lh">
                           <a
                             className="link-small-160lh animate-in-up"
-                            href="https://maps.google.com/?q=Hyderabad"
+                            href={about.mapUrl || "https://maps.google.com/?q=Hyderabad"}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            Door No. 7-66/2/216,217,229&230/302<br />
-                            Raidurgh, Navkhalsa, Serilingampally,<br />
-                            Hyderabad, Telangana-500008
+                            {(() => {
+                              const addr = about.address || "";
+                              if (!addr) {
+                                return (
+                                  <>
+                                    Door No. 7-66/2/216,217,229&230/302<br />
+                                    Raidurgh, Navkhalsa, Serilingampally,<br />
+                                    Hyderabad, Telangana-500008
+                                  </>
+                                );
+                              }
+                              const lines = addr.includes("\n") ? addr.split("\n") : (() => {
+                                const parts = addr.split(",");
+                                if (parts.length > 2) {
+                                  const line1 = parts.slice(0, 3).join(",").trim();
+                                  const line2 = parts.slice(3, 6).join(",").trim();
+                                  const line3 = parts.slice(6).join(",").trim();
+                                  return [line1, line2, line3].filter(Boolean);
+                                }
+                                return [addr];
+                              })();
+                              return lines.map((line, idx) => (
+                                <React.Fragment key={idx}>
+                                  {line}
+                                  {idx < lines.length - 1 && <br />}
+                                </React.Fragment>
+                              ));
+                            })()}
                           </a>
                         </p>
                       </div>
@@ -456,8 +481,8 @@ export const Contact: React.FC = () => {
                       <div className="col-12 col-md-6 col-lg-3 contact-data__item grid-item">
                         <p className="contact-data__title tagline-chapter animate-in-up">Phone</p>
                         <p className="contact-data__text small type-basic-160lh">
-                          <a className="link-small-160lh animate-in-up" href="tel:+919347474144">
-                            +919347474144
+                          <a className="link-small-160lh animate-in-up" href={`tel:${about.phone || "+919347474144"}`}>
+                            {about.phone || "+919347474144"}
                           </a>
                         </p>
                       </div>
@@ -466,9 +491,9 @@ export const Contact: React.FC = () => {
                         <p className="contact-data__text small type-basic-160lh">
                           <a
                             className="link-small-160lh animate-in-up"
-                            href="mailto:poojaproductions70mm@gmail.com"
+                            href={`mailto:${about.email || "poojaproductions70mm@gmail.com"}`}
                           >
-                            poojaproductions70mm@gmail.com
+                            {about.email || "poojaproductions70mm@gmail.com"}
                           </a>
                         </p>
                       </div>

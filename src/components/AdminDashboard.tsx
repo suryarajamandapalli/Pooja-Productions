@@ -818,11 +818,10 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
                   <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Office Address</label>
-                  <input
-                    type="text"
+                  <textarea
                     value={data.about.address}
                     onChange={(e) => updateField("about", "address", e.target.value)}
-                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                    style={{ minHeight: "8rem", padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF", resize: "vertical" }}
                   />
                 </div>
 
