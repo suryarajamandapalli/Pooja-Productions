@@ -13,8 +13,11 @@ export const About: React.FC = () => {
   return (
     <section id="about" className="inner inner-grid-bottom about" style={{ overflow: "hidden" }}>
       {/* Floating Rocks Parallax Background */}
-      <div className="about-rock-user" data-speed="0.85">
-        <img src="/img/backgrounds/about_rock.png" alt="Floating Rock" />
+      <div className="about-rock-left" data-speed="0.75">
+        <img src="/img/backgrounds/about_rock_left.png" alt="Floating Rock Left" />
+      </div>
+      <div className="about-rock-right" data-speed="0.85">
+        <img src="/img/backgrounds/about_rock_right.png" alt="Floating Rock Right" />
       </div>
 
       <div className="inner__wrapper" style={{ position: "relative", zIndex: 2 }}>

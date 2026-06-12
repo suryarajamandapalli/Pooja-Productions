@@ -262,14 +262,16 @@ form select option {
 /* ══════════════════════════════════════════════════════
    ABOUT SECTION DECORATIVE ROCKS
    ══════════════════════════════════════════════════════ */
-.about-rock-user {
+.about-rock-left,
+.about-rock-right {
   position: absolute;
   pointer-events: none;
   z-index: 1;
   will-change: transform;
 }
 
-.about-rock-user img {
+.about-rock-left img,
+.about-rock-right img {
   width: 100%;
   height: auto;
   display: block;
@@ -277,31 +279,48 @@ form select option {
 
 /* Hide on mobile to prevent overlapping/cluttering vertical content on narrow viewports */
 @media only screen and (max-width: 767px) {
-  .about-rock-user {
+  .about-rock-left,
+  .about-rock-right {
     display: none;
   }
 }
 
 /* Medium screens (Tablets, 768px - 1199px) */
 @media only screen and (min-width: 768px) and (max-width: 1199px) {
-  .about-rock-user {
-    top: 15%;
-    right: -40px;
-    width: 200px;
+  .about-rock-left {
+    bottom: -20px;
+    left: -30px;
+    width: 160px;
   }
-  .about-rock-user img {
-    opacity: 0.75;
+  .about-rock-left img {
+    opacity: 0.8;
+  }
+  .about-rock-right {
+    top: -20px;
+    right: -30px;
+    width: 240px;
+  }
+  .about-rock-right img {
+    opacity: 0.8;
   }
 }
 
 /* Large screens (Desktop, 1200px+) */
 @media only screen and (min-width: 1200px) {
-  .about-rock-user {
-    top: 10%;
-    right: -60px;
-    width: 320px;
+  .about-rock-left {
+    bottom: -40px;
+    left: -50px;
+    width: 240px;
   }
-  .about-rock-user img {
+  .about-rock-left img {
+    opacity: 0.85;
+  }
+  .about-rock-right {
+    top: -40px;
+    right: -60px;
+    width: 340px;
+  }
+  .about-rock-right img {
     opacity: 0.85;
   }
 }
