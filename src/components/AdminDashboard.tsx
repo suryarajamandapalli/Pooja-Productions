@@ -88,6 +88,31 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
     deleteMedia
   } = cms;
 
+  const nav = data?.navigation || {
+    home: "Home",
+    about: "About",
+    film: "film",
+    studio: "Studio",
+    divisions: "Divisions",
+    legacy: "legacy",
+    team: "Team",
+    letsConnect: "Let's Connect",
+    contact: "Contact",
+  };
+
+  const sectionOptions = [
+    { value: "close", label: "Close Popup Only" },
+    { value: "#home", label: `${nav.home} Section` },
+    { value: "#about", label: `${nav.about} Section` },
+    { value: "#portfolio", label: nav.film },
+    { value: "#studio", label: `${nav.studio} Section` },
+    { value: "#services", label: nav.divisions },
+    { value: "#resume", label: nav.legacy },
+    { value: "#team", label: `${nav.team} Section` },
+    { value: "#lets-pitch", label: nav.letsConnect },
+    { value: "#contact", label: nav.contact },
+  ];
+
   const handleSave = async () => {
     setSaveStatus("saving");
     const success = await saveAllChanges();
@@ -350,6 +375,21 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Primary Button Target Link</label>
+                  <select
+                    value={data.welcomePopup?.primaryBtnLink || "close"}
+                    onChange={(e) => updateField("welcomePopup", "primaryBtnLink", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  >
+                    {sectionOptions.map(opt => (
+                      <option key={opt.value} value={opt.value} style={{ backgroundColor: "#0C0C0C", color: "#FFF" }}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
                   <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Secondary Button Text</label>
                   <input
                     type="text"
@@ -357,6 +397,21 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                     onChange={(e) => updateField("welcomePopup", "secondaryBtnText", e.target.value)}
                     style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
                   />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Secondary Button Target Link</label>
+                  <select
+                    value={data.welcomePopup?.secondaryBtnLink || "close"}
+                    onChange={(e) => updateField("welcomePopup", "secondaryBtnLink", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  >
+                    {sectionOptions.map(opt => (
+                      <option key={opt.value} value={opt.value} style={{ backgroundColor: "#0C0C0C", color: "#FFF" }}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 

@@ -123,6 +123,8 @@ export interface WelcomePopupContent {
   description: string;
   primaryBtnText: string;
   secondaryBtnText: string;
+  primaryBtnLink?: string;
+  secondaryBtnLink?: string;
 }
 
 export interface NavItemContent {
@@ -188,6 +190,8 @@ const defaultWelcomePopup: WelcomePopupContent = {
   description: "Stories that stir the soul. Visuals that capture the imagination. Cinema that stands the test of time.",
   primaryBtnText: "Explore Site",
   secondaryBtnText: "Enter Site",
+  primaryBtnLink: "#portfolio",
+  secondaryBtnLink: "close",
 };
 
 const defaultNavigation: NavItemContent = {
@@ -203,9 +207,15 @@ const defaultNavigation: NavItemContent = {
 };
 
 const ensureDefaults = (loaded: WebsiteData): WebsiteData => {
+  const welcome = loaded.welcomePopup || defaultWelcomePopup;
   return {
     ...loaded,
-    welcomePopup: loaded.welcomePopup || defaultWelcomePopup,
+    welcomePopup: {
+      ...defaultWelcomePopup,
+      ...welcome,
+      primaryBtnLink: welcome.primaryBtnLink || defaultWelcomePopup.primaryBtnLink,
+      secondaryBtnLink: welcome.secondaryBtnLink || defaultWelcomePopup.secondaryBtnLink,
+    },
     navigation: loaded.navigation || defaultNavigation,
   };
 };

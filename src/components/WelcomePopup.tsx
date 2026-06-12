@@ -30,7 +30,12 @@ export const WelcomePopup: React.FC = () => {
     description: "Stories that stir the soul. Visuals that capture the imagination. Cinema that stands the test of time.",
     primaryBtnText: "Explore Site",
     secondaryBtnText: "Enter Site",
+    primaryBtnLink: "#portfolio",
+    secondaryBtnLink: "close",
   };
+
+  const primaryLink = welcomeData.primaryBtnLink || "#portfolio";
+  const secondaryLink = welcomeData.secondaryBtnLink || "close";
 
   return (
     <div
@@ -94,8 +99,13 @@ export const WelcomePopup: React.FC = () => {
 
         <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center", flexWrap: "wrap" }}>
           <a
-            href="#portfolio"
-            onClick={close}
+            href={primaryLink === "close" ? "#" : primaryLink}
+            onClick={(e) => {
+              if (primaryLink === "close") {
+                e.preventDefault();
+              }
+              close();
+            }}
             style={{
               padding: "1.3rem 3rem",
               background: "linear-gradient(135deg, #C5A880, #a8895e)",
@@ -106,14 +116,21 @@ export const WelcomePopup: React.FC = () => {
               textDecoration: "none",
               letterSpacing: "0.04em",
               transition: "opacity 0.3s",
+              display: "inline-block",
             }}
             onMouseOver={(e) => e.currentTarget.style.opacity = "0.85"}
             onMouseOut={(e) => e.currentTarget.style.opacity = "1"}
           >
             {welcomeData.primaryBtnText}
           </a>
-          <button
-            onClick={close}
+          <a
+            href={secondaryLink === "close" ? "#" : secondaryLink}
+            onClick={(e) => {
+              if (secondaryLink === "close") {
+                e.preventDefault();
+              }
+              close();
+            }}
             style={{
               padding: "1.3rem 3rem",
               background: "transparent",
@@ -122,15 +139,18 @@ export const WelcomePopup: React.FC = () => {
               borderRadius: "100px",
               fontWeight: 500,
               fontSize: "1.5rem",
+              textDecoration: "none",
               cursor: "pointer",
               letterSpacing: "0.04em",
               transition: "all 0.3s",
+              display: "inline-block",
+              textAlign: "center",
             }}
             onMouseOver={(e) => { e.currentTarget.style.borderColor = "#C5A880"; e.currentTarget.style.color = "#C5A880"; }}
             onMouseOut={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; e.currentTarget.style.color = "rgba(255,255,255,0.6)"; }}
           >
             {welcomeData.secondaryBtnText}
-          </button>
+          </a>
         </div>
 
         {/* Close X */}
