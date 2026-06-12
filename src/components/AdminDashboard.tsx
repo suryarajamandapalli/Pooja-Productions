@@ -1097,21 +1097,37 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                       </div>
                       <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
                         <label>Landscape Image (imgS)</label>
-                        <input
-                          type="text"
-                          value={service.imgS}
-                          onChange={(e) => updateListItem("services", service.id, { imgS: e.target.value })}
-                          style={{ padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
-                        />
+                        <div style={{ display: "flex", gap: "1rem" }}>
+                          <input
+                            type="text"
+                            value={service.imgS}
+                            onChange={(e) => updateListItem("services", service.id, { imgS: e.target.value })}
+                            style={{ flex: 1, padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
+                          />
+                          <button
+                            onClick={() => handleInlineUpload((url) => updateListItem("services", service.id, { imgS: url }))}
+                            style={{ padding: "1rem 1.5rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.6rem", cursor: "pointer", fontWeight: 700, fontSize: "1.2rem", whiteSpace: "nowrap" }}
+                          >
+                            📷 Upload
+                          </button>
+                        </div>
                       </div>
                       <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
                         <label>Portrait Image (imgM)</label>
-                        <input
-                          type="text"
-                          value={service.imgM}
-                          onChange={(e) => updateListItem("services", service.id, { imgM: e.target.value })}
-                          style={{ padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
-                        />
+                        <div style={{ display: "flex", gap: "1rem" }}>
+                          <input
+                            type="text"
+                            value={service.imgM}
+                            onChange={(e) => updateListItem("services", service.id, { imgM: e.target.value })}
+                            style={{ flex: 1, padding: "1rem", backgroundColor: "#121212", border: "1px solid #262626", borderRadius: "0.6rem", color: "#FFF" }}
+                          />
+                          <button
+                            onClick={() => handleInlineUpload((url) => updateListItem("services", service.id, { imgM: url }))}
+                            style={{ padding: "1rem 1.5rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.6rem", cursor: "pointer", fontWeight: 700, fontSize: "1.2rem", whiteSpace: "nowrap" }}
+                          >
+                            📷 Upload
+                          </button>
+                        </div>
                       </div>
                       <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", gridColumn: "1 / -1" }}>
                         <label>Description</label>
