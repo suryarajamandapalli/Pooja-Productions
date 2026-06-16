@@ -52,59 +52,61 @@ export const About: React.FC = () => {
                 {/* Content Block - H2 Section Title End */}
 
                 {/* Content Block - Leadership Data Start */}
-                <div className="content__block grid-block" style={{ marginTop: "1.5rem" }}>
-                  <div className="container-fluid p-0">
-                    <div className="row g-0 justify-content-between">
-                      <div className="col-12 col-md-4 grid-item animate-in-up" style={{ paddingRight: "3rem" }}>
-                        <div className="chairman-frame" style={{ 
-                          position: "relative",
-                          borderRadius: "var(--_radius-s)",
-                          overflow: "hidden",
-                          border: "1px solid rgba(255, 255, 255, 0.1)",
-                          boxShadow: "0 20px 40px rgba(0, 0, 0, 0.6)",
-                          aspectRatio: "3/4",
-                          backgroundColor: "#0d0d0d"
-                        }}>
-                          <img 
-                            src={leadership.imageUrl.startsWith("http") || leadership.imageUrl.startsWith("/") ? leadership.imageUrl : `/${leadership.imageUrl}`} 
-                            alt={`${leadership.name} - ${leadership.role}`} 
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              objectFit: "cover",
-                              transition: "transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)"
-                            }}
-                            className="chairman-img-hover"
-                          />
+                <div className="content__block grid-block animate-in-up" style={{ marginTop: "1.5rem" }}>
+                  <div className="liquid-glass-card">
+                    <div className="container-fluid p-0">
+                      <div className="row g-0 justify-content-between align-items-center">
+                        <div className="col-12 col-md-4 grid-item chairman-card-img-col">
+                          <div className="chairman-frame" style={{ 
+                            position: "relative",
+                            borderRadius: "var(--_radius-s)",
+                            overflow: "hidden",
+                            border: "1px solid rgba(255, 255, 255, 0.1)",
+                            boxShadow: "0 20px 40px rgba(0, 0, 0, 0.6)",
+                            aspectRatio: "3/4",
+                            backgroundColor: "#0d0d0d"
+                          }}>
+                            <img 
+                              src={leadership.imageUrl.startsWith("http") || leadership.imageUrl.startsWith("/") ? leadership.imageUrl : `/${leadership.imageUrl}`} 
+                              alt={`${leadership.name} - ${leadership.role}`} 
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                transition: "transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)"
+                              }}
+                              className="chairman-img-hover"
+                            />
+                          </div>
                         </div>
-                      </div>
-                      
-                      <div className="col-12 col-md-8 grid-item pre-grid">
-                        <h3 className="animate-in-up" style={{ fontSize: "3rem", fontWeight: 700, color: "var(--t-bright)", margin: 0 }}>
-                          {leadership.name}
-                        </h3>
-                        <p className="tagline-chapter animate-in-up" style={{ color: "var(--neutral-bright)", fontSize: "1.3rem", letterSpacing: "0.15em", textTransform: "uppercase", marginTop: "0.5rem", marginBottom: "2rem" }}>
-                          {leadership.role}
-                        </p>
                         
-                        <blockquote className="chairman-quote animate-in-up" style={{ 
-                          borderLeft: "2px solid var(--neutral-bright)", 
-                          paddingLeft: "2rem", 
-                          margin: "2rem 0",
-                          fontStyle: "italic",
-                          color: "rgba(255, 255, 255, 0.9)",
-                          fontSize: "1.8rem",
-                          lineHeight: "1.6"
-                        }}>
-                          "{leadership.quote}"
-                        </blockquote>
+                        <div className="col-12 col-md-8 grid-item pre-grid">
+                          <h3 style={{ fontSize: "3rem", fontWeight: 700, color: "var(--t-bright)", margin: 0 }}>
+                            {leadership.name}
+                          </h3>
+                          <p className="tagline-chapter" style={{ color: "var(--neutral-bright)", fontSize: "1.3rem", letterSpacing: "0.15em", textTransform: "uppercase", marginTop: "0.5rem", marginBottom: "2rem" }}>
+                            {leadership.role}
+                          </p>
+                          
+                          <blockquote className="chairman-quote" style={{ 
+                            borderLeft: "2px solid var(--neutral-bright)", 
+                            paddingLeft: "2rem", 
+                            margin: "2rem 0",
+                            fontStyle: "italic",
+                            color: "rgba(255, 255, 255, 0.9)",
+                            fontSize: "1.8rem",
+                            lineHeight: "1.6"
+                          }}>
+                            "{leadership.quote}"
+                          </blockquote>
 
-                        <p className="about-descr__text type-basic-160lh animate-in-up" style={{ color: "var(--t-medium)", fontSize: "1.6rem" }}>
-                          {leadership.bio1}
-                        </p>
-                        <p className="about-descr__text type-basic-160lh animate-in-up" style={{ color: "var(--t-medium)", fontSize: "1.6rem", marginTop: "1.5rem" }}>
-                          {leadership.bio2}
-                        </p>
+                          <p className="about-descr__text type-basic-160lh" style={{ color: "var(--t-medium)", fontSize: "1.6rem" }}>
+                            {leadership.bio1}
+                          </p>
+                          <p className="about-descr__text type-basic-160lh" style={{ color: "var(--t-medium)", fontSize: "1.6rem", marginTop: "1.5rem" }}>
+                            {leadership.bio2}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>

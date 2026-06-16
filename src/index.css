@@ -343,3 +343,45 @@ form select option {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Liquid Glass Card for Leadership section */
+.liquid-glass-card {
+  background: rgba(255, 255, 255, 0.012);
+  backdrop-filter: blur(15px) saturate(140%);
+  -webkit-backdrop-filter: blur(15px) saturate(140%);
+  border: 1px solid rgba(197, 168, 128, 0.12); /* Subtle gold tint */
+  border-radius: 28px;
+  padding: 2.5rem;
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.5s;
+}
+
+@media only screen and (min-width: 768px) {
+  .liquid-glass-card {
+    padding: 4rem;
+  }
+  .chairman-card-img-col {
+    padding-right: 3rem !important;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .liquid-glass-card {
+    padding: 5rem;
+  }
+}
+
+.no-touch .liquid-glass-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(197, 168, 128, 0.28);
+  box-shadow: 
+    0 40px 80px rgba(0, 0, 0, 0.7),
+    0 0 30px rgba(197, 168, 128, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
