@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "./SplitText";
 import { useCMS } from "./CMSContext";
@@ -174,8 +175,8 @@ export const Portfolio: React.FC = () => {
         </div>
       </div>
 
-      {/* Lightbox / Custom Premium Lightbox Modal */}
-      {lightboxIndex !== null && films.length > lightboxIndex && (
+      {/* Lightbox / Custom Premium Lightbox Modal via Portal */}
+      {lightboxIndex !== null && films.length > lightboxIndex && createPortal(
         <div style={{
           position: "fixed",
           top: 0,
@@ -184,7 +185,7 @@ export const Portfolio: React.FC = () => {
           height: "100vh",
           backgroundColor: "rgba(10, 10, 10, 0.98)",
           backdropFilter: "blur(10px)",
-          zIndex: 9999,
+          zIndex: 999999, // Render on top of everything including header menu
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -192,61 +193,76 @@ export const Portfolio: React.FC = () => {
           animation: "fadeIn 0.3s ease",
           userSelect: "none"
         }} role="dialog">
+          
           {/* Close button in top-right */}
           <button
             onClick={closeLightbox}
             style={{
-              position: "absolute",
+              position: "fixed",
               top: "30px",
               right: "30px",
-              background: "rgba(255, 255, 255, 0.05)",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
+              background: "rgba(255, 255, 255, 0.08)",
+              border: "1px solid rgba(255, 255, 255, 0.2)",
               borderRadius: "50%",
               width: "50px",
               height: "50px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#fff",
+              color: "#ffffff",
               fontSize: "2rem",
               cursor: "pointer",
-              zIndex: 10000,
-              transition: "background 0.3s, transform 0.2s"
+              zIndex: 1000000,
+              transition: "background 0.3s, border-color 0.3s",
+              outline: "none"
             }}
-            onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255, 255, 255, 0.15)"}
-            onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)"}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+              e.currentTarget.style.borderColor = "rgba(197, 168, 128, 0.5)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.08)";
+              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
+            }}
             title="Close"
           >
-            <i className="ph ph-x"></i>
+            <i className="ph ph-x" style={{ color: "#ffffff", display: "inline-block" }}></i>
           </button>
 
           {/* Navigation - Left Arrow */}
           <button
             onClick={showPrev}
             style={{
-              position: "absolute",
+              position: "fixed",
               left: "30px",
               top: "50%",
               transform: "translateY(-50%)",
-              background: "rgba(255, 255, 255, 0.05)",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
+              background: "rgba(255, 255, 255, 0.08)",
+              border: "1px solid rgba(255, 255, 255, 0.2)",
               borderRadius: "50%",
               width: "60px",
               height: "60px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#fff",
+              color: "#ffffff",
               fontSize: "2.4rem",
               cursor: "pointer",
-              zIndex: 10000,
-              transition: "background 0.3s"
+              zIndex: 1000000,
+              transition: "background 0.3s, border-color 0.3s",
+              outline: "none"
             }}
-            onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255, 255, 255, 0.15)"}
-            onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)"}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+              e.currentTarget.style.borderColor = "rgba(197, 168, 128, 0.5)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.08)";
+              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
+            }}
             title="Previous"
           >
-            <i className="ph ph-caret-left"></i>
+            <i className="ph ph-caret-left" style={{ color: "#ffffff", display: "inline-block" }}></i>
           </button>
 
           {/* Center Image and Title info */}
@@ -255,14 +271,14 @@ export const Portfolio: React.FC = () => {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            maxWidth: "85vw",
+            maxWidth: "80vw",
             maxHeight: "80vh"
           }}>
             <img
               src={films[lightboxIndex].src.startsWith("http") || films[lightboxIndex].src.startsWith("/") ? films[lightboxIndex].src : `/${films[lightboxIndex].src}`}
               alt={films[lightboxIndex].title}
               style={{
-                maxHeight: "65vh",
+                maxHeight: "60vh",
                 maxWidth: "100%",
                 objectFit: "contain",
                 boxShadow: "0 25px 50px rgba(0,0,0,0.8)",
@@ -271,10 +287,10 @@ export const Portfolio: React.FC = () => {
               }}
             />
             {/* Title / Info overlay at the bottom of the image */}
-            <div style={{ marginTop: "20px", textAlign: "center" }}>
-              <h4 style={{ color: "#fff", fontSize: "2rem", margin: "0 0 5px 0" }}>{films[lightboxIndex].title}</h4>
-              <p style={{ color: "var(--neutral-bright)", fontSize: "1.3rem", textTransform: "uppercase", letterSpacing: "0.1em", margin: 0 }}>{films[lightboxIndex].category}</p>
-              <p style={{ color: "rgba(255, 255, 255, 0.7)", fontSize: "1.5rem", maxWidth: "600px", marginTop: "10px", lineHeight: "1.5" }}>{films[lightboxIndex].description}</p>
+            <div style={{ marginTop: "25px", textAlign: "center" }}>
+              <h4 style={{ color: "#ffffff", fontSize: "2.2rem", fontWeight: 600, margin: "0 0 5px 0" }}>{films[lightboxIndex].title}</h4>
+              <p style={{ color: "var(--neutral-bright)", fontSize: "1.3rem", textTransform: "uppercase", letterSpacing: "0.15em", fontWeight: 500, margin: 0 }}>{films[lightboxIndex].category}</p>
+              <p style={{ color: "rgba(255, 255, 255, 0.75)", fontSize: "1.5rem", maxWidth: "600px", marginTop: "12px", lineHeight: "1.6" }}>{films[lightboxIndex].description}</p>
             </div>
           </div>
 
@@ -282,41 +298,50 @@ export const Portfolio: React.FC = () => {
           <button
             onClick={showNext}
             style={{
-              position: "absolute",
+              position: "fixed",
               right: "30px",
               top: "50%",
               transform: "translateY(-50%)",
-              background: "rgba(255, 255, 255, 0.05)",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
+              background: "rgba(255, 255, 255, 0.08)",
+              border: "1px solid rgba(255, 255, 255, 0.2)",
               borderRadius: "50%",
               width: "60px",
               height: "60px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#fff",
+              color: "#ffffff",
               fontSize: "2.4rem",
               cursor: "pointer",
-              zIndex: 10000,
-              transition: "background 0.3s"
+              zIndex: 1000000,
+              transition: "background 0.3s, border-color 0.3s",
+              outline: "none"
             }}
-            onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255, 255, 255, 0.15)"}
-            onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)"}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+              e.currentTarget.style.borderColor = "rgba(197, 168, 128, 0.5)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.08)";
+              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
+            }}
             title="Next"
           >
-            <i className="ph ph-caret-right"></i>
+            <i className="ph ph-caret-right" style={{ color: "#ffffff", display: "inline-block" }}></i>
           </button>
 
           {/* Counter info at the bottom */}
           <div style={{
-            position: "absolute",
+            position: "fixed",
             bottom: "30px",
             color: "rgba(255, 255, 255, 0.5)",
-            fontSize: "1.4rem"
+            fontSize: "1.4rem",
+            fontWeight: 500
           }}>
             {lightboxIndex + 1} / {films.length}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </section>
   );
