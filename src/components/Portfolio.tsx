@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "./SplitText";
 import { useCMS } from "./CMSContext";
@@ -6,59 +6,15 @@ import { useCMS } from "./CMSContext";
 export const Portfolio: React.FC = () => {
   const { data } = useCMS();
   const films = data?.films || [];
-  const containerRef = useRef<HTMLDivElement>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  // Dynamic absolute positioning to simulate the original Isotope/Masonry layout
+  // Refresh ScrollTrigger to recalculate trigger positions once films are rendered
   useEffect(() => {
-    const handleLayout = () => {
-      const container = containerRef.current;
-      if (!container) return;
-      const items = container.querySelectorAll<HTMLElement>(".grid-item");
-      const width = container.offsetWidth;
-      const isDesktop = window.innerWidth >= 768;
-      const cols = isDesktop ? 2 : 1;
-      const gap = isDesktop ? 30 : 25; // 30px gap on desktop, 25px on mobile
-      const colWidth = (width - gap * (cols - 1)) / cols;
-      const colHeights = Array(cols).fill(0);
-
-      items.forEach((item) => {
-        let minCol = 0;
-        for (let i = 1; i < cols; i++) {
-          if (colHeights[i] < colHeights[minCol]) {
-            minCol = i;
-          }
-        }
-        item.style.position = "absolute";
-        item.style.left = `${minCol * (colWidth + gap)}px`;
-        item.style.top = `${colHeights[minCol]}px`;
-        item.style.width = `${colWidth}px`;
-        colHeights[minCol] += item.offsetHeight + gap;
-      });
-
-      container.style.height = `${colHeights.length > 0 ? Math.max(...colHeights) - gap : 0}px`;
+    const timer = setTimeout(() => {
       ScrollTrigger.refresh();
-    };
-
-    // Trigger layout after image load
-    const images = containerRef.current?.querySelectorAll("img");
-    images?.forEach((img) => {
-      if (img.complete) {
-        handleLayout();
-      } else {
-        img.addEventListener("load", handleLayout);
-      }
-    });
-
-    window.addEventListener("resize", handleLayout);
-    // Timeout for fallback layout calculation
-    const timer = setTimeout(handleLayout, 600);
-
-    return () => {
-      window.removeEventListener("resize", handleLayout);
-      clearTimeout(timer);
-    };
-  }, [films]); // Recalculate if film elements are added/edited/removed
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [films]);
 
   const openLightbox = (index: number, e: React.MouseEvent) => {
     e.preventDefault();
@@ -80,6 +36,18 @@ export const Portfolio: React.FC = () => {
       setLightboxIndex((prev) => (prev !== null && prev < films.length - 1 ? prev + 1 : 0));
     }
   };
+
+  // Keyboard navigation for Lightbox
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (lightboxIndex === null) return;
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") showPrev();
+      if (e.key === "ArrowRight") showNext();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [lightboxIndex, films]);
 
   return (
     <section id="portfolio" className="inner inner-grid-bottom portfolio" style={{ position: "relative" }}>
@@ -131,33 +99,29 @@ export const Portfolio: React.FC = () => {
                 </div>
                 {/* Content Block - H2 Section Title End */}
 
-                {/* Content Block - Portfolio Gallery Masonry Grid Start */}
-                <div className="content__block grid-block">
+                {/* Content Block - Portfolio Gallery Grid Start */}
+                <div className="content__block grid-block animate-in-up" style={{ marginTop: "3rem" }}>
                   <div className="container-fluid px-0 inner__gallery">
-                    {/* Portfolio Gallery Start */}
-                    <div
-                      ref={containerRef}
-                      className="row gx-0 my-gallery"
-                      style={{ position: "relative", width: "100%" }}
-                    >
+                    {/* Portfolio Gallery Masonry using CSS Columns */}
+                    <div className="masonry-gallery-grid">
                       {films.map((item, index) => {
                         const imageSrc = item.src.startsWith("http") || item.src.startsWith("/") ? item.src : `/${item.src}`;
                         return (
                           <figure
-                            key={item.id}
-                            className="col-12 col-md-6 gallery__item grid-item animate-card-2"
-                            style={{ boxSizing: "border-box", margin: 0 }}
+                            key={item.id || index}
+                            className="masonry-gallery-item"
                           >
                             <a
                               href={imageSrc}
                               className="gallery__link"
                               onClick={(e) => openLightbox(index, e)}
+                              style={{ display: "block", borderRadius: "16px", overflow: "hidden", position: "relative" }}
                             >
-                              <img src={imageSrc} className="gallery__image" alt={item.title} />
-                              <div
-                                className="picture"
-                                style={{ backgroundImage: `url(${imageSrc})` }}
-                              ></div>
+                              <img 
+                                src={imageSrc} 
+                                className="gallery-image-natural" 
+                                alt={item.title} 
+                              />
                               {/* Visible Card Title Overlay */}
                               <div style={{
                                 position: "absolute",
@@ -172,12 +136,12 @@ export const Portfolio: React.FC = () => {
                                 <h3 style={{ margin: 0, color: "#fff", fontSize: "1.5rem", fontWeight: 500, letterSpacing: "-0.02em" }}>{item.title}</h3>
                               </div>
                             </a>
-                            <figcaption className={`gallery__descr ${index % 2 === 1 ? "opposite" : ""}`}>
-                              <h5 className={index % 2 === 1 ? "opposite" : ""}>
+                            <figcaption className="sr-only" style={{ display: "none" }}>
+                              <h5>
                                 {item.title}
                                 <small>{item.category}</small>
                               </h5>
-                              <p className="small">{item.description}</p>
+                              <p>{item.description}</p>
                             </figcaption>
                           </figure>
                         );
@@ -186,7 +150,7 @@ export const Portfolio: React.FC = () => {
                     {/* Portfolio Gallery End */}
 
                     {/* Contact Link Start */}
-                    <div className="gallery__btn animate-in-up">
+                    <div className="gallery__btn animate-in-up" style={{ marginTop: "4rem" }}>
                       <a href="#contact" className="btn btn-line-circle-icon">
                         <span className="btn-caption">Get In Touch</span>
                         <span className="circle hover-circle">
@@ -198,7 +162,7 @@ export const Portfolio: React.FC = () => {
                     {/* Contact Link End */}
                   </div>
                 </div>
-                {/* Content Block - Portfolio Gallery Masonry Grid End */}
+                {/* Content Block - Portfolio Gallery Grid End */}
               </div>
             </div>
             {/* Inner Section Content End */}
@@ -210,58 +174,147 @@ export const Portfolio: React.FC = () => {
         </div>
       </div>
 
-      {/* Lightbox / PhotoSwipe Recreation Modal */}
+      {/* Lightbox / Custom Premium Lightbox Modal */}
       {lightboxIndex !== null && films.length > lightboxIndex && (
-        <div className="pswp pswp--open" style={{ display: "block", opacity: 1, zIndex: 9999 }} role="dialog">
-          <div className="pswp__bg" onClick={closeLightbox}></div>
-          <div className="pswp__scroll-wrap">
-            <div className="pswp__container">
-              <div
-                className="pswp__item"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: "100%",
-                  padding: "40px"
-                }}
-              >
-                <img
-                  src={films[lightboxIndex].src.startsWith("http") || films[lightboxIndex].src.startsWith("/") ? films[lightboxIndex].src : `/${films[lightboxIndex].src}`}
-                  alt={films[lightboxIndex].title}
-                  style={{
-                    maxHeight: "80vh",
-                    maxWidth: "90vw",
-                    objectFit: "contain",
-                    boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
-                    borderRadius: "8px",
-                    border: "1px solid var(--stroke-elements)"
-                  }}
-                />
-              </div>
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          backgroundColor: "rgba(10, 10, 10, 0.98)",
+          backdropFilter: "blur(10px)",
+          zIndex: 9999,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          animation: "fadeIn 0.3s ease",
+          userSelect: "none"
+        }} role="dialog">
+          {/* Close button in top-right */}
+          <button
+            onClick={closeLightbox}
+            style={{
+              position: "absolute",
+              top: "30px",
+              right: "30px",
+              background: "rgba(255, 255, 255, 0.05)",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+              borderRadius: "50%",
+              width: "50px",
+              height: "50px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#fff",
+              fontSize: "2rem",
+              cursor: "pointer",
+              zIndex: 10000,
+              transition: "background 0.3s, transform 0.2s"
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255, 255, 255, 0.15)"}
+            onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)"}
+            title="Close"
+          >
+            <i className="ph ph-x"></i>
+          </button>
+
+          {/* Navigation - Left Arrow */}
+          <button
+            onClick={showPrev}
+            style={{
+              position: "absolute",
+              left: "30px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              background: "rgba(255, 255, 255, 0.05)",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+              borderRadius: "50%",
+              width: "60px",
+              height: "60px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#fff",
+              fontSize: "2.4rem",
+              cursor: "pointer",
+              zIndex: 10000,
+              transition: "background 0.3s"
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255, 255, 255, 0.15)"}
+            onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)"}
+            title="Previous"
+          >
+            <i className="ph ph-caret-left"></i>
+          </button>
+
+          {/* Center Image and Title info */}
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            maxWidth: "85vw",
+            maxHeight: "80vh"
+          }}>
+            <img
+              src={films[lightboxIndex].src.startsWith("http") || films[lightboxIndex].src.startsWith("/") ? films[lightboxIndex].src : `/${films[lightboxIndex].src}`}
+              alt={films[lightboxIndex].title}
+              style={{
+                maxHeight: "65vh",
+                maxWidth: "100%",
+                objectFit: "contain",
+                boxShadow: "0 25px 50px rgba(0,0,0,0.8)",
+                borderRadius: "12px",
+                border: "1px solid rgba(255, 255, 255, 0.1)"
+              }}
+            />
+            {/* Title / Info overlay at the bottom of the image */}
+            <div style={{ marginTop: "20px", textAlign: "center" }}>
+              <h4 style={{ color: "#fff", fontSize: "2rem", margin: "0 0 5px 0" }}>{films[lightboxIndex].title}</h4>
+              <p style={{ color: "var(--neutral-bright)", fontSize: "1.3rem", textTransform: "uppercase", letterSpacing: "0.1em", margin: 0 }}>{films[lightboxIndex].category}</p>
+              <p style={{ color: "rgba(255, 255, 255, 0.7)", fontSize: "1.5rem", maxWidth: "600px", marginTop: "10px", lineHeight: "1.5" }}>{films[lightboxIndex].description}</p>
             </div>
-            <div className="pswp__ui">
-              <div className="pswp__top-bar">
-                <div className="pswp__counter">
-                  {lightboxIndex + 1} / {films.length}
-                </div>
-                <button
-                  className="pswp__button pswp__button--close link-s"
-                  title="Close (Esc)"
-                  onClick={closeLightbox}
-                ></button>
-              </div>
-              <button
-                className="pswp__button pswp__button--arrow--left link-s"
-                title="Previous"
-                onClick={showPrev}
-              ></button>
-              <button
-                className="pswp__button pswp__button--arrow--right link-s"
-                title="Next"
-                onClick={showNext}
-              ></button>
-            </div>
+          </div>
+
+          {/* Navigation - Right Arrow */}
+          <button
+            onClick={showNext}
+            style={{
+              position: "absolute",
+              right: "30px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              background: "rgba(255, 255, 255, 0.05)",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+              borderRadius: "50%",
+              width: "60px",
+              height: "60px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#fff",
+              fontSize: "2.4rem",
+              cursor: "pointer",
+              zIndex: 10000,
+              transition: "background 0.3s"
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255, 255, 255, 0.15)"}
+            onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)"}
+            title="Next"
+          >
+            <i className="ph ph-caret-right"></i>
+          </button>
+
+          {/* Counter info at the bottom */}
+          <div style={{
+            position: "absolute",
+            bottom: "30px",
+            color: "rgba(255, 255, 255, 0.5)",
+            fontSize: "1.4rem"
+          }}>
+            {lightboxIndex + 1} / {films.length}
           </div>
         </div>
       )}
