@@ -87,7 +87,9 @@ const MainAppContent: React.FC = () => {
 
         const parentSection = el.closest("section") || el.closest(".inner") || document.body;
         
-        const range = 240;
+        // Disable parallax translation on mobile viewports to prevent clipping decorative elements
+        const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+        const range = isMobile ? 0 : 240;
         const startY = (1 - speed) * -range;
         const endY = (1 - speed) * range;
 

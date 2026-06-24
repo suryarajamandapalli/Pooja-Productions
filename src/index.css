@@ -164,7 +164,7 @@ form select option {
   }
 }
 
-@media only screen and (max-width: 575px) {
+@media only screen and (max-width: 767px) {
   .intro-bg-01__01 {
     width: 120px !important;
     height: 120px !important;
@@ -447,7 +447,7 @@ form select option {
 
 /* Fix footer background diamond cutting off and overlap */
 .bottom-bg-01__01 {
-  right: 5% !important;
+  right: -25px !important;
   bottom: 80px !important;
   width: 160px !important;
   opacity: 0.55 !important;
@@ -458,6 +458,7 @@ form select option {
   .bottom-bg-01__01 {
     width: 220px !important;
     bottom: 100px !important;
+    right: -40px !important;
   }
 }
 
@@ -465,8 +466,23 @@ form select option {
   .bottom-bg-01__01 {
     width: 280px !important;
     bottom: 60px !important;
-    right: 4% !important;
+    right: -60px !important;
   }
 }
+
+/* Ensure contact data text sits above any background diamonds */
+.contact-data {
+  position: relative;
+  z-index: 5;
+}
+
+/* Hide floating background diamonds on mobile viewports to prevent cluttering and layout overlaps */
+@media only screen and (max-width: 767px) {
+  img.floating-bg-diamond {
+    display: none !important;
+  }
+}
+
+
 
 

@@ -199,7 +199,7 @@ export const FloatingDiamonds: React.FC = () => {
       src: "/Daimonds/3.png",
       className: "diamond-17",
       style: {
-        top: "83%",
+        top: "82%",
         left: "2%",
         width: "95px",
         opacity: 0.65,
@@ -211,7 +211,7 @@ export const FloatingDiamonds: React.FC = () => {
       src: "/Daimonds/4.png",
       className: "diamond-18",
       style: {
-        top: "88%",
+        top: "85%",
         right: "3%",
         width: "100px",
         opacity: 0.7,
@@ -223,35 +223,11 @@ export const FloatingDiamonds: React.FC = () => {
       src: "/Daimonds/5.png",
       className: "diamond-19",
       style: {
-        top: "92%",
+        top: "88%",
         left: "5%",
         width: "70px",
         opacity: 0.6,
         filter: "drop-shadow(0 0 15px rgba(157, 184, 206, 0.5))",
-      },
-    },
-    // 20. Classic Blue Diamond - Bottom Area
-    {
-      src: "/Daimonds/6.png",
-      className: "diamond-20",
-      style: {
-        top: "96%",
-        right: "4%",
-        width: "115px",
-        opacity: 0.65,
-        filter: "drop-shadow(0 0 20px rgba(97, 115, 157, 0.5))",
-      },
-    },
-    // 21. Teal/Slate Diamond - Bottom Area
-    {
-      src: "/Daimonds/7.png",
-      className: "diamond-21",
-      style: {
-        top: "98%",
-        left: "3%",
-        width: "90px",
-        opacity: 0.7,
-        filter: "drop-shadow(0 0 25px rgba(95, 122, 130, 0.45))",
       },
     },
   ];
