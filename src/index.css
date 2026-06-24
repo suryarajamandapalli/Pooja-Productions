@@ -485,6 +485,19 @@ form select option {
   }
 }
 
+/* Polish font sizes and word wrap in footer to prevent overlaps on smaller screens */
+.contact-data__text {
+  font-size: 1.35rem !important;
+  word-break: break-all;
+}
+
+@media only screen and (min-width: 768px) {
+  .contact-data__text {
+    font-size: 1.45rem !important;
+    word-break: normal;
+  }
+}
+
 
 
 
