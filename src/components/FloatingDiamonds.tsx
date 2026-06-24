@@ -9,9 +9,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "3%",
         left: "3%",
-        width: "55px",
-        opacity: 0.75,
-        filter: "drop-shadow(0 0 15px rgba(180, 180, 190, 0.45))",
+        width: "120px",
+        opacity: 0.85,
+        filter: "drop-shadow(0 0 25px rgba(180, 180, 190, 0.55))",
       },
     },
     // 2. Dark Diamond - Hero Section
@@ -21,9 +21,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "8%",
         right: "5%",
-        width: "75px",
-        opacity: 0.6,
-        filter: "drop-shadow(0 0 15px rgba(80, 80, 100, 0.4))",
+        width: "160px",
+        opacity: 0.7,
+        filter: "drop-shadow(0 0 25px rgba(80, 80, 100, 0.5))",
       },
     },
     // 3. Blue Diamond - About Section
@@ -33,9 +33,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "13%",
         left: "6%",
-        width: "85px",
-        opacity: 0.65,
-        filter: "drop-shadow(0 0 20px rgba(71, 113, 160, 0.5))",
+        width: "180px",
+        opacity: 0.75,
+        filter: "drop-shadow(0 0 30px rgba(71, 113, 160, 0.6))",
       },
     },
     // 4. Light Silver/Blue Diamond - About Section
@@ -45,9 +45,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "18%",
         right: "2%",
-        width: "100px",
-        opacity: 0.7,
-        filter: "drop-shadow(0 0 15px rgba(126, 132, 148, 0.45))",
+        width: "210px",
+        opacity: 0.8,
+        filter: "drop-shadow(0 0 25px rgba(126, 132, 148, 0.55))",
       },
     },
     // 5. Ice Blue Diamond - Portfolio Section
@@ -57,9 +57,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "23%",
         left: "4%",
-        width: "70px",
-        opacity: 0.6,
-        filter: "drop-shadow(0 0 15px rgba(157, 184, 206, 0.5))",
+        width: "140px",
+        opacity: 0.7,
+        filter: "drop-shadow(0 0 25px rgba(157, 184, 206, 0.6))",
       },
     },
     // 6. Classic Blue Diamond - Portfolio Section
@@ -69,9 +69,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "28%",
         right: "8%",
-        width: "115px",
-        opacity: 0.65,
-        filter: "drop-shadow(0 0 20px rgba(97, 115, 157, 0.5))",
+        width: "240px",
+        opacity: 0.75,
+        filter: "drop-shadow(0 0 30px rgba(97, 115, 157, 0.6))",
       },
     },
     // 7. Teal/Slate Diamond - Studio Section
@@ -81,9 +81,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "33%",
         left: "2%",
-        width: "80px",
-        opacity: 0.7,
-        filter: "drop-shadow(0 0 25px rgba(95, 122, 130, 0.45))",
+        width: "190px",
+        opacity: 0.8,
+        filter: "drop-shadow(0 0 35px rgba(95, 122, 130, 0.55))",
       },
     },
     // 8. Silver Diamond - Studio Section
@@ -93,9 +93,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "38%",
         right: "4%",
-        width: "60px",
-        opacity: 0.7,
-        filter: "drop-shadow(0 0 15px rgba(180, 180, 190, 0.45))",
+        width: "130px",
+        opacity: 0.8,
+        filter: "drop-shadow(0 0 25px rgba(180, 180, 190, 0.55))",
       },
     },
     // 9. Dark Diamond - Services Section
@@ -105,9 +105,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "43%",
         left: "8%",
-        width: "70px",
-        opacity: 0.6,
-        filter: "drop-shadow(0 0 15px rgba(80, 80, 100, 0.4))",
+        width: "150px",
+        opacity: 0.7,
+        filter: "drop-shadow(0 0 25px rgba(80, 80, 100, 0.5))",
       },
     },
     // 10. Blue Diamond - Services Section
@@ -117,9 +117,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "48%",
         right: "3%",
-        width: "90px",
-        opacity: 0.65,
-        filter: "drop-shadow(0 0 20px rgba(71, 113, 160, 0.5))",
+        width: "200px",
+        opacity: 0.75,
+        filter: "drop-shadow(0 0 30px rgba(71, 113, 160, 0.6))",
       },
     },
     // 11. Light Silver/Blue Diamond - Resume Section
@@ -129,9 +129,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "53%",
         left: "3%",
-        width: "105px",
-        opacity: 0.7,
-        filter: "drop-shadow(0 0 15px rgba(126, 132, 148, 0.45))",
+        width: "220px",
+        opacity: 0.8,
+        filter: "drop-shadow(0 0 25px rgba(126, 132, 148, 0.55))",
       },
     },
     // 12. Ice Blue Diamond - Resume Section
@@ -141,9 +141,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "58%",
         right: "6%",
-        width: "75px",
-        opacity: 0.6,
-        filter: "drop-shadow(0 0 15px rgba(157, 184, 206, 0.5))",
+        width: "160px",
+        opacity: 0.7,
+        filter: "drop-shadow(0 0 25px rgba(157, 184, 206, 0.6))",
       },
     },
     // 13. Classic Blue Diamond - Team Section
@@ -153,9 +153,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "63%",
         left: "5%",
-        width: "110px",
-        opacity: 0.65,
-        filter: "drop-shadow(0 0 20px rgba(97, 115, 157, 0.5))",
+        width: "240px",
+        opacity: 0.75,
+        filter: "drop-shadow(0 0 30px rgba(97, 115, 157, 0.6))",
       },
     },
     // 14. Teal/Slate Diamond - Team Section
@@ -165,9 +165,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "68%",
         right: "2%",
-        width: "85px",
-        opacity: 0.7,
-        filter: "drop-shadow(0 0 25px rgba(95, 122, 130, 0.45))",
+        width: "180px",
+        opacity: 0.8,
+        filter: "drop-shadow(0 0 35px rgba(95, 122, 130, 0.55))",
       },
     },
     // 15. Silver Diamond - Contact Section
@@ -177,9 +177,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "73%",
         left: "4%",
-        width: "65px",
-        opacity: 0.75,
-        filter: "drop-shadow(0 0 15px rgba(180, 180, 190, 0.45))",
+        width: "140px",
+        opacity: 0.85,
+        filter: "drop-shadow(0 0 25px rgba(180, 180, 190, 0.55))",
       },
     },
     // 16. Dark Diamond - Contact Section
@@ -189,9 +189,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "78%",
         right: "5%",
-        width: "80px",
-        opacity: 0.6,
-        filter: "drop-shadow(0 0 15px rgba(80, 80, 100, 0.4))",
+        width: "180px",
+        opacity: 0.7,
+        filter: "drop-shadow(0 0 25px rgba(80, 80, 100, 0.5))",
       },
     },
     // 17. Blue Diamond - Contact Section
@@ -201,9 +201,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "82%",
         left: "2%",
-        width: "95px",
-        opacity: 0.65,
-        filter: "drop-shadow(0 0 20px rgba(71, 113, 160, 0.5))",
+        width: "200px",
+        opacity: 0.75,
+        filter: "drop-shadow(0 0 30px rgba(71, 113, 160, 0.6))",
       },
     },
     // 18. Light Silver/Blue Diamond - Bottom Area
@@ -213,9 +213,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "85%",
         right: "3%",
-        width: "100px",
-        opacity: 0.7,
-        filter: "drop-shadow(0 0 15px rgba(126, 132, 148, 0.45))",
+        width: "210px",
+        opacity: 0.8,
+        filter: "drop-shadow(0 0 25px rgba(126, 132, 148, 0.55))",
       },
     },
     // 19. Ice Blue Diamond - Bottom Area
@@ -225,9 +225,9 @@ export const FloatingDiamonds: React.FC = () => {
       style: {
         top: "88%",
         left: "5%",
-        width: "70px",
-        opacity: 0.6,
-        filter: "drop-shadow(0 0 15px rgba(157, 184, 206, 0.5))",
+        width: "150px",
+        opacity: 0.7,
+        filter: "drop-shadow(0 0 25px rgba(157, 184, 206, 0.6))",
       },
     },
   ];

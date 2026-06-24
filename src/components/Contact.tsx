@@ -425,8 +425,8 @@ export const Contact: React.FC = () => {
                 {/* Content Block - Contact Data Start */}
                 <div className="content__block grid-block">
                   <div className="container-fluid p-0 contact-data">
-                    <div className="row g-0">
-                      <div className="col-12 col-md-6 col-lg-4 contact-data__item grid-item">
+                    <div className="row gx-4 gy-4">
+                      <div className="col-12 col-md-6 col-lg-3 contact-data__item grid-item">
                         <p className="contact-data__title tagline-chapter animate-in-up">Address</p>
                         <p className="contact-data__text small type-basic-160lh">
                           <a
@@ -466,7 +466,7 @@ export const Contact: React.FC = () => {
                           </a>
                         </p>
                       </div>
-                      <div className="col-12 col-md-6 col-lg-2 contact-data__item grid-item">
+                      <div className="col-12 col-md-6 col-lg-3 contact-data__item grid-item">
                         <p className="contact-data__title tagline-chapter animate-in-up">Website</p>
                         <p className="contact-data__text small type-basic-160lh">
                           <a
