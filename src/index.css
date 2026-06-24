@@ -166,10 +166,10 @@ form select option {
 
 @media only screen and (max-width: 575px) {
   .intro-bg-01__01 {
-    width: 180px !important;
-    height: 180px !important;
-    top: -50px !important;
-    right: -30px !important;
+    width: 120px !important;
+    height: 120px !important;
+    top: 15px !important;
+    right: 15px !important;
   }
   .intro-bg-01__02 {
     width: 90px !important;
@@ -443,6 +443,30 @@ form select option {
 
 .gallery__link:hover .gallery-image-natural {
   transform: scale(1.05) !important;
+}
+
+/* Fix footer background diamond cutting off and overlap */
+.bottom-bg-01__01 {
+  right: 5% !important;
+  bottom: 80px !important;
+  width: 160px !important;
+  opacity: 0.55 !important;
+  filter: drop-shadow(0 0 25px rgba(126, 132, 148, 0.4)) !important;
+}
+
+@media only screen and (min-width: 992px) {
+  .bottom-bg-01__01 {
+    width: 220px !important;
+    bottom: 100px !important;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .bottom-bg-01__01 {
+    width: 280px !important;
+    bottom: 60px !important;
+    right: 4% !important;
+  }
 }
 
 
