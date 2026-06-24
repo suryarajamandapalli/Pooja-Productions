@@ -447,7 +447,7 @@ form select option {
 
 /* Fix footer background diamond position and visibility */
 .bottom-bg-01__01 {
-  right: 1% !important; /* Keep it fully visible inside the page content */
+  right: -30px !important; /* Shift right to prevent overlap with contact links */
   bottom: 80px !important;
   width: 160px !important;
   opacity: 0.65 !important;
@@ -458,7 +458,7 @@ form select option {
   .bottom-bg-01__01 {
     width: 220px !important;
     bottom: 100px !important;
-    right: 1% !important;
+    right: -40px !important;
   }
 }
 
@@ -466,7 +466,7 @@ form select option {
   .bottom-bg-01__01 {
     width: 280px !important;
     bottom: 60px !important;
-    right: 1% !important;
+    right: -60px !important;
   }
 }
 
