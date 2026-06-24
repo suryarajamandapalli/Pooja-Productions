@@ -33,20 +33,10 @@ img.floating-bg-diamond {
 }
 
 /* Custom animations for each diamond to make them feel organic and unsynchronized */
-img.floating-bg-diamond.diamond-1 { animation: floatOrganic1 14s ease-in-out infinite alternate !important; }
-img.floating-bg-diamond.diamond-2 { animation: floatOrganic2 16s ease-in-out infinite alternate !important; }
-img.floating-bg-diamond.diamond-3 { animation: floatOrganic3 18s ease-in-out infinite alternate !important; }
-img.floating-bg-diamond.diamond-4 { animation: floatOrganic4 15s ease-in-out infinite alternate !important; }
-img.floating-bg-diamond.diamond-5 { animation: floatOrganic1 17s ease-in-out infinite alternate-reverse !important; }
-img.floating-bg-diamond.diamond-6 { animation: floatOrganic2 13s ease-in-out infinite alternate-reverse !important; }
-img.floating-bg-diamond.diamond-7 { animation: floatOrganic3 19s ease-in-out infinite alternate-reverse !important; }
-img.floating-bg-diamond.diamond-8 { animation: floatOrganic4 16s ease-in-out infinite alternate-reverse !important; }
-img.floating-bg-diamond.diamond-9 { animation: floatOrganic1 15s ease-in-out infinite alternate !important; }
-img.floating-bg-diamond.diamond-10 { animation: floatOrganic2 14s ease-in-out infinite alternate !important; }
-img.floating-bg-diamond.diamond-11 { animation: floatOrganic3 17s ease-in-out infinite alternate !important; }
-img.floating-bg-diamond.diamond-12 { animation: floatOrganic4 15s ease-in-out infinite alternate-reverse !important; }
-img.floating-bg-diamond.diamond-13 { animation: floatOrganic1 19s ease-in-out infinite alternate-reverse !important; }
-img.floating-bg-diamond.diamond-14 { animation: floatOrganic2 16s ease-in-out infinite alternate !important; }
+img.floating-bg-diamond.diamond-1, img.floating-bg-diamond.diamond-5, img.floating-bg-diamond.diamond-9, img.floating-bg-diamond.diamond-13, img.floating-bg-diamond.diamond-17, img.floating-bg-diamond.diamond-21 { animation: floatOrganic1 14s ease-in-out infinite alternate !important; }
+img.floating-bg-diamond.diamond-2, img.floating-bg-diamond.diamond-6, img.floating-bg-diamond.diamond-10, img.floating-bg-diamond.diamond-14, img.floating-bg-diamond.diamond-18 { animation: floatOrganic2 16s ease-in-out infinite alternate !important; }
+img.floating-bg-diamond.diamond-3, img.floating-bg-diamond.diamond-7, img.floating-bg-diamond.diamond-11, img.floating-bg-diamond.diamond-15, img.floating-bg-diamond.diamond-19 { animation: floatOrganic3 18s ease-in-out infinite alternate !important; }
+img.floating-bg-diamond.diamond-4, img.floating-bg-diamond.diamond-8, img.floating-bg-diamond.diamond-12, img.floating-bg-diamond.diamond-16, img.floating-bg-diamond.diamond-20 { animation: floatOrganic4 15s ease-in-out infinite alternate !important; }
 
 @keyframes floatOrganic1 {
   0% { transform: translateY(0) rotate(0deg) scale(1); }
