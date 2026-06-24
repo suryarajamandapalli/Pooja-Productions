@@ -82,7 +82,7 @@ export const WelcomePopup: React.FC = () => {
         {/* Ornament */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "1.2rem", marginBottom: "2rem" }}>
           <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, transparent, rgba(197,168,128,0.4))" }} />
-          <i className="ph ph-film-slate" style={{ color: "#C5A880", fontSize: "2rem" }}></i>
+          <img src="/Daimonds/5.png" alt="Diamond Ornament" style={{ height: "3rem", width: "auto", objectFit: "contain", filter: "drop-shadow(0 0 10px rgba(157, 184, 206, 0.6))" }} />
           <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, rgba(197,168,128,0.4), transparent)" }} />
         </div>
 

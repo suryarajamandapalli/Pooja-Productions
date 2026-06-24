@@ -21,6 +21,7 @@ import { Resume } from "./components/Resume";
 import { Contact } from "./components/Contact";
 import { WelcomePopup } from "./components/WelcomePopup";
 import { Team } from "./components/Team";
+import { FloatingDiamonds } from "./components/FloatingDiamonds";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
@@ -358,6 +359,7 @@ const MainAppContent: React.FC = () => {
 
       {/* 5. Main Scrollable Container */}
       <main id="page-content" className="page-content" style={{ position: "relative" }}>
+        <FloatingDiamonds />
         <Hero />
         <About />
         <Portfolio />
