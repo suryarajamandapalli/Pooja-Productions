@@ -7,18 +7,14 @@ export const WelcomePopup: React.FC = () => {
   const { data } = useCMS();
 
   useEffect(() => {
-    const seen = sessionStorage.getItem("pp_welcome_seen");
-    if (!seen) {
-      const t = setTimeout(() => setVisible(true), 1800);
-      return () => clearTimeout(t);
-    }
+    const t = setTimeout(() => setVisible(true), 1800);
+    return () => clearTimeout(t);
   }, []);
 
   const close = () => {
     setClosing(true);
     setTimeout(() => {
       setVisible(false);
-      sessionStorage.setItem("pp_welcome_seen", "1");
     }, 500);
   };
 
