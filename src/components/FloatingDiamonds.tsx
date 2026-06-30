@@ -8,7 +8,7 @@ export const FloatingDiamonds: React.FC = () => {
       className: "diamond-1",
       style: {
         top: "3%",
-        left: "3%",
+        left: "14%",
         width: "120px",
         opacity: 0.85,
         filter: "drop-shadow(0 0 25px rgba(180, 180, 190, 0.55))",
@@ -32,7 +32,7 @@ export const FloatingDiamonds: React.FC = () => {
       className: "diamond-3",
       style: {
         top: "13%",
-        left: "6%",
+        left: "16%",
         width: "180px",
         opacity: 0.75,
         filter: "drop-shadow(0 0 30px rgba(71, 113, 160, 0.6))",
@@ -56,7 +56,7 @@ export const FloatingDiamonds: React.FC = () => {
       className: "diamond-5",
       style: {
         top: "23%",
-        left: "4%",
+        left: "13%",
         width: "140px",
         opacity: 0.7,
         filter: "drop-shadow(0 0 25px rgba(157, 184, 206, 0.6))",
@@ -80,7 +80,7 @@ export const FloatingDiamonds: React.FC = () => {
       className: "diamond-7",
       style: {
         top: "33%",
-        left: "2%",
+        left: "15%",
         width: "190px",
         opacity: 0.8,
         filter: "drop-shadow(0 0 35px rgba(95, 122, 130, 0.55))",
@@ -104,7 +104,7 @@ export const FloatingDiamonds: React.FC = () => {
       className: "diamond-9",
       style: {
         top: "43%",
-        left: "8%",
+        left: "17%",
         width: "150px",
         opacity: 0.7,
         filter: "drop-shadow(0 0 25px rgba(80, 80, 100, 0.5))",
@@ -128,7 +128,7 @@ export const FloatingDiamonds: React.FC = () => {
       className: "diamond-11",
       style: {
         top: "53%",
-        left: "3%",
+        left: "14%",
         width: "220px",
         opacity: 0.8,
         filter: "drop-shadow(0 0 25px rgba(126, 132, 148, 0.55))",
@@ -152,7 +152,7 @@ export const FloatingDiamonds: React.FC = () => {
       className: "diamond-13",
       style: {
         top: "63%",
-        left: "5%",
+        left: "15%",
         width: "240px",
         opacity: 0.75,
         filter: "drop-shadow(0 0 30px rgba(97, 115, 157, 0.6))",
@@ -176,7 +176,7 @@ export const FloatingDiamonds: React.FC = () => {
       className: "diamond-15",
       style: {
         top: "73%",
-        left: "4%",
+        left: "13%",
         width: "140px",
         opacity: 0.85,
         filter: "drop-shadow(0 0 25px rgba(180, 180, 190, 0.55))",
@@ -200,7 +200,7 @@ export const FloatingDiamonds: React.FC = () => {
       className: "diamond-17",
       style: {
         top: "82%",
-        left: "2%",
+        left: "12%",
         width: "200px",
         opacity: 0.75,
         filter: "drop-shadow(0 0 30px rgba(71, 113, 160, 0.6))",
@@ -224,7 +224,7 @@ export const FloatingDiamonds: React.FC = () => {
       className: "diamond-19",
       style: {
         top: "88%",
-        left: "5%",
+        left: "14%",
         width: "150px",
         opacity: 0.7,
         filter: "drop-shadow(0 0 25px rgba(157, 184, 206, 0.6))",
