@@ -4,7 +4,7 @@ import type { FilmItem, TestimonialItem, AwardItem, TeamItem } from "./CMSContex
 
 export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackToSite }) => {
   const cms = useCMS();
-  const [activeTab, setActiveTab] = useState<"general" | "films" | "services" | "media" | "testimonials" | "awards" | "team" | "tools" | "submissions">("general");
+  const [activeTab, setActiveTab] = useState<"general" | "socials" | "films" | "services" | "media" | "testimonials" | "awards" | "team" | "tools" | "submissions">("general");
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
   const [mediaFiles, setMediaFiles] = useState<string[]>([]);
   const [mediaLoading, setMediaLoading] = useState(false);
@@ -265,6 +265,7 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
         }}>
           {[
             { id: "general", label: "General Copy", icon: "ph-pencil-line" },
+            { id: "socials", label: "Social Media Links", icon: "ph-share-network" },
             { id: "films", label: "Films Showcase", icon: "ph-film-strip" },
             { id: "services", label: "Studio Divisions", icon: "ph-projector-screen" },
             { id: "testimonials", label: "Directors Quotes", icon: "ph-chat-circle-dots" },
@@ -276,7 +277,7 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as "general" | "films" | "services" | "testimonials" | "awards" | "team" | "tools" | "submissions" | "media")}
+              onClick={() => setActiveTab(tab.id as any)}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -529,11 +530,12 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
-                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Subheadline</label>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Small Subtitle (above headline)</label>
                   <textarea
-                    value={data.hero.subheadline}
-                    onChange={(e) => updateField("hero", "subheadline", e.target.value)}
-                    style={{ minHeight: "10rem", padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF", resize: "vertical" }}
+                    value={data.hero.heroSubtitle || ""}
+                    onChange={(e) => updateField("hero", "heroSubtitle", e.target.value)}
+                    placeholder={"HELLO !\nMr. MK Presents"}
+                    style={{ minHeight: "7rem", padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF", resize: "vertical" }}
                   />
                 </div>
 
@@ -554,6 +556,15 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                     value={data.hero.secondaryBtnText}
                     onChange={(e) => updateField("hero", "secondaryBtnText", e.target.value)}
                     style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", gridColumn: "1 / -1" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Large Blockquote Text</label>
+                  <textarea
+                    value={data.hero.blockquote || ""}
+                    onChange={(e) => updateField("hero", "blockquote", e.target.value)}
+                    style={{ minHeight: "8rem", padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF", resize: "vertical" }}
                   />
                 </div>
 
@@ -836,55 +847,6 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                 </div>
               </div>
 
-              {/* STUDIO NETWORK & SOCIALS */}
-              <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem", marginTop: "4rem" }}>
-                <h2 style={{ color: "#FFF", fontSize: "2.4rem", fontWeight: 700, margin: 0 }}>STUDIO NETWORK & SOCIALS</h2>
-                <p style={{ color: "#C5A880", margin: "0.5rem 0 0 0" }}>Edit links for Vimeo, Instagram, YouTube, and LinkedIn.</p>
-              </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
-                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Vimeo URL</label>
-                  <input
-                    type="text"
-                    value={data.about.vimeo || ""}
-                    onChange={(e) => updateField("about", "vimeo", e.target.value)}
-                    placeholder="https://vimeo.com/username"
-                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
-                  />
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
-                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Instagram URL</label>
-                  <input
-                    type="text"
-                    value={data.about.instagram || ""}
-                    onChange={(e) => updateField("about", "instagram", e.target.value)}
-                    placeholder="https://instagram.com/username"
-                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
-                  />
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
-                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>YouTube URL</label>
-                  <input
-                    type="text"
-                    value={data.about.youtube || ""}
-                    onChange={(e) => updateField("about", "youtube", e.target.value)}
-                    placeholder="https://youtube.com/c/username"
-                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
-                  />
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
-                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>LinkedIn URL</label>
-                  <input
-                    type="text"
-                    value={data.about.linkedin || ""}
-                    onChange={(e) => updateField("about", "linkedin", e.target.value)}
-                    placeholder="https://linkedin.com/company/username"
-                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
-                  />
-                </div>
-              </div>
-
               {/* LEADERSHIP & VISION DETAILS */}
               <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem", marginTop: "4rem" }}>
                 <h2 style={{ color: "#FFF", fontSize: "2.4rem", fontWeight: 700, margin: 0 }}>LEADERSHIP & VISION DETAILS</h2>
@@ -954,6 +916,59 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                     value={data.leadership?.bio2 || ""}
                     onChange={(e) => updateField("leadership", "bio2", e.target.value)}
                     style={{ minHeight: "10rem", padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF", resize: "vertical" }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB: SOCIAL MEDIA LINKS */}
+          {activeTab === "socials" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
+              <div style={{ borderBottom: "1px solid #262626", paddingBottom: "2rem" }}>
+                <h2 style={{ color: "#FFF", fontSize: "2.4rem", fontWeight: 700, margin: 0 }}>STUDIO NETWORK & SOCIAL LINKS</h2>
+                <p style={{ color: "#C5A880", margin: "0.5rem 0 0 0" }}>Configure links to the official studio social media channels.</p>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Vimeo URL</label>
+                  <input
+                    type="text"
+                    value={data.about.vimeo || ""}
+                    onChange={(e) => updateField("about", "vimeo", e.target.value)}
+                    placeholder="https://vimeo.com/username"
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Instagram URL</label>
+                  <input
+                    type="text"
+                    value={data.about.instagram || ""}
+                    onChange={(e) => updateField("about", "instagram", e.target.value)}
+                    placeholder="https://instagram.com/username"
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>YouTube URL</label>
+                  <input
+                    type="text"
+                    value={data.about.youtube || ""}
+                    onChange={(e) => updateField("about", "youtube", e.target.value)}
+                    placeholder="https://youtube.com/c/username"
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>LinkedIn URL</label>
+                  <input
+                    type="text"
+                    value={data.about.linkedin || ""}
+                    onChange={(e) => updateField("about", "linkedin", e.target.value)}
+                    placeholder="https://linkedin.com/company/username"
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
                   />
                 </div>
               </div>

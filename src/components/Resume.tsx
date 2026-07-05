@@ -136,8 +136,15 @@ export const Resume: React.FC = () => {
                 {/* Content Block - Tools Cards End */}
 
                 {/* Content Block - Testimonials Start */}
-                <div className="content__block pre-offcanvas-text-block">
-                  <div className="block__subtitle">
+                <div className="content__block pre-offcanvas-text-block" style={{ position: "relative" }}>
+                  <div className="block__subtitle" style={{ position: "relative", zIndex: 5 }}>
+                    {/* Local blue diamond positioned to complement the section title */}
+                    <img
+                      src="/Daimonds/6.png"
+                      alt=""
+                      aria-hidden="true"
+                      className="testimonials-section-diamond"
+                    />
                     <p className="tagline-chapter animate-in-up">Voices of Directors & Partners</p>
                   </div>
 
@@ -193,25 +200,26 @@ export const Resume: React.FC = () => {
                           );
                         })}
                       </div>
-
-                      {/* Navigation buttons */}
-                      {testimonials.length > 1 && (
-                        <>
-                          <div className="swiper-button-prev mxd-slider-btn mxd-slider-btn-square-prev animate-in-up">
-                            <a className="btn btn-line icon-left slide-left" href="#0">
-                              <i className="ph ph-arrow-left"></i>
-                            </a>
-                          </div>
-                          <div className="swiper-button-next mxd-slider-btn mxd-slider-btn-square-next animate-in-up">
-                            <a className="btn btn-line icon-right slide-right" href="#0">
-                              <i className="ph ph-arrow-right"></i>
-                            </a>
-                          </div>
-                          {/* Pagination */}
-                          <div className="swiper-pagination mxd-swiper-pagination-fraction"></div>
-                        </>
-                      )}
+                      
+                      {/* Pagination */}
+                      <div className="swiper-pagination mxd-swiper-pagination-fraction"></div>
                     </div>
+
+                    {/* Navigation buttons - placed OUTSIDE the swiper-testimonials div to prevent overflow clipping */}
+                    {testimonials.length > 1 && (
+                      <>
+                        <div className="swiper-button-prev mxd-slider-btn mxd-slider-btn-square-prev animate-in-up">
+                          <a className="btn btn-line icon-left slide-left" href="#0">
+                            <i className="ph ph-arrow-left"></i>
+                          </a>
+                        </div>
+                        <div className="swiper-button-next mxd-slider-btn mxd-slider-btn-square-next animate-in-up">
+                          <a className="btn btn-line icon-right slide-right" href="#0">
+                            <i className="ph ph-arrow-right"></i>
+                          </a>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
                 {/* Content Block - Testimonials End */}

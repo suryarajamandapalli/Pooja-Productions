@@ -3,6 +3,23 @@ import gsap from "gsap";
 
 export const Loader: React.FC = () => {
   useEffect(() => {
+    const skipLoader = sessionStorage.getItem("pooja_skip_loader") === "true";
+    if (skipLoader) {
+      const loader = document.getElementById("loader");
+      if (loader) loader.classList.add("loaded");
+      
+      const wrapper = document.querySelector(".loader__wrapper");
+      if (wrapper) {
+        gsap.set(wrapper, { y: "-100%", opacity: 0 });
+      }
+      
+      const loadingItems = document.querySelectorAll(".loading__item");
+      const fadeInItems  = document.querySelectorAll(".loading__fade");
+      gsap.set(loadingItems, { opacity: 1, y: 0 });
+      gsap.set(fadeInItems,  { opacity: 1 });
+      return;
+    }
+
     const tl = gsap.timeline({ defaults: { overwrite: "auto" } });
 
     // 1. Initialize logo states

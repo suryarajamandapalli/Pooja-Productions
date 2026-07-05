@@ -58,8 +58,22 @@ export const Hero: React.FC = () => {
  
               {/* Headline Start */}
               <div id="headline" className="headline d-flex align-items-start flex-column loading-wrap">
-                <p className="headline__subtitle space-bottom loading__item">HELLO !<br />Mr. MK Presents</p>
-                <h1 className="headline__title loading__item">Pooja<br />Productions</h1>
+                <p className="headline__subtitle space-bottom loading__item">
+                  {(hero?.heroSubtitle || "HELLO !\nMr. MK Presents").split("\n").map((line, index, arr) => (
+                    <React.Fragment key={index}>
+                      {line}
+                      {index < arr.length - 1 && <br />}
+                    </React.Fragment>
+                  ))}
+                </p>
+                <h1 className="headline__title loading__item">
+                  {(hero?.headline || "Pooja\nProductions").split("\n").map((line, index, arr) => (
+                    <React.Fragment key={index}>
+                      {line}
+                      {index < arr.length - 1 && <br />}
+                    </React.Fragment>
+                  ))}
+                </h1>
                 <div className="headline__btn loading__item">
                   <a className="btn btn-line-small icon-right slide-right-down" href="#portfolio">
                     <span className="btn-caption">{primaryBtnText}</span>
@@ -117,7 +131,7 @@ export const Hero: React.FC = () => {
                   <div className="row g-0">
                     <div className="col-12">
                       <blockquote className="reveal-type">
-                        <SplitText text="Stories that stir the soul, visuals that capture the imagination, and cinema that stands the test of time." />
+                        <SplitText text={hero?.blockquote || "Stories that stir the soul, visuals that capture the imagination, and cinema that stands the test of time."} />
                       </blockquote>
                     </div>
                   </div>

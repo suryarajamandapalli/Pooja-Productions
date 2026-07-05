@@ -55,6 +55,22 @@ export const About: React.FC = () => {
                 {/* Content Block - Leadership Data Start */}
                 <div className="content__block grid-block animate-in-up" style={{ marginTop: "1.5rem" }}>
                   <div className="liquid-glass-card">
+                    {/* Diamond accent — top-right corner of card */}
+                    <img
+                      src="/Daimonds/5.png"
+                      alt=""
+                      aria-hidden="true"
+                      style={{
+                        position: "absolute",
+                        top: "-55px",
+                        right: "-30px",
+                        width: "130px",
+                        opacity: 0.9,
+                        filter: "drop-shadow(0 0 20px rgba(157, 184, 206, 0.8))",
+                        pointerEvents: "none",
+                        zIndex: 20,
+                      }}
+                    />
                     <div className="container-fluid p-0">
                       <div className="row g-0 justify-content-between align-items-center">
                         <div className="col-12 col-md-4 grid-item chairman-card-img-col">

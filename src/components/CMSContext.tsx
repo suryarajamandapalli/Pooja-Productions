@@ -18,10 +18,12 @@ export interface MarqueeItem {
 export interface HeroContent {
   headline: string;
   subheadline: string;
+  heroSubtitle?: string;
   primaryBtnText: string;
   secondaryBtnText: string;
   bgVideoUrl?: string;
   heroImageUrl?: string;
+  blockquote?: string;
 }
 
 export interface AboutContent {
@@ -191,9 +193,9 @@ const defaultWelcomePopup: WelcomePopupContent = {
   subheadline: "Pooja Productions",
   description: "Stories that stir the soul. Visuals that capture the imagination. Cinema that stands the test of time.",
   primaryBtnText: "Explore Site",
-  secondaryBtnText: "Enter Site",
-  primaryBtnLink: "#portfolio",
-  secondaryBtnLink: "close",
+  secondaryBtnText: "Our films",
+  primaryBtnLink: "close",
+  secondaryBtnLink: "#portfolio",
 };
 
 const defaultNavigation: NavItemContent = {
@@ -208,10 +210,27 @@ const defaultNavigation: NavItemContent = {
   contact: "Contact",
 };
 
+const defaultHero = {
+  headline: "Pooja\nProductions",
+  heroSubtitle: "HELLO !\nMr. MK Presents",
+  subheadline: "HELLO !\nMr. MK Presents",
+  primaryBtnText: "Explore our Slate",
+  secondaryBtnText: "Co-Produce",
+  bgVideoUrl: "",
+  heroImageUrl: "/img/backgrounds/1200x1200_bg01.png",
+  blockquote: "Stories that stir the soul, visuals that capture the imagination, and cinema that stands the test of time.",
+};
+
 const ensureDefaults = (loaded: WebsiteData): WebsiteData => {
   const welcome = loaded.welcomePopup || defaultWelcomePopup;
   return {
     ...loaded,
+    hero: {
+      ...defaultHero,
+      ...(loaded.hero || {}),
+      // heroSubtitle must always default to "HELLO ! / Mr. MK Presents" if not set
+      heroSubtitle: (loaded.hero?.heroSubtitle) || defaultHero.heroSubtitle,
+    },
     welcomePopup: {
       ...defaultWelcomePopup,
       ...welcome,
@@ -221,6 +240,7 @@ const ensureDefaults = (loaded: WebsiteData): WebsiteData => {
     navigation: loaded.navigation || defaultNavigation,
   };
 };
+
 
 const CMSContext = createContext<CMSContextType | undefined>(undefined);
 

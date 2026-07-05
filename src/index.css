@@ -365,12 +365,13 @@ form select option {
 
 /* Liquid Glass Card for Leadership section */
 .liquid-glass-card {
+  position: relative;
   background: rgba(255, 255, 255, 0.012);
   backdrop-filter: blur(15px) saturate(140%);
   -webkit-backdrop-filter: blur(15px) saturate(140%);
-  border: 1px solid rgba(197, 168, 128, 0.12); /* Subtle gold tint */
-  border-radius: 28px;
-  padding: 2.5rem;
+  border: 1px solid rgba(197, 168, 128, 0.18);
+  border-radius: 16px;
+  padding: 2rem;
   box-shadow: 
     0 30px 60px rgba(0, 0, 0, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
@@ -380,18 +381,30 @@ form select option {
               border-color 0.5s;
 }
 
+/* Subtle rectangular corner frame accent */
+.liquid-glass-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 16px;
+  background: transparent;
+  border: 1px solid rgba(197, 168, 128, 0.1);
+  pointer-events: none;
+  z-index: 0;
+}
+
 @media only screen and (min-width: 768px) {
   .liquid-glass-card {
-    padding: 4rem;
+    padding: 2.5rem;
   }
   .chairman-card-img-col {
-    padding-right: 3rem !important;
+    padding-right: 2rem !important;
   }
 }
 
 @media only screen and (min-width: 1200px) {
   .liquid-glass-card {
-    padding: 5rem;
+    padding: 3rem;
   }
 }
 
@@ -497,9 +510,442 @@ form select option {
     word-break: normal;
   }
 }
+/* ═══════════════════════════════════════════════════════
+   TESTIMONIALS SECTION — Layout Polish (Handcrafted UI Design)
+   ═══════════════════════════════════════════════════════ */
 
+/* 1. Section Headroom (Prevents previous section clipping) */
+#resume {
+  position: relative;
+  z-index: 10 !important;
+  background-color: var(--base) !important;
+}
 
+.pre-offcanvas-text-block {
+  position: relative;
+  z-index: 10 !important;
+}
 
+/* 2. Heading & Diamond Indicator Alignment */
+.pre-offcanvas-text-block .block__subtitle {
+  position: relative;
+  z-index: 15 !important;
+  padding-top: 5rem !important; /* spacing below preceding section */
+  margin-top: 1rem !important;
+  margin-bottom: 3.2rem !important;
+  padding-left: 3.6rem !important; /* space for the diamond indicator */
+  margin-left: 0 !important;
+  overflow: visible !important;
+}
 
+@media only screen and (min-width: 1200px) {
+  .pre-offcanvas-text-block .block__subtitle {
+    margin-left: 6.5rem !important; /* aligns perfectly with the card's left edge */
+  }
+}
 
+.testimonials-section-diamond {
+  position: absolute !important;
+  top: 50% !important;
+  left: 0 !important;
+  transform: translateY(-50%) !important;
+  width: 24px !important; /* elegant indicator size */
+  height: auto;
+  opacity: 0.85 !important;
+  filter: drop-shadow(0 0 8px rgba(97, 115, 157, 0.4)) !important;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* 3. Slider Wrapper (Leaves horizontal breathing room for arrows) */
+.testimonials-slider {
+  position: relative;
+  overflow: visible !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+@media only screen and (min-width: 1200px) {
+  .testimonials-slider {
+    margin-left: 6.5rem !important;
+    margin-right: 6.5rem !important;
+  }
+}
+
+.swiper-testimonials {
+  overflow: hidden !important; /* keeps sliding cards inside bounds */
+}
+
+/* 4. Swiper Fraction Pagination */
+.swiper-pagination.mxd-swiper-pagination-fraction {
+  font-family: var(--_font-default) !important;
+  font-size: 1.6rem !important;
+  color: var(--t-bright) !important;
+  bottom: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* 5. Navigation Buttons (Close to card, vertically centered, smooth hover scale) */
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  display: none !important;
+  content: "" !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  color: transparent !important;
+  background-image: none !important;
+}
+
+.mxd-slider-btn {
+  position: absolute !important;
+  top: 50% !important;
+  bottom: auto !important;
+  transform: translateY(-50%) !important;
+  margin: 0 !important;
+  z-index: 30 !important;
+}
+
+.mxd-slider-btn a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 4.8rem !important;
+  height: 4.8rem !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.4s ease, 
+              background-color 0.4s ease !important;
+}
+
+.mxd-slider-btn a:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(197, 168, 128, 0.5) !important;
+}
+
+.mxd-slider-btn-square-prev {
+  left: -3rem !important; /* sits snuggly close to card left border */
+  padding-left: 0 !important;
+}
+.mxd-slider-btn-square-prev a:hover {
+  transform: scale(1.1) translateX(-3px) !important;
+}
+
+.mxd-slider-btn-square-next {
+  right: -3rem !important; /* sits snuggly close to card right border */
+  padding-right: 0 !important;
+}
+.mxd-slider-btn-square-next a:hover {
+  transform: scale(1.1) translateX(3px) !important;
+}
+
+@media only screen and (max-width: 1199px) {
+  .testimonials-slider {
+    padding-bottom: 7.2rem !important; /* space for pagination + mobile arrows */
+  }
+  .mxd-slider-btn {
+    top: auto !important;
+    bottom: 0 !important;
+    transform: none !important;
+  }
+  .mxd-slider-btn-square-prev {
+    left: calc(50% - 60px) !important;
+  }
+  .mxd-slider-btn-square-next {
+    left: calc(50% + 12px) !important;
+    right: auto !important;
+  }
+  .swiper-pagination.mxd-swiper-pagination-fraction {
+    bottom: 4.4rem !important;
+  }
+}
+
+/* 6. Card Polish (Consistent glass effect, borders, shadows, auto height) */
+.testimonials-card {
+  background: rgba(255, 255, 255, 0.012) !important;
+  backdrop-filter: blur(20px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important; /* crisp refined border */
+  border-radius: 16px !important; /* premium soft corners */
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important; /* internal highlight */
+  padding: 3rem !important;
+  height: auto !important;
+  min-height: 0 !important; /* dynamic, content-driven height prevents bottom empty space */
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: visible !important;
+}
+
+@media only screen and (min-width: 768px) {
+  .testimonials-card {
+    padding: 3.6rem !important;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .testimonials-card {
+    padding: 4.8rem !important;
+  }
+}
+
+/* 7. Column stretch & baseline alignment */
+.testimonials-card .row {
+  align-items: stretch !important;
+}
+
+.testimonials-card__tdata {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  padding-right: 2.4rem !important;
+}
+
+.testimonials-card__timage {
+  padding-left: 2.4rem !important;
+}
+
+@media only screen and (max-width: 991px) {
+  .testimonials-card__timage {
+    padding-left: 0 !important;
+    margin-top: 3.2rem !important;
+  }
+}
+
+/* Image container and visual sizing */
+.timage__inner {
+  height: 100% !important;
+  min-height: 280px !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+.timage__inner img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.testimonials-card:hover .timage__inner img {
+  transform: scale(1.03) !important;
+}
+
+/* 8. Profile Block (Perfect baseline spacing: 24px) */
+.testimonials-card__tauthor {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0;
+}
+
+.tauthor__avatar {
+  flex-shrink: 0 !important;
+  width: 80px !important;
+  height: 80px !important;
+  margin-right: 24px !important; /* strict 24px spacing grid */
+  border-radius: 50% !important;
+  border: 1px solid rgba(197, 168, 128, 0.25) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+  overflow: hidden !important;
+}
+
+.tauthor__info {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+.tauthor__name {
+  font-size: 2.4rem !important; /* bold typographic weight */
+  font-weight: 700 !important;
+  color: var(--t-bright) !important;
+  margin: 0 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.015em !important;
+}
+
+.tauthor__position {
+  font-size: 1.2rem !important; /* smaller, lighter description */
+  font-weight: 500 !important;
+  color: #AEB5C5 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.12em !important;
+  margin-top: 6px !important; /* baseline spacing grid */
+  margin-bottom: 0 !important;
+  line-height: 1.2 !important;
+}
+
+.tauthor__rating {
+  margin-top: 8px !important; /* rating star spacing grid */
+  display: flex !important;
+  gap: 4px !important;
+}
+
+.tauthor__rating i {
+  color: #C5A880 !important; /* theme gold stars */
+  font-size: 1.4rem !important;
+}
+
+/* 9. Quote block formatting (spacing: 24px) */
+.testimonials-card__descr {
+  margin-top: 24px !important; /* spacing block from author info */
+  flex-grow: 1 !important;
+}
+
+.testimonials-card__descr p {
+  font-size: 1.6rem !important;
+  line-height: 1.65 !important; /* readable line height */
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-weight: 400 !important;
+  font-family: var(--_font-default) !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  margin: 0 !important;
+}
+
+@media only screen and (min-width: 1400px) {
+  .testimonials-card__descr p {
+    font-size: 1.7rem !important;
+  }
+}
+
+/* 10. CTA Button (Natural page flow, spacing: 32px, micro hover slide) */
+.testimonials-card__btnholder {
+  position: relative !important;
+  bottom: auto !important;
+  left: auto !important;
+  margin-top: 32px !important; /* spacing block from quote description */
+  padding-top: 0 !important;
+  margin-bottom: 0 !important;
+  align-self: flex-start !important;
+}
+
+.testimonials-card__btnholder a.btn-line {
+  transition: color 0.4s ease, border-color 0.4s ease !important;
+}
+
+.testimonials-card__btnholder a.btn-line i {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.testimonials-card__btnholder a.btn-line:hover i {
+  transform: translateX(5px) !important; /* smooth hover arrow translation */
+}
+
+/* ═══════════════════════════════════════════════════════
+   FOOTER BOTTOM BAR — UI & Spacing Polish (Flat Dark Style)
+   ═══════════════════════════════════════════════════════ */
+
+/* Footer Divider Line */
+.footer-divider {
+  width: 100% !important;
+  height: 1px !important;
+  background: rgba(197, 168, 128, 0.15) !important; /* theme gold tint divider */
+  margin: 4.8rem 0 3.6rem 0 !important;
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+/* Footer Bottom Bar Styling */
+.footer-bottom-bar {
+  position: relative !important;
+  z-index: 5 !important;
+  font-family: var(--_font-default) !important;
+  font-size: 1.4rem !important;
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+.footer-copyright {
+  font-weight: 500 !important;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.45) !important;
+  font-weight: 500 !important;
+  transition: color 0.3s ease !important;
+  text-decoration: none !important;
+}
+
+.footer-link:hover {
+  color: #C5A880 !important;
+}
+
+/* Social Media Icons */
+.footer-social-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 3.6rem !important;
+  height: 3.6rem !important;
+  border-radius: 50% !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+  font-size: 1.6rem !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.footer-social-icon:hover {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-color: rgba(197, 168, 128, 0.4) !important;
+  color: #C5A880 !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Back to Top link button */
+.footer-back-to-top {
+  color: rgba(255, 255, 255, 0.45) !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  font-size: 1.2rem !important;
+  text-decoration: none !important;
+  transition: color 0.3s ease !important;
+}
+
+.footer-back-to-top i {
+  font-size: 1.4rem !important;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.footer-back-to-top:hover {
+  color: #C5A880 !important;
+}
+
+.footer-back-to-top:hover i {
+  transform: translateY(-3px) !important;
+}
+
+@media only screen and (max-width: 767px) {
+  .footer-bottom-bar {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 2.4rem !important;
+  }
+}
+
+/* Cinematic Home Page Fade-In Transition (Step 5) */
+.site-fade-in-premium {
+  opacity: 0;
+  will-change: transform, opacity, filter;
+  animation: homeFadeIn 2.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes homeFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(1.04);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+}
 

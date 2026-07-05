@@ -2527,7 +2527,7 @@ form textarea:required:valid {
 }
 
 .intro-bg-01__02 {
-  bottom: -60px;
+  bottom: -120px;
   left: auto;
   right: 0;
   width: 120px;
@@ -2535,7 +2535,7 @@ form textarea:required:valid {
 }
 @media only screen and (min-width: 768px) {
   .intro-bg-01__02 {
-    bottom: -90px;
+    bottom: -150px;
     left: auto;
     right: 0;
     width: 190px;
@@ -2544,7 +2544,7 @@ form textarea:required:valid {
 }
 @media only screen and (min-width: 1200px) {
   .intro-bg-01__02 {
-    bottom: -30px;
+    bottom: -90px;
     left: -76px;
     width: 240px;
     height: 240px;
@@ -2552,7 +2552,7 @@ form textarea:required:valid {
 }
 @media only screen and (min-width: 1400px) {
   .intro-bg-01__02 {
-    bottom: -10px;
+    bottom: -70px;
     left: -68px;
     width: 290px;
     height: 290px;
@@ -2560,7 +2560,7 @@ form textarea:required:valid {
 }
 @media only screen and (min-width: 1600px) {
   .intro-bg-01__02 {
-    bottom: -45px;
+    bottom: -105px;
     left: -140px;
     width: 400px;
     height: 400px;
@@ -6688,22 +6688,22 @@ form textarea:required:valid {
 }
 
 .mxd-slider-btn-square-prev {
-  padding-left: 3rem;
-  left: 0;
+  padding-left: 0;
+  left: -4rem;
 }
 @media only screen and (min-width: 1400px) {
   .mxd-slider-btn-square-prev {
-    padding-left: 5rem;
+    left: -6rem;
   }
 }
 
 .mxd-slider-btn-square-next {
-  padding-right: 3rem;
-  right: 0;
+  padding-right: 0;
+  right: -4rem;
 }
 @media only screen and (min-width: 1400px) {
   .mxd-slider-btn-square-next {
-    padding-right: 5rem;
+    right: -6rem;
   }
 }
 

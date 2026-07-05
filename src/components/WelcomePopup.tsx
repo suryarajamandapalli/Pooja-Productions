@@ -25,13 +25,13 @@ export const WelcomePopup: React.FC = () => {
     subheadline: "Pooja Productions",
     description: "Stories that stir the soul. Visuals that capture the imagination. Cinema that stands the test of time.",
     primaryBtnText: "Explore Site",
-    secondaryBtnText: "Enter Site",
-    primaryBtnLink: "#portfolio",
-    secondaryBtnLink: "close",
+    secondaryBtnText: "Our films",
+    primaryBtnLink: "close",
+    secondaryBtnLink: "#portfolio",
   };
 
-  const primaryLink = welcomeData.primaryBtnLink || "#portfolio";
-  const secondaryLink = welcomeData.secondaryBtnLink || "close";
+  const primaryLink = welcomeData.primaryBtnLink || "close";
+  const secondaryLink = welcomeData.secondaryBtnLink || "#portfolio";
 
   return (
     <div
@@ -76,10 +76,8 @@ export const WelcomePopup: React.FC = () => {
         />
 
         {/* Ornament */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "1.2rem", marginBottom: "2rem" }}>
-          <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, transparent, rgba(197,168,128,0.4))" }} />
-          <img src="/Daimonds/5.png" alt="Diamond Ornament" style={{ height: "3rem", width: "auto", objectFit: "contain", filter: "drop-shadow(0 0 10px rgba(157, 184, 206, 0.6))" }} />
-          <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, rgba(197,168,128,0.4), transparent)" }} />
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "2rem" }}>
+          <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, transparent, rgba(197,168,128,0.4), transparent)" }} />
         </div>
 
         <h2 style={{ color: "#FFFFFF", fontSize: "2.8rem", fontWeight: 700, margin: "0 0 1.2rem", letterSpacing: "-0.02em", lineHeight: 1.2 }}>

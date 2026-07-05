@@ -22,25 +22,47 @@ import { Contact } from "./components/Contact";
 import { WelcomePopup } from "./components/WelcomePopup";
 import { Team } from "./components/Team";
 import { FloatingDiamonds } from "./components/FloatingDiamonds";
+import { LaunchPage } from "./components/LaunchPage";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const MainAppContent: React.FC = () => {
   const { isAdmin, loading, logout } = useCMS();
-  const [view, setView] = useState<"site" | "admin">(() => {
+  const [view, setView] = useState<"launch" | "site" | "admin">(() => {
     if (typeof window !== "undefined") {
       if (window.location.pathname === "/admin" || window.location.hash === "#admin") {
         return "admin";
+      }
+      if (window.location.pathname === "/launch" || window.location.hash === "#launch") {
+        return "launch";
       }
     }
     return "site";
   });
 
+  const [homepageFade, setHomepageFade] = useState(false);
+
+  useEffect(() => {
+    if (view === "site") {
+      const skipLoader = sessionStorage.getItem("pooja_skip_loader") === "true";
+      if (skipLoader) {
+        setHomepageFade(true);
+        const timer = setTimeout(() => {
+          setHomepageFade(false);
+          sessionStorage.removeItem("pooja_skip_loader");
+        }, 3000);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [view]);
+
   useEffect(() => {
     const handlePopState = () => {
       if (window.location.pathname === "/admin" || window.location.hash === "#admin") {
         setView("admin");
+      } else if (window.location.pathname === "/launch" || window.location.hash === "#launch") {
+        setView("launch");
       } else {
         logout();
         setView("site");
@@ -60,8 +82,14 @@ const MainAppContent: React.FC = () => {
     setView("site");
   };
 
+  const handleLaunched = () => {
+    sessionStorage.setItem("pooja_skip_loader", "true");
+    window.history.pushState(null, "", "/");
+    setView("site");
+  };
+
   useEffect(() => {
-    if (view === "admin") return;
+    if (view === "admin" || view === "launch") return;
     if (loading) return; // Wait until CMS data is ready & full site is in DOM
 
     // 1. Initialize Lenis Smooth Scroll
@@ -345,9 +373,12 @@ const MainAppContent: React.FC = () => {
     return <AdminDashboard onBackToSite={navigateToSite} />;
   }
 
+  if (view === "launch") {
+    return <LaunchPage onLaunched={handleLaunched} />;
+  }
+
   return (
-    <>
-      {/* 1. Loader screen */}
+    <div className={homepageFade ? "site-fade-in-premium" : ""}>
       <Loader />
 
       {/* Welcome Popup */}
@@ -379,7 +410,7 @@ const MainAppContent: React.FC = () => {
 
       {/* 7. Scroll-to-top trigger button */}
       <ScrollToTop />
-    </>
+    </div>
   );
 };
 

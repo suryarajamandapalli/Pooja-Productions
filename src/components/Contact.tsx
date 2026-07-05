@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useCMS } from "./CMSContext";
+import gsap from "gsap";
 
 export const Contact: React.FC = () => {
   const { data, addSubmission } = useCMS();
@@ -73,6 +74,15 @@ export const Contact: React.FC = () => {
         synopsis: "", agreeTerms: false, agreeCopyright: false
       });
     }, 5000);
+  };
+
+  const scrollToTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    gsap.to(window, {
+      scrollTo: 0,
+      ease: "power4.inOut",
+      duration: 1.5,
+    });
   };
 
   if (!about) {
@@ -426,7 +436,7 @@ export const Contact: React.FC = () => {
                 <div className="content__block grid-block">
                   <div className="container-fluid p-0 contact-data">
                     <div className="row gx-4 gy-4">
-                      <div className="col-12 col-md-6 col-lg-4 contact-data__item grid-item">
+                      <div className="col-12 col-md-6 col-lg-3 contact-data__item grid-item">
                         <p className="contact-data__title tagline-chapter animate-in-up">Address</p>
                         <p className="contact-data__text small type-basic-160lh">
                           <a
@@ -440,7 +450,7 @@ export const Contact: React.FC = () => {
                               if (!addr) {
                                 return (
                                   <>
-                                    Door No. 7-66/2/216,217,229&230/302<br />
+                                    Door No. 7-66/2/216,217,229 & 230/302<br />
                                     Raidurgh, Navkhalsa, Serilingampally,<br />
                                     Hyderabad, Telangana-500008
                                   </>
@@ -479,7 +489,7 @@ export const Contact: React.FC = () => {
                           </a>
                         </p>
                       </div>
-                      <div className="col-12 col-md-6 col-lg-2 contact-data__item grid-item">
+                      <div className="col-12 col-md-6 col-lg-3 contact-data__item grid-item">
                         <p className="contact-data__title tagline-chapter animate-in-up">Phone</p>
                         <p className="contact-data__text small type-basic-160lh">
                           <a className="link-small-160lh animate-in-up" href={`tel:${about.phone || "+919347474144"}`}>
@@ -502,6 +512,36 @@ export const Contact: React.FC = () => {
                   </div>
                 </div>
                 {/* Content Block - Contact Data End */}
+
+                {/* Flat Bottom Bar */}
+                <div className="footer-divider"></div>
+
+                <div className="footer-bottom-bar d-flex flex-column flex-md-row align-items-center justify-content-between gap-4" style={{ paddingBottom: "4rem" }}>
+                  <div className="footer-copyright">
+                    © 2026 Pooja Productions. All rights reserved.
+                  </div>
+                  <div className="footer-links d-flex gap-4">
+                    <a href="#0" className="footer-link">Privacy Policy</a>
+                    <a href="#0" className="footer-link">Terms</a>
+                  </div>
+                  <div className="footer-socials d-flex gap-3">
+                    {[
+                      { icon: "ph-vimeo-logo", url: about.vimeo || "https://vimeo.com/" },
+                      { icon: "ph-instagram-logo", url: about.instagram || "https://www.instagram.com/" },
+                      { icon: "ph-youtube-logo", url: about.youtube || "https://www.youtube.com/" },
+                      { icon: "ph-linkedin-logo", url: about.linkedin || "https://www.linkedin.com/" }
+                    ].map((soc, i) => (
+                      <a key={i} href={soc.url} target="_blank" rel="noopener noreferrer" className="footer-social-icon">
+                        <i className={`ph ${soc.icon}`}></i>
+                      </a>
+                    ))}
+                  </div>
+                  <a href="#0" className="footer-back-to-top d-inline-flex align-items-center gap-2" onClick={scrollToTop}>
+                    <span>Back to Top</span>
+                    <i className="ph ph-arrow-up"></i>
+                  </a>
+                </div>
+
               </div>
             </div>
             {/* Inner Section Content End */}

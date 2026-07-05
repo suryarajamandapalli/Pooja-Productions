@@ -2,19 +2,7 @@ import React from "react";
 
 export const FloatingDiamonds: React.FC = () => {
   const diamonds = [
-    // 1. Silver Diamond - Hero Section
-    {
-      src: "/Daimonds/1.png",
-      className: "diamond-1",
-      style: {
-        top: "3%",
-        left: "14%",
-        width: "120px",
-        opacity: 0.85,
-        filter: "drop-shadow(0 0 25px rgba(180, 180, 190, 0.55))",
-      },
-    },
-    // 2. Dark Diamond - Hero Section
+    // 2. Dark Diamond - Hero Section (upper right)
     {
       src: "/Daimonds/2.png",
       className: "diamond-2",
@@ -26,7 +14,7 @@ export const FloatingDiamonds: React.FC = () => {
         filter: "drop-shadow(0 0 25px rgba(80, 80, 100, 0.5))",
       },
     },
-    // 3. Blue Diamond - About Section
+    // 3. Blue Diamond - About Section (left)
     {
       src: "/Daimonds/3.png",
       className: "diamond-3",
@@ -122,16 +110,16 @@ export const FloatingDiamonds: React.FC = () => {
         filter: "drop-shadow(0 0 30px rgba(71, 113, 160, 0.6))",
       },
     },
-    // 11. Light Silver/Blue Diamond - Resume Section
+    // 11. Light Silver/Blue Diamond - fully off-screen, no overlap
     {
       src: "/Daimonds/4.png",
       className: "diamond-11",
       style: {
-        top: "53%",
-        left: "14%",
-        width: "220px",
-        opacity: 0.8,
-        filter: "drop-shadow(0 0 25px rgba(126, 132, 148, 0.55))",
+        top: "54%",
+        left: "-20%",
+        width: "140px",
+        opacity: 0.2,
+        filter: "drop-shadow(0 0 20px rgba(126, 132, 148, 0.4))",
       },
     },
     // 12. Ice Blue Diamond - Resume Section
@@ -144,18 +132,6 @@ export const FloatingDiamonds: React.FC = () => {
         width: "160px",
         opacity: 0.7,
         filter: "drop-shadow(0 0 25px rgba(157, 184, 206, 0.6))",
-      },
-    },
-    // 13. Classic Blue Diamond - Team Section
-    {
-      src: "/Daimonds/6.png",
-      className: "diamond-13",
-      style: {
-        top: "63%",
-        left: "15%",
-        width: "240px",
-        opacity: 0.75,
-        filter: "drop-shadow(0 0 30px rgba(97, 115, 157, 0.6))",
       },
     },
     // 14. Teal/Slate Diamond - Team Section
@@ -243,8 +219,8 @@ export const FloatingDiamonds: React.FC = () => {
         width: "100%",
         height: "100%",
         pointerEvents: "none",
-        zIndex: 2,
-        overflow: "hidden",
+        zIndex: 10,
+        overflow: "visible",
       }}
     >
       {diamonds.map((d, i) => (

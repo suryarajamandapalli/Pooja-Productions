@@ -1,0 +1,392 @@
+/* ═══════════════════════════════════════════════════════
+   CINEMATIC LAUNCH PAGE STYLING — Pooja Productions
+   ═══════════════════════════════════════════════════════ */
+
+.launch-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+  z-index: 999999;
+  overflow: hidden;
+  font-family: "Urbanist", sans-serif;
+  color: #ffffff;
+  user-select: none;
+  transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.launch-container.started {
+  background-color: transparent !important;
+}
+
+.launch-container.started .launch-background,
+.launch-container.started .launch-rays {
+  opacity: 0 !important;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Cinematic Film Grain Overlay */
+.launch-grain {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+  z-index: 10;
+}
+
+/* Volumetric Golden Spotlight Background */
+.launch-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 30%, rgba(197, 168, 128, 0.15) 0%, rgba(0, 0, 0, 0) 70%),
+              radial-gradient(circle at 50% 100%, rgba(71, 113, 160, 0.05) 0%, rgba(0, 0, 0, 0) 60%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Soft Volumetric Light Rays */
+.launch-rays {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(197, 168, 128, 0.02) 0px,
+    rgba(197, 168, 128, 0.02) 4px,
+    transparent 4px,
+    transparent 20px
+  );
+  mask-image: radial-gradient(circle at 50% 20%, black 20%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at 50% 20%, black 20%, transparent 80%);
+  filter: blur(8px);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Video Chroma Key Canvas */
+.launch-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Hidden Video Element */
+.launch-video-hidden {
+  display: none;
+}
+
+/* Centered UI Container */
+.launch-ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  pointer-events: none;
+}
+
+/* Golden Circular Launch Button */
+.launch-gold-btn {
+  pointer-events: auto;
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 4px solid rgba(197, 168, 128, 0.6);
+  background: radial-gradient(circle at 50% 30%, #ffd700 0%, #c5a880 40%, #8a6f44 80%, #4a3b22 100%);
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.6),
+    inset 0 4px 8px rgba(255, 255, 255, 0.5),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(197, 168, 128, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  transform: scale(1);
+  opacity: 1;
+  transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1),
+              opacity 0.6s cubic-bezier(0.645, 0.045, 0.355, 1),
+              box-shadow 0.4s ease,
+              border-color 0.4s ease;
+  z-index: 120;
+  overflow: hidden;
+}
+
+/* Button Active Fade-Out State */
+.launch-gold-btn.fade-out {
+  opacity: 0 !important;
+  transform: scale(0.65) !important;
+}
+
+/* Bevel Inner Ring Ring */
+.launch-gold-btn::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 80%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Diagonal Light Sweep Effect on Hover */
+.launch-btn-sweep {
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 45%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 55%
+  );
+  transform: rotate(-45deg);
+  transition: transform 0s;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.launch-gold-btn:hover .launch-btn-sweep {
+  transform: translate(60%, 60%) rotate(-45deg);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Button Hover State */
+.launch-gold-btn:hover {
+  transform: translateY(-6px) scale(1.05);
+  border-color: rgba(255, 223, 137, 0.95);
+  box-shadow: 
+    0 25px 45px rgba(0, 0, 0, 0.8),
+    inset 0 4px 10px rgba(255, 255, 255, 0.6),
+    inset 0 -4px 10px rgba(0, 0, 0, 0.6),
+    0 0 50px rgba(255, 215, 0, 0.5);
+}
+
+/* Button Click Active State */
+.launch-gold-btn:active {
+  transform: translateY(-2px) scale(0.98);
+}
+
+/* Launch Button Text Styles */
+.launch-btn-text {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+  margin-left: 0.25em; /* offsets last letter spacing */
+  z-index: 10;
+  transition: text-shadow 0.3s ease;
+}
+
+.launch-gold-btn:hover .launch-btn-text {
+  text-shadow: 0 0 20px rgba(255, 215, 0, 1), 0 0 35px rgba(255, 255, 255, 0.8);
+}
+
+
+
+/* Golden Energy Ring Expansion on Click */
+.launch-energy-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.1);
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 8px double #ffd700;
+  box-shadow: 0 0 80px #ffd700, inset 0 0 40px #ffd700;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 110;
+}
+
+.launch-energy-ring.active {
+  animation: energyExpand 1.5s cubic-bezier(0.1, 0.8, 0.1, 1) forwards;
+}
+
+@keyframes energyExpand {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 1;
+    border-width: 12px;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(8);
+    opacity: 0;
+    border-width: 1px;
+  }
+}
+
+/* Cinematic Lens Flare */
+.launch-lens-flare {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 1px;
+  height: 1px;
+  background: #ffffff;
+  box-shadow: 
+    0 0 100px 50px #ffffff,
+    0 0 250px 100px #ffd700,
+    0 0 500px 200px rgba(197, 168, 128, 0.5);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 200;
+}
+
+/* Horizontal anamorphic flare line */
+.launch-lens-flare::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ffffff 40%, #ffd700 50%, #ffffff 60%, transparent);
+  box-shadow: 0 0 30px 10px rgba(255, 215, 0, 0.8);
+  opacity: 0.9;
+}
+
+.launch-lens-flare.active {
+  animation: flareBloom 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.launch-lens-flare.active::after {
+  animation: flareAnamorphic 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes flareBloom {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(5);
+    opacity: 0;
+  }
+}
+
+@keyframes flareAnamorphic {
+  0% {
+    width: 0px;
+    opacity: 0;
+  }
+  30% {
+    width: 250vw;
+    opacity: 1;
+  }
+  100% {
+    width: 300vw;
+    opacity: 0;
+  }
+}
+
+/* Light Bloom Full-screen Transition */
+.launch-light-bloom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 99999999;
+}
+
+.launch-light-bloom.active {
+  animation: lightBloomTransition 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes lightBloomTransition {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Full Screen Container Fade-To-Black transition */
+.launch-container.fade-to-black {
+  background-color: #000000 !important;
+  transition: background-color 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+.launch-container.fade-to-black .launch-canvas,
+.launch-container.fade-to-black .launch-blue-diamond,
+.launch-container.fade-to-black .launch-grain,
+.launch-container.fade-to-black .launch-background,
+.launch-container.fade-to-black .launch-rays {
+  opacity: 0 !important;
+  transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+/* Floating Blue Diamonds (Branding) */
+.launch-blue-diamond {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.12;
+  filter: drop-shadow(0 0 10px rgba(71, 113, 160, 0.3));
+  z-index: 3;
+}
+
+.launch-blue-diamond img {
+  width: 100%;
+  height: auto;
+}
+
+/* Responsive Scaling for buttons and details */
+@media only screen and (max-width: 576px) {
+  .launch-gold-btn {
+    width: 150px;
+    height: 150px;
+  }
+  .launch-btn-text {
+    font-size: 1.5rem;
+  }
+}
