@@ -949,50 +949,21 @@ form select option {
   }
 }
 
-/* Aranea Den Footer Attribution Badge styling */
-.araneaden-badge {
+/* Aranea Den Footer Attribution Link styling */
+.araneaden-link {
+  font-family: var(--_font-default) !important;
+  font-size: 1.2rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.12em !important;
+  color: rgba(255, 255, 255, 0.45) !important;
   text-decoration: none !important;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: color 0.3s ease, transform 0.3s ease !important;
+  text-transform: uppercase !important;
+  display: inline-block !important;
 }
 
-.araneaden-badge:hover {
-  transform: translateY(-2px) scale(1.02);
-}
-
-.araneaden-logo-pill {
-  background-color: #0c1424; /* Premium dark navy/blue background */
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 9999px;
-  padding: 0.5rem 1.4rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: border-color 0.3s ease, background-color 0.3s ease;
-}
-
-.araneaden-badge:hover .araneaden-logo-pill {
-  border-color: rgba(197, 168, 128, 0.4); /* soft gold border hover hint */
-  background-color: #111d33;
-}
-
-.araneaden-logo-pill img {
-  height: 1.5rem; /* perfect relative sizing */
-  width: auto;
-  object-fit: contain;
-  display: block;
-}
-
-.araneaden-badge-text {
-  font-family: var(--_font-default);
-  font-size: 1.15rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.45);
-  transition: color 0.3s ease;
-}
-
-.araneaden-badge:hover .araneaden-badge-text {
-  color: #C5A880; /* changes text color to gold on hover */
+.araneaden-link:hover {
+  color: #C5A880 !important; /* Gold on hover */
+  transform: translateY(-1px);
 }
 

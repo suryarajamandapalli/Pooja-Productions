@@ -521,17 +521,14 @@ export const Contact: React.FC = () => {
                     © 2026 Pooja Productions. All rights reserved.
                   </div>
                   
-                  {/* Aranea Den Footer Attribution Badge */}
+                  {/* Aranea Den Footer Attribution */}
                   <a 
                     href="https://araneaden.com" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="araneaden-badge d-inline-flex align-items-center gap-3"
+                    className="araneaden-link"
                   >
-                    <div className="araneaden-logo-pill">
-                      <img src="/img/araneaden_logo.png" alt="Aranea Den Logo" />
-                    </div>
-                    <span className="araneaden-badge-text">MADE BY ARANEA DEN</span>
+                    MADE BY ARANEA DEN
                   </a>
 
                   <div className="footer-links d-flex gap-4">
