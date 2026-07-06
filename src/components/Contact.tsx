@@ -559,7 +559,7 @@ export const Contact: React.FC = () => {
                 {/* Single centered glowing gold diamond behind footer bottom */}
                 <div className="footer-single-diamond-container">
                   <img
-                    src="/img/footer_gold_diamond.jpg"
+                    src="/img/footer_gold_diamond_final.png"
                     alt="Glowing Gold Diamond"
                     className="footer-single-diamond"
                   />
