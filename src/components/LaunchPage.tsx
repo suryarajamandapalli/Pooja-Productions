@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
 import "./LaunchPage.css";
 
 interface LaunchPageProps {
@@ -8,7 +7,11 @@ interface LaunchPageProps {
 
 export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
   const [clicked, setClicked] = useState(false);
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [firstFrameDrawn, setFirstFrameDrawn] = useState(false);
+
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animationFrameId = useRef<number | null>(null);
 
   // Lock scroll on mount
   useEffect(() => {
@@ -24,12 +27,6 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
     window.addEventListener("touchmove", preventScroll, { passive: false });
     window.addEventListener("keydown", preventKeys, { passive: false });
 
-    // Set initial blurred and darkened state for the background site
-    gsap.set(document.documentElement, {
-      "--launch-blur": "20px",
-      "--launch-brightness": "0.15"
-    });
-
     return () => {
       document.body.style.overflow = "";
       document.body.style.height = "";
@@ -39,134 +36,165 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
     };
   }, []);
 
-  // Handle clicking the gold Launch switch button
+  // Set up canvas sizing
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      const video = videoRef.current;
+      if (video && video.paused && video.currentTime === 0) {
+        drawFrame(video, canvas);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Frame processing helper
+  const drawFrame = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const w = canvas.width;
+    const h = canvas.height;
+
+    // Offscreen buffer canvas for pixel operations
+    const bufferCanvas = document.createElement("canvas");
+    const bufferCtx = bufferCanvas.getContext("2d");
+    if (!bufferCtx) return;
+
+    bufferCanvas.width = video.videoWidth || 960;
+    bufferCanvas.height = video.videoHeight || 540;
+
+    // Draw video frame to buffer
+    bufferCtx.drawImage(video, 0, 0, bufferCanvas.width, bufferCanvas.height);
+
+    const frameData = bufferCtx.getImageData(0, 0, bufferCanvas.width, bufferCanvas.height);
+    const data = frameData.data;
+    const len = data.length;
+
+    // Key out black color in the curtain video
+    // Thresholds: pixels with max brightness < 16 are transparent, > 48 are opaque.
+    for (let i = 0; i < len; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+
+      const brightness = Math.max(r, g, b);
+
+      if (brightness < 16) {
+        data[i + 3] = 0; // transparent
+      } else if (brightness < 48) {
+        const factor = (brightness - 16) / 32;
+        data[i + 3] = Math.round(factor * 255); // smooth alpha blend edge
+      }
+    }
+
+    bufferCtx.putImageData(frameData, 0, 0);
+
+    // Cover scale drawing (similar to object-fit: cover)
+    ctx.clearRect(0, 0, w, h);
+
+    const videoRatio = bufferCanvas.width / bufferCanvas.height;
+    const canvasRatio = w / h;
+    let drawW = w;
+    let drawH = h;
+    let drawX = 0;
+    let drawY = 0;
+
+    if (canvasRatio > videoRatio) {
+      drawH = w / videoRatio;
+      drawY = (h - drawH) / 2;
+    } else {
+      drawW = h * videoRatio;
+      drawX = (w - drawW) / 2;
+    }
+
+    ctx.drawImage(bufferCanvas, drawX, drawY, drawW, drawH);
+  };
+
+  // Video data loaded trigger first frame draw
+  const handleLoadedData = () => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (video && canvas) {
+      video.currentTime = 0;
+      drawFrame(video, canvas);
+      setFirstFrameDrawn(true);
+    }
+  };
+
+  // Play animation loop
+  const startAnimation = () => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas) return;
+
+    const updateFrame = () => {
+      if (!video.paused && !video.ended) {
+        drawFrame(video, canvas);
+      }
+      animationFrameId.current = requestAnimationFrame(updateFrame);
+    };
+
+    video.play().then(() => {
+      animationFrameId.current = requestAnimationFrame(updateFrame);
+    }).catch((err) => {
+      console.warn("Video playback blocked or failed:", err);
+    });
+  };
+
+  // Video ended callback
+  const handleVideoEnded = () => {
+    if (animationFrameId.current) {
+      cancelAnimationFrame(animationFrameId.current);
+    }
+    onLaunched(); // unmounts LaunchPage
+  };
+
   const handleLaunchClick = () => {
     if (clicked) return;
     setClicked(true);
-
-    const leftStrips = document.querySelectorAll(".curtain-strip-l");
-    const rightStrips = document.querySelectorAll(".curtain-strip-r");
-    const shadows = document.querySelectorAll(".strip-shadow");
-
-    // Initialize GSAP Timeline (curtains open over 5.2 seconds for a slow, heavy, realistic velvet feel)
-    const tl = gsap.timeline({
-      paused: true,
-      onComplete: () => {
-        // Destroy curtain layer and complete launch
-        gsap.to(containerRef.current, {
-          opacity: 0,
-          duration: 0.6,
-          ease: "power2.out",
-          onComplete: onLaunched
-        });
-      }
-    });
-
-    // Left curtain strips (staggered starting from the center strip index 4 to leftmost index 0)
-    tl.to(leftStrips, {
-      xPercent: (i) => -100 * (i + 1) / 5, // pulls each strip left
-      scaleX: 0.12,
-      transformOrigin: "left center",
-      duration: 5.2,
-      ease: "power2.inOut",
-      stagger: {
-        amount: 0.9,
-        from: "end"
-      }
-    }, 0);
-
-    // Right curtain strips (staggered starting from the center strip index 0 to rightmost index 4)
-    tl.to(rightStrips, {
-      xPercent: (i) => 100 * (5 - i) / 5, // pulls each strip right
-      scaleX: 0.12,
-      transformOrigin: "right center",
-      duration: 5.2,
-      ease: "power2.inOut",
-      stagger: {
-        amount: 0.9,
-        from: "start"
-      }
-    }, 0);
-
-    // Shadows deepen in the folds to create a realistic 3D gathering effect
-    tl.to(shadows, {
-      opacity: 0.65,
-      duration: 5.2,
-      ease: "power2.inOut"
-    }, 0);
-
-    // Wait exactly 300ms after the click animation finishes before opening curtains
-    setTimeout(() => {
-      tl.play();
-
-      // Synchronized reveal of the homepage container (unblur and brighten)
-      gsap.to(document.documentElement, {
-        "--launch-blur": "0px",
-        "--launch-brightness": "1.0",
-        duration: 4.8,
-        ease: "power2.inOut",
-        delay: 0.2
-      });
-    }, 300);
+    startAnimation();
   };
 
   return (
-    <div ref={containerRef} className="new-launch-container">
-      {/* Volumetric spotlight rays behind curtains */}
-      <div className="launch-aura"></div>
-      <div className="launch-spotlight"></div>
+    <div className="new-launch-container">
+      {/* Fullscreen keying canvas for video frames */}
+      <canvas ref={canvasRef} className="launch-canvas-layer" />
 
-      {/* Cinematic Curtains Layer (5 vertical strips on left, 5 on right) */}
-      <div className="launch-curtains-stage">
-        {/* Left Curtain */}
-        {[...Array(5)].map((_, i) => (
-          <div
-            key={`left-${i}`}
-            className="curtain-strip curtain-strip-l"
-            style={{
-              left: `${i * 10}vw`,
-              backgroundImage: "url(/img/velvet_curtains.jpg)",
-              backgroundPosition: `-${i * 10}vw center`,
-              backgroundSize: "100vw 100vh"
-            }}
-          >
-            <div className="strip-shadow" />
-          </div>
-        ))}
+      {/* Heavy Gold Launch switch button */}
+      {!clicked && firstFrameDrawn && (
+        <div className="launch-btn-wrapper">
+          <button className="launch-gold-ticket" onClick={handleLaunchClick}>
+            <div className="ticket-notch notch-l"></div>
+            <div className="ticket-notch notch-r"></div>
+            <div className="ticket-inner-border"></div>
+            <div className="ticket-title">POOJA PRODUCTIONS</div>
+            <span className="ticket-action">LAUNCH</span>
+            <div className="ticket-meta">ADMIT ONE</div>
+          </button>
+        </div>
+      )}
 
-        {/* Right Curtain */}
-        {[...Array(5)].map((_, i) => (
-          <div
-            key={`right-${i}`}
-            className="curtain-strip curtain-strip-r"
-            style={{
-              left: `${(5 + i) * 10}vw`,
-              backgroundImage: "url(/img/velvet_curtains.jpg)",
-              backgroundPosition: `-${(5 + i) * 10}vw center`,
-              backgroundSize: "100vw 100vh"
-            }}
-          >
-            <div className="strip-shadow" />
-          </div>
-        ))}
-      </div>
-
-      {/* Centered Gold Theatre switch button */}
-      <div className="launch-btn-wrapper">
-        <button
-          className={`launch-gold-ticket ${clicked ? "clicked" : ""}`}
-          onClick={handleLaunchClick}
-          disabled={clicked}
-        >
-          <div className="ticket-notch notch-l"></div>
-          <div className="ticket-notch notch-r"></div>
-          <div className="ticket-inner-border"></div>
-          
-          <div className="ticket-title">POOJA PRODUCTIONS</div>
-          <span className="ticket-action">LAUNCH</span>
-          <div className="ticket-meta">ADMIT ONE</div>
-        </button>
-      </div>
+      {/* Video Element */}
+      <video
+        ref={videoRef}
+        src="/launch_video.mp4"
+        onLoadedData={handleLoadedData}
+        onEnded={handleVideoEnded}
+        className="launch-video-element"
+        preload="auto"
+        muted
+        playsInline
+      />
     </div>
   );
 };
