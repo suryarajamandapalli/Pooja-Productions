@@ -537,7 +537,6 @@ export const Contact: React.FC = () => {
                   </div>
                   <div className="footer-socials d-flex gap-3">
                     {[
-                      { icon: "ph-vimeo-logo", url: about?.vimeo || "https://vimeo.com/" },
                       { icon: "ph-instagram-logo", url: about?.instagram || "https://www.instagram.com/" },
                       { icon: "ph-youtube-logo", url: about?.youtube || "https://www.youtube.com/" },
                       { icon: "ph-linkedin-logo", url: about?.linkedin || "https://www.linkedin.com/" }
