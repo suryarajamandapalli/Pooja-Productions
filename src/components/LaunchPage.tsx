@@ -11,6 +11,7 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const bufferCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationFrameId = useRef<number | null>(null);
 
   // Lock scrolling
@@ -65,9 +66,13 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
     const h = canvas.height;
 
     // Fast offscreen canvas
-    const bufferCanvas = document.createElement("canvas");
+    if (!bufferCanvasRef.current) {
+      bufferCanvasRef.current = document.createElement("canvas");
+    }
+    const bufferCanvas = bufferCanvasRef.current;
     bufferCanvas.width = 960;
     bufferCanvas.height = 540;
+    
     const bufferCtx = bufferCanvas.getContext("2d");
     if (!bufferCtx) return;
 
@@ -116,32 +121,44 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (video && canvas) {
-      video.currentTime = 0;
       drawFrame(video, canvas);
       setVideoReady(true);
     }
   };
 
-  const startAnimation = () => {
+  const startAnimation = async () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
 
+    console.log("startAnimation triggered");
+    console.log("1. video.paused:", video.paused);
+    console.log("2. video.readyState:", video.readyState);
+    console.log("3. video.currentTime before play:", video.currentTime);
+
     const renderLoop = () => {
-      if (!video.paused && !video.ended) {
+      if (video && !video.ended) {
         drawFrame(video, canvas);
+        console.log("Render frame at video.currentTime:", video.currentTime, "paused:", video.paused);
         animationFrameId.current = requestAnimationFrame(renderLoop);
+      } else {
+        console.log("renderLoop exit, video.ended:", video?.ended);
       }
     };
 
-    video.play().then(() => {
+    try {
+      await video.play();
+      console.log("video.play() resolved successfully. video.paused:", video.paused);
       animationFrameId.current = requestAnimationFrame(renderLoop);
-    }).catch((err) => {
-      console.warn("Curtain video play blocked:", err);
-    });
+    } catch (err) {
+      console.error("video.play() failed with error:", err);
+      // Fallback: unmount and show site immediately so page isn't blocked on failure
+      onLaunched();
+    }
   };
 
   const handleVideoEnded = () => {
+    console.log("Video ended event fired");
     if (animationFrameId.current) {
       cancelAnimationFrame(animationFrameId.current);
     }
@@ -155,23 +172,43 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
     startAnimation();
   };
 
+  // Pre-load check on mount
   useEffect(() => {
     const video = videoRef.current;
-    if (video) {
-      if (video.readyState === 4) {
+    if (!video) return;
+
+    const handleReady = () => {
+      console.log("handleReady readyState:", video.readyState);
+      if (video.readyState === 4 && !videoReady) {
         handleVideoLoad();
-      } else {
-        video.addEventListener("canplaythrough", handleVideoLoad);
-        video.addEventListener("loadeddata", handleVideoLoad);
-      }
-    }
-    return () => {
-      if (video) {
-        video.removeEventListener("canplaythrough", handleVideoLoad);
-        video.removeEventListener("loadeddata", handleVideoLoad);
       }
     };
-  }, []);
+
+    video.addEventListener("canplaythrough", handleReady);
+    video.addEventListener("loadeddata", handleReady);
+    video.addEventListener("progress", handleReady);
+
+    // Fallback: poll readyState every 200ms to ensure it updates immediately if cached
+    const interval = setInterval(() => {
+      if (video.readyState === 4 && !videoReady) {
+        console.log("Polling fallback detected readyState === 4");
+        handleReady();
+        clearInterval(interval);
+      }
+    }, 200);
+
+    // Initial check
+    if (video.readyState === 4) {
+      handleReady();
+    }
+
+    return () => {
+      video.removeEventListener("canplaythrough", handleReady);
+      video.removeEventListener("loadeddata", handleReady);
+      video.removeEventListener("progress", handleReady);
+      clearInterval(interval);
+    };
+  }, [videoReady]);
 
   return (
     <div className="launch-stage-overlay">
