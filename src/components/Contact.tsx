@@ -567,7 +567,7 @@ export const Contact: React.FC = () => {
                       return (
                         <img
                           key={i}
-                          src={`/Daimonds/${i % 2 === 0 ? 5 : 7}.png`}
+                          src="/img/golden_glowing_diamond.jpg"
                           alt=""
                           className="footer-orbit-diamond"
                           style={{
@@ -577,8 +577,9 @@ export const Contact: React.FC = () => {
                             width: "70px",
                             height: "70px",
                             objectFit: "contain",
-                            opacity: 0.28,
-                            filter: "drop-shadow(0 0 15px rgba(197, 168, 128, 0.4))",
+                            opacity: 0.35,
+                            mixBlendMode: "screen",
+                            filter: "drop-shadow(0 0 15px rgba(197, 168, 128, 0.45))",
                             transform: `rotate(${angle}deg)`
                           }}
                         />
