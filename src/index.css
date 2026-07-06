@@ -1039,6 +1039,7 @@ form select option {
   width: auto !important;
   object-fit: contain !important;
   display: block !important;
+  mix-blend-mode: screen !important; /* blends away dark rectangle background */
   transition: filter 0.3s ease !important;
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3)) brightness(0.95);
 }
@@ -1064,14 +1065,28 @@ form select option {
 /* Background Single Centered Gold Diamond behind Footer bottom bar */
 .footer-single-diamond-container {
   position: absolute !important;
-  bottom: -220px !important;
+  bottom: -280px !important; /* sits lower to account for larger size */
   left: 50% !important;
   transform: translateX(-50%) !important;
-  width: 440px !important;
-  height: 440px !important;
+  width: 560px !important; /* enlarged size */
+  height: 560px !important; /* enlarged size */
   pointer-events: none !important;
   z-index: 1 !important;
   overflow: visible !important;
+}
+
+/* Soft cinematic volumetric glowing aura behind the diamond */
+.footer-single-diamond-container::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 5% !important;
+  left: 5% !important;
+  width: 90% !important;
+  height: 90% !important;
+  background: radial-gradient(circle, rgba(229, 184, 115, 0.28) 0%, rgba(229, 184, 115, 0.08) 55%, rgba(0, 0, 0, 0) 100%) !important;
+  filter: blur(50px) !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
 }
 
 .footer-single-diamond {
@@ -1079,10 +1094,10 @@ form select option {
   height: 100% !important;
   object-fit: contain !important;
   display: block !important;
-  opacity: 0.48 !important;
+  opacity: 0.52 !important;
   mix-blend-mode: screen !important;
-  filter: drop-shadow(0 0 50px rgba(229, 184, 115, 0.85)) brightness(1.3) saturate(1.25) !important;
-  animation: footerDiamondSpin 30s linear infinite !important;
+  filter: drop-shadow(0 0 60px rgba(229, 184, 115, 0.5)) drop-shadow(0 0 100px rgba(229, 184, 115, 0.25)) brightness(1.25) saturate(1.2) !important;
+  animation: footerDiamondSpin 120s linear infinite !important; /* slowed down rotation speed */
 }
 
 @keyframes footerDiamondSpin {
