@@ -1,456 +1,213 @@
-/* ═══════════════════════════════════════════════════════
-   CINEMATIC LAUNCH PAGE STYLING — Pooja Productions
-   ═══════════════════════════════════════════════════════ */
+/* ==========================================================================
+   NEW PREMIUM CINEMATIC THEATRE LAUNCH STYLING
+   ========================================================================== */
 
-.launch-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: #000000;
-  z-index: 999999;
-  overflow: hidden;
-  font-family: "Urbanist", sans-serif;
-  color: #ffffff;
-  user-select: none;
-  transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+.new-launch-container {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: transparent !important; /* lets homepage background peek through curtains */
+  z-index: 999999 !important;
+  overflow: hidden !important;
+  user-select: none !important;
 }
 
-.launch-container.started {
-  background-color: transparent !important;
+/* Volumetric Cinema Spotlight Backdrop */
+.launch-aura {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: radial-gradient(circle at 50% 25%, rgba(197, 168, 128, 0.16) 0%, rgba(0, 0, 0, 0) 70%) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
 }
 
-.launch-container.started .launch-background,
-.launch-container.started .launch-rays {
-  opacity: 0 !important;
-  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+.launch-spotlight {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: radial-gradient(circle at 50% 100%, rgba(71, 113, 160, 0.04) 0%, rgba(0, 0, 0, 0) 60%) !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
 }
 
-/* Cinematic Film Grain Overlay */
-.launch-grain {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
-  z-index: 10;
+/* Keyed Curtain Video Canvas */
+.launch-curtain-canvas {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  z-index: 5 !important;
+  pointer-events: none !important;
 }
 
-/* Volumetric Golden Spotlight Background */
-.launch-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 50% 30%, rgba(197, 168, 128, 0.15) 0%, rgba(0, 0, 0, 0) 70%),
-              radial-gradient(circle at 50% 100%, rgba(71, 113, 160, 0.05) 0%, rgba(0, 0, 0, 0) 60%);
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Soft Volumetric Light Rays */
-.launch-rays {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: repeating-linear-gradient(
-    45deg,
-    rgba(197, 168, 128, 0.02) 0px,
-    rgba(197, 168, 128, 0.02) 4px,
-    transparent 4px,
-    transparent 20px
-  );
-  mask-image: radial-gradient(circle at 50% 20%, black 20%, transparent 80%);
-  -webkit-mask-image: radial-gradient(circle at 50% 20%, black 20%, transparent 80%);
-  filter: blur(8px);
-  z-index: 2;
-  pointer-events: none;
-}
-
-/* Video Chroma Key Canvas */
-.launch-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 5;
-  pointer-events: none;
-}
-
-/* Hidden Video Element */
-.launch-video-hidden {
-  display: none;
-}
-
-/* Centered UI Container */
-.launch-ui {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  pointer-events: none;
-}
-
-/* Golden Ticket Launch Button */
-.launch-gold-btn {
-  pointer-events: auto;
-  position: relative;
-  width: 320px !important;
-  height: 160px !important;
-  border-radius: 12px !important;
-  border: 2px solid rgba(255, 215, 0, 0.45) !important;
-  background: linear-gradient(135deg, #16130c 0%, #3a2f1a 35%, #594828 50%, #3a2f1a 65%, #16130c 100%) !important;
-  box-shadow: 
-    0 25px 55px rgba(0, 0, 0, 0.75),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 0 35px rgba(255, 215, 0, 0.12) !important;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  outline: none;
-  transform: scale(1);
-  opacity: 1;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              width 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              height 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              border-radius 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.4s ease,
-              border-color 0.4s ease !important;
-  z-index: 120;
-  overflow: hidden;
-}
-
-/* Ticket Side Punches (Notches) */
-.ticket-notch {
-  position: absolute;
-  top: 50%;
-  width: 24px;
-  height: 24px;
-  background-color: #000000; /* matches background mask */
-  border-radius: 50%;
-  transform: translateY(-50%);
-  z-index: 5;
-  border: 2px solid rgba(255, 215, 0, 0.45);
-  transition: opacity 0.3s ease;
-}
-.notch-left {
-  left: -13px;
-}
-.notch-right {
-  right: -13px;
-}
-
-/* Inner Dashed Line Design */
-.ticket-border-dashed {
-  position: absolute;
-  top: 10px;
-  left: 14px;
-  right: 14px;
-  bottom: 10px;
-  border: 1px dashed rgba(255, 215, 0, 0.4);
-  border-radius: 6px;
-  pointer-events: none;
-  z-index: 2;
-  transition: opacity 0.3s ease;
-}
-
-/* Ticket Header/Footer Metadata text */
-.ticket-header {
-  position: absolute;
-  top: 18px;
-  font-size: 1.0rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  color: rgba(255, 215, 0, 0.55);
-  text-transform: uppercase;
-  font-family: var(--_font-default);
-  z-index: 10;
-  transition: opacity 0.3s ease;
-}
-.ticket-footer {
-  position: absolute;
-  bottom: 18px;
-  font-size: 1.0rem;
-  font-weight: 600;
-  letter-spacing: 0.28em;
-  color: rgba(255, 215, 0, 0.55);
-  text-transform: uppercase;
-  font-family: var(--_font-default);
-  z-index: 10;
-  transition: opacity 0.3s ease;
-}
-
-/* Button Active Fade-Out State */
-.launch-gold-btn.fade-out {
-  opacity: 0 !important;
-  transform: scale(0.65) !important;
-}
-
-/* Interactive Cursor Gold Shine Highlight Overlay */
-.launch-btn-sweep {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle 90px at var(--shine-x, -999px) var(--shine-y, -999px), rgba(255, 223, 137, 0.25) 0%, transparent 100%) !important;
-  pointer-events: none;
-  z-index: 3;
-}
-
-/* Button Hover State */
-.launch-gold-btn:hover {
-  transform: translateY(-8px) scale(1.04);
-  border-color: rgba(255, 215, 0, 0.9) !important;
-  box-shadow: 
-    0 35px 65px rgba(0, 0, 0, 0.85),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    0 0 50px rgba(255, 215, 0, 0.3) !important;
-}
-
-/* Button Morphing to Play Button on Clicked */
-.launch-gold-btn.clicked {
-  width: 90px !important;
-  height: 90px !important;
-  border-radius: 50% !important;
-  padding: 0 !important;
-  background: radial-gradient(circle at 50% 30%, #ffd700 0%, #c5a880 40%, #8a6f44 80%) !important;
-  border-color: #ffd700 !important;
-  box-shadow: 0 0 45px rgba(255, 215, 0, 0.85) !important;
-}
-
-.launch-gold-btn.clicked .ticket-notch,
-.launch-gold-btn.clicked .ticket-border-dashed,
-.launch-gold-btn.clicked .ticket-header,
-.launch-gold-btn.clicked .ticket-footer {
+/* Hidden Source Video */
+.launch-video-source {
   display: none !important;
-  opacity: 0 !important;
 }
 
-/* Launch Button Text Styles */
-.launch-btn-text {
-  font-size: 1.8rem;
-  font-weight: 700;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: #ffffff;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
-  margin-left: 0.25em; /* offsets last letter spacing */
-  z-index: 10;
-  transition: text-shadow 0.3s ease, font-size 0.3s ease;
+/* Centered Button Wrapper */
+.launch-btn-wrapper {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 100 !important;
+  pointer-events: none !important;
 }
 
-.launch-gold-btn.clicked .launch-btn-text {
-  font-size: 2.8rem !important;
-  margin-left: 0.15em !important;
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.8) !important;
-  animation: pulsePlayButton 1.5s ease-in-out infinite alternate !important;
-}
-
-@keyframes pulsePlayButton {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.1);
-  }
-}
-
-.launch-gold-btn:hover .launch-btn-text {
-  text-shadow: 0 0 20px rgba(255, 215, 0, 1), 0 0 35px rgba(255, 255, 255, 0.8);
-}
-
-
-
-/* Golden Energy Ring Expansion on Click */
-.launch-energy-ring {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.1);
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  border: 8px double #ffd700;
-  box-shadow: 0 0 80px #ffd700, inset 0 0 40px #ffd700;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 110;
-}
-
-.launch-energy-ring.active {
-  animation: energyExpand 1.5s cubic-bezier(0.1, 0.8, 0.1, 1) forwards;
-}
-
-@keyframes energyExpand {
-  0% {
-    transform: translate(-50%, -50%) scale(0.8);
-    opacity: 1;
-    border-width: 12px;
-  }
-  50% {
-    opacity: 0.8;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(8);
-    opacity: 0;
-    border-width: 1px;
-  }
-}
-
-/* Cinematic Lens Flare */
-.launch-lens-flare {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  width: 1px;
-  height: 1px;
-  background: #ffffff;
+/* Gold Metallic Ticket Button */
+.launch-gold-ticket {
+  pointer-events: auto !important;
+  position: relative !important;
+  width: 300px !important;
+  height: 150px !important;
+  border-radius: 12px !important;
+  border: 2px solid rgba(229, 184, 115, 0.5) !important;
+  background: linear-gradient(135deg, #13100a 0%, #302615 35%, #4b3d22 50%, #302615 65%, #13100a 100%) !important;
   box-shadow: 
-    0 0 100px 50px #ffffff,
-    0 0 250px 100px #ffd700,
-    0 0 500px 200px rgba(197, 168, 128, 0.5);
-  border-radius: 50%;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 200;
+    0 30px 65px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 0 35px rgba(197, 168, 128, 0.15) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  outline: none !important;
+  overflow: hidden !important;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.4s ease !important;
 }
 
-/* Horizontal anamorphic flare line */
-.launch-lens-flare::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 1px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #ffffff 40%, #ffd700 50%, #ffffff 60%, transparent);
-  box-shadow: 0 0 30px 10px rgba(255, 215, 0, 0.8);
-  opacity: 0.9;
+/* Ticket Side Circular Punches (Notches) */
+.ticket-notch {
+  position: absolute !important;
+  top: 50% !important;
+  width: 24px !important;
+  height: 24px !important;
+  background-color: #0b0b0b !important; /* blends into curtain background */
+  border-radius: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 5 !important;
+  border: 2px solid rgba(229, 184, 115, 0.5) !important;
+}
+.notch-l {
+  left: -13px !important;
+}
+.notch-r {
+  right: -13px !important;
 }
 
-.launch-lens-flare.active {
-  animation: flareBloom 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* Ticket Inner Borders */
+.ticket-inner-border {
+  position: absolute !important;
+  top: 9px !important;
+  left: 13px !important;
+  right: 13px !important;
+  bottom: 9px !important;
+  border: 1px dashed rgba(229, 184, 115, 0.4) !important;
+  border-radius: 6px !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
 }
 
-.launch-lens-flare.active::after {
-  animation: flareAnamorphic 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* Ticket Text Elements */
+.ticket-title {
+  position: absolute !important;
+  top: 18px !important;
+  font-family: var(--_font-default) !important;
+  font-size: 1.0rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.22em !important;
+  color: rgba(229, 184, 115, 0.6) !important;
+  text-transform: uppercase !important;
 }
 
-@keyframes flareBloom {
-  0% {
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 1;
-  }
-  30% {
-    transform: translate(-50%, -50%) scale(1.5);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(5);
-    opacity: 0;
-  }
+.ticket-action {
+  font-family: var(--_font-default) !important;
+  font-size: 2.2rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.25em !important;
+  color: #ffffff !important;
+  text-shadow: 0 0 12px rgba(229, 184, 115, 0.8) !important;
+  margin-left: 0.25em !important; /* balances spacing */
+  z-index: 10 !important;
+  transition: text-shadow 0.3s ease !important;
 }
 
-@keyframes flareAnamorphic {
-  0% {
-    width: 0px;
-    opacity: 0;
-  }
-  30% {
-    width: 250vw;
-    opacity: 1;
-  }
-  100% {
-    width: 300vw;
-    opacity: 0;
-  }
+.ticket-meta {
+  position: absolute !important;
+  bottom: 18px !important;
+  font-family: var(--_font-default) !important;
+  font-size: 1.0rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.28em !important;
+  color: rgba(229, 184, 115, 0.6) !important;
+  text-transform: uppercase !important;
 }
 
-/* Light Bloom Full-screen Transition */
-.launch-light-bloom {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #ffffff;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 99999999;
+/* Ticket Hover effects */
+.launch-gold-ticket:hover {
+  transform: translateY(-5px) scale(1.03) !important;
+  border-color: rgba(229, 184, 115, 0.95) !important;
+  box-shadow: 
+    0 35px 70px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 0 50px rgba(229, 184, 115, 0.35) !important;
 }
 
-.launch-light-bloom.active {
-  animation: lightBloomTransition 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+.launch-gold-ticket:hover .ticket-action {
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.9), 0 0 30px rgba(229, 184, 115, 1) !important;
 }
 
-@keyframes lightBloomTransition {
-  0% {
-    opacity: 0;
-  }
-  40% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+/* Ticket Click Press and Wobble Animation */
+.launch-gold-ticket:active {
+  transform: translateY(2px) scale(0.96) !important;
+  animation: ticketWobble 0.25s linear infinite !important;
 }
 
-/* Full Screen Container Fade-To-Black transition */
-.launch-container.fade-to-black {
-  background-color: #000000 !important;
-  transition: background-color 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+@keyframes ticketWobble {
+  0% { transform: translateY(2px) scale(0.96) rotate(0deg); }
+  25% { transform: translateY(2px) scale(0.96) rotate(-0.5deg); }
+  75% { transform: translateY(2px) scale(0.96) rotate(0.5deg); }
+  100% { transform: translateY(2px) scale(0.96) rotate(0deg); }
 }
 
-.launch-container.fade-to-black .launch-canvas,
-.launch-container.fade-to-black .launch-blue-diamond,
-.launch-container.fade-to-black .launch-grain,
-.launch-container.fade-to-black .launch-background,
-.launch-container.fade-to-black .launch-rays {
-  opacity: 0 !important;
-  transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+/* Glass Reflection Sheen on Ticket */
+.launch-gold-ticket::after {
+  content: "" !important;
+  position: absolute !important;
+  top: -50% !important;
+  left: -60% !important;
+  width: 200% !important;
+  height: 200% !important;
+  background: linear-gradient(
+    45deg,
+    transparent 45%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 55%
+  ) !important;
+  transform: rotate(-45deg) translate(-100%, -100%) !important;
+  transition: transform 0s !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
 }
 
-/* Floating Blue Diamonds (Branding) */
-.launch-blue-diamond {
-  position: absolute;
-  pointer-events: none;
-  opacity: 0.12;
-  filter: drop-shadow(0 0 10px rgba(71, 113, 160, 0.3));
-  z-index: 3;
-}
-
-.launch-blue-diamond img {
-  width: 100%;
-  height: auto;
-}
-
-/* Responsive Scaling for buttons and details */
-@media only screen and (max-width: 576px) {
-  .launch-gold-btn {
-    width: 150px;
-    height: 150px;
-  }
-  .launch-btn-text {
-    font-size: 1.5rem;
-  }
+.launch-gold-ticket:hover::after {
+  transform: rotate(-45deg) translate(100%, 100%) !important;
+  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
