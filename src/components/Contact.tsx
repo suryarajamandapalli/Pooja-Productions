@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useCMS } from "./CMSContext";
-import gsap from "gsap";
 
 export const Contact: React.FC = () => {
   const { data, addSubmission } = useCMS();
@@ -76,14 +75,7 @@ export const Contact: React.FC = () => {
     }, 5000);
   };
 
-  const scrollToTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    gsap.to(window, {
-      scrollTo: 0,
-      ease: "power4.inOut",
-      duration: 1.5,
-    });
-  };
+
 
   if (!about) {
     return null;
@@ -550,10 +542,6 @@ export const Contact: React.FC = () => {
                       </a>
                     ))}
                   </div>
-                  <a href="#0" className="footer-back-to-top d-inline-flex align-items-center gap-2" onClick={scrollToTop}>
-                    <span>Back to Top</span>
-                    <i className="ph ph-arrow-up"></i>
-                  </a>
                 </div>
 
                 {/* Single centered glowing gold diamond behind footer bottom */}
