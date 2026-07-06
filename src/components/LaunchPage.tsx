@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
 import "./LaunchPage.css";
 
 interface LaunchPageProps {
@@ -8,14 +7,13 @@ interface LaunchPageProps {
 
 export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
   const [clicked, setClicked] = useState(false);
-  const [isReady, setIsReady] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const bufferCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationFrameId = useRef<number | null>(null);
 
-  // Lock scroll on mount and set initial subtle 2px blur
+  // Lock scrolling
   useEffect(() => {
     const preventScroll = (e: Event) => e.preventDefault();
     const preventKeys = (e: KeyboardEvent) => {
@@ -29,11 +27,6 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
     window.addEventListener("touchmove", preventScroll, { passive: false });
     window.addEventListener("keydown", preventKeys, { passive: false });
 
-    // Maximum 2px blur on homepage content before launch
-    gsap.set(document.documentElement, {
-      "--launch-blur": "2px"
-    });
-
     return () => {
       document.body.style.overflow = "";
       document.body.style.height = "";
@@ -43,186 +36,164 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
     };
   }, []);
 
-  // Frame processing helper with fixed 960x540 internal resolution for maximum performance
+  // Set up canvas resolution and sizing
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      const video = videoRef.current;
+      if (video && video.paused && video.currentTime === 0) {
+        drawFrame(video, canvas);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const drawFrame = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const targetWidth = 960;
-    const targetHeight = 540;
+    const w = canvas.width;
+    const h = canvas.height;
 
-    if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
-      canvas.width = targetWidth;
-      canvas.height = targetHeight;
-    }
-
-    if (!bufferCanvasRef.current) {
-      bufferCanvasRef.current = document.createElement("canvas");
-    }
-    const bufferCanvas = bufferCanvasRef.current;
-    bufferCanvas.width = targetWidth;
-    bufferCanvas.height = targetHeight;
-
+    // Fast offscreen canvas
+    const bufferCanvas = document.createElement("canvas");
+    bufferCanvas.width = 960;
+    bufferCanvas.height = 540;
     const bufferCtx = bufferCanvas.getContext("2d");
     if (!bufferCtx) return;
 
-    // Calculate crop coordinates for object-fit: cover
-    const videoWidth = video.videoWidth || 960;
-    const videoHeight = video.videoHeight || 540;
-    const videoRatio = videoWidth / videoHeight;
-    const targetRatio = targetWidth / targetHeight;
+    // Draw frame to buffer (stretched cover)
+    const vw = video.videoWidth || 960;
+    const vh = video.videoHeight || 540;
+    const vr = vw / vh;
+    const tr = 960 / 540;
 
-    let sx = 0, sy = 0, sw = videoWidth, sh = videoHeight;
-
-    if (videoRatio > targetRatio) {
-      sw = videoHeight * targetRatio;
-      sx = (videoWidth - sw) / 2;
+    let sx = 0, sy = 0, sw = vw, sh = vh;
+    if (vr > tr) {
+      sw = vh * tr;
+      sx = (vw - sw) / 2;
     } else {
-      sh = videoWidth / targetRatio;
-      sy = (videoHeight - sh) / 2;
+      sh = vw / tr;
+      sy = (vh - sh) / 2;
     }
 
-    bufferCtx.drawImage(video, sx, sy, sw, sh, 0, 0, targetWidth, targetHeight);
+    bufferCtx.drawImage(video, sx, sy, sw, sh, 0, 0, 960, 540);
 
-    const frameData = bufferCtx.getImageData(0, 0, targetWidth, targetHeight);
-    const data = frameData.data;
+    const frame = bufferCtx.getImageData(0, 0, 960, 540);
+    const data = frame.data;
     const len = data.length;
 
-    // Key out black background pixels
+    // Key out ONLY pure/near-black background pixels (r, g, b all below 14)
+    // Preserves red curtain folds and fabric shadows perfectly
+    const threshold = 14;
     for (let i = 0; i < len; i += 4) {
       const r = data[i];
       const g = data[i + 1];
       const b = data[i + 2];
 
-      const brightness = Math.max(r, g, b);
-
-      if (brightness < 16) {
-        data[i + 3] = 0; // transparent
-      } else if (brightness < 48) {
-        const factor = (brightness - 16) / 32;
-        data[i + 3] = Math.round(factor * 255); // smooth transparent edge transition
+      if (r < threshold && g < threshold && b < threshold) {
+        data[i + 3] = 0; // Transparent
       }
     }
 
-    bufferCtx.putImageData(frameData, 0, 0);
+    bufferCtx.putImageData(frame, 0, 0);
 
-    ctx.clearRect(0, 0, targetWidth, targetHeight);
-    ctx.drawImage(bufferCanvas, 0, 0);
+    // Draw buffer to visible screen canvas (object-fit: cover equivalent)
+    ctx.clearRect(0, 0, w, h);
+    ctx.drawImage(bufferCanvas, 0, 0, w, h);
   };
 
-  // Video data loaded trigger first frame draw and ready state check
-  const handleReadyCheck = () => {
+  const handleVideoLoad = () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
-    if (video && canvas && video.readyState === 4) {
+    if (video && canvas) {
       video.currentTime = 0;
       drawFrame(video, canvas);
-      setIsReady(true);
+      setVideoReady(true);
     }
   };
 
-  // Handle clicking the gold Launch switch button
-  const handleLaunchClick = () => {
-    if (clicked || !isReady) return;
-    setClicked(true);
-
+  const startAnimation = () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
 
-    // Play click button depress state for 300ms, then start video curtains reveal
-    setTimeout(() => {
-      const renderLoop = () => {
-        if (!video.paused && !video.ended) {
-          drawFrame(video, canvas);
-          animationFrameId.current = requestAnimationFrame(renderLoop);
-        }
-      };
-
-      // Play video forward exactly ONE time
-      video.play().then(() => {
+    const renderLoop = () => {
+      if (!video.paused && !video.ended) {
+        drawFrame(video, canvas);
         animationFrameId.current = requestAnimationFrame(renderLoop);
-        
-        // Gradually decrease blur from 2px to 0px over the duration of the curtain opening
-        gsap.to(document.documentElement, {
-          "--launch-blur": "0px",
-          duration: video.duration || 4.5,
-          ease: "power1.inOut"
-        });
-      }).catch((err) => {
-        console.warn("Curtains video play error:", err);
-      });
-    }, 300);
+      }
+    };
+
+    video.play().then(() => {
+      animationFrameId.current = requestAnimationFrame(renderLoop);
+    }).catch((err) => {
+      console.warn("Curtain video play blocked:", err);
+    });
   };
 
-  // Video ended callback
   const handleVideoEnded = () => {
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    if (video && canvas) {
-      video.pause();
-      // Draw last frame once to freeze it
-      drawFrame(video, canvas);
-    }
-
     if (animationFrameId.current) {
       cancelAnimationFrame(animationFrameId.current);
     }
-
-    // Freeze final frame for exactly 200ms before destroying the overlay
-    setTimeout(() => {
-      onLaunched(); // unmounts LaunchPage
-    }, 200);
+    // Instantly remove everything
+    onLaunched();
   };
 
-  // Pre-load check on mount
+  const handleLaunchClick = () => {
+    if (clicked || !videoReady) return;
+    setClicked(true);
+    startAnimation();
+  };
+
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
       if (video.readyState === 4) {
-        handleReadyCheck();
+        handleVideoLoad();
       } else {
-        video.addEventListener("canplaythrough", handleReadyCheck);
-        video.addEventListener("loadeddata", handleReadyCheck);
+        video.addEventListener("canplaythrough", handleVideoLoad);
+        video.addEventListener("loadeddata", handleVideoLoad);
       }
     }
     return () => {
       if (video) {
-        video.removeEventListener("canplaythrough", handleReadyCheck);
-        video.removeEventListener("loadeddata", handleReadyCheck);
+        video.removeEventListener("canplaythrough", handleVideoLoad);
+        video.removeEventListener("loadeddata", handleVideoLoad);
       }
     };
   }, []);
 
   return (
-    <div className="new-launch-container">
-      {/* Fullscreen keying canvas for video frames */}
-      <canvas ref={canvasRef} className="launch-canvas-layer" />
+    <div className="launch-stage-overlay">
+      <canvas ref={canvasRef} className="launch-stage-canvas" />
 
-      {/* Heavy Gold Launch switch button */}
       {!clicked && (
-        <div className="launch-btn-wrapper">
+        <div className="launch-btn-container">
           <button
-            className="launch-gold-ticket"
+            className="launch-gold-btn"
             onClick={handleLaunchClick}
-            disabled={!isReady}
+            disabled={!videoReady}
           >
-            <div className="ticket-notch notch-l"></div>
-            <div className="ticket-notch notch-r"></div>
-            <div className="ticket-inner-border"></div>
-            <div className="ticket-title">POOJA PRODUCTIONS</div>
-            <span className="ticket-action">{isReady ? "LAUNCH" : "BUFFERING"}</span>
-            <div className="ticket-meta">ADMIT ONE</div>
+            LAUNCH
           </button>
         </div>
       )}
 
-      {/* Video Element */}
       <video
         ref={videoRef}
         src="/launch_video.mp4"
         onEnded={handleVideoEnded}
-        className="launch-video-element"
+        className="launch-video-hidden"
         preload="auto"
         muted
         playsInline

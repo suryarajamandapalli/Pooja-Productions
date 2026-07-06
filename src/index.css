@@ -1136,7 +1136,6 @@ form select option {
   }
 }
 
-/* While Launch Curtain is active, block scroll & hide/blur the page content */
 .launch-overlay-active {
   overflow: hidden !important;
   height: 100vh !important;
@@ -1146,8 +1145,6 @@ form select option {
 .launch-overlay-active .site-header,
 .launch-overlay-active .brand-identity-logo,
 .launch-overlay-active .welcome-popup-container {
-  filter: blur(var(--launch-blur, 2px)) !important;
   pointer-events: none !important;
-  will-change: filter !important;
 }
 

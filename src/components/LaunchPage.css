@@ -1,21 +1,21 @@
 /* ==========================================================================
-   NEW PREMIUM CINEMATIC THEATRE LAUNCH STYLING
+   NEW PREMIUM STAGE CURTAIN LAUNCH OVERLAY
    ========================================================================== */
 
-.new-launch-container {
+.launch-stage-overlay {
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-  background-color: transparent !important; /* lets homepage background peek through curtains */
-  z-index: 99999 !important;
+  background-color: transparent !important;
+  z-index: 999999 !important;
   overflow: hidden !important;
   user-select: none !important;
 }
 
-/* Keyed Curtain Video Canvas */
-.launch-canvas-layer {
+/* Fullscreen Canvas overlaying homepage */
+.launch-stage-canvas {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
@@ -24,15 +24,16 @@
   display: block !important;
   z-index: 5 !important;
   pointer-events: none !important;
+  object-fit: cover !important;
 }
 
-/* Hidden Source Video */
-.launch-video-element {
+/* Hidden video element used as frame source */
+.launch-video-hidden {
   display: none !important;
 }
 
 /* Centered Button Wrapper */
-.launch-btn-wrapper {
+.launch-btn-container {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
@@ -41,158 +42,53 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  z-index: 100 !important;
+  z-index: 10 !important;
   pointer-events: none !important;
 }
 
-/* Gold Metallic Ticket Button */
-.launch-gold-ticket {
+/* Premium Gold Launch Button */
+.launch-gold-btn {
   pointer-events: auto !important;
   position: relative !important;
-  width: 320px !important;
-  height: 160px !important;
-  border-radius: 12px !important;
-  border: 2px solid rgba(229, 184, 115, 0.45) !important;
-  background: linear-gradient(135deg, #13100a 0%, #302615 35%, #4b3d22 50%, #302615 65%, #13100a 100%) !important;
+  padding: 24px 64px !important;
+  font-size: 1.8rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.35em !important;
+  color: #ffffff !important;
+  text-transform: uppercase !important;
+  border-radius: 8px !important;
+  border: 2px solid rgba(229, 184, 115, 0.5) !important;
+  background: linear-gradient(135deg, #16120a 0%, #3a2e1b 50%, #16120a 100%) !important;
   box-shadow: 
-    0 30px 65px rgba(0, 0, 0, 0.8),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    0 0 35px rgba(197, 168, 128, 0.15) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
+    0 25px 50px rgba(0, 0, 0, 0.7),
+    0 0 30px rgba(229, 184, 115, 0.15) !important;
   cursor: pointer !important;
   outline: none !important;
   overflow: hidden !important;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.4s ease !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease !important;
 }
 
-/* Ticket Side Circular Punches (Notches) */
-.ticket-notch {
-  position: absolute !important;
-  top: 50% !important;
-  width: 24px !important;
-  height: 24px !important;
-  background-color: #0b0b0b !important; /* blends into curtain background */
-  border-radius: 50% !important;
-  transform: translateY(-50%) !important;
-  z-index: 5 !important;
-  border: 2px solid rgba(229, 184, 115, 0.5) !important;
-}
-.notch-l {
-  left: -13px !important;
-}
-.notch-r {
-  right: -13px !important;
-}
-
-/* Ticket Inner Borders */
-.ticket-inner-border {
-  position: absolute !important;
-  top: 9px !important;
-  left: 13px !important;
-  right: 13px !important;
-  bottom: 9px !important;
-  border: 1px dashed rgba(229, 184, 115, 0.4) !important;
-  border-radius: 6px !important;
-  pointer-events: none !important;
-  z-index: 2 !important;
-}
-
-/* Ticket Text Elements */
-.ticket-title {
-  position: absolute !important;
-  top: 18px !important;
-  font-family: var(--_font-default) !important;
-  font-size: 1.0rem !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.22em !important;
-  color: rgba(229, 184, 115, 0.6) !important;
-  text-transform: uppercase !important;
-}
-
-.ticket-action {
-  font-family: var(--_font-default) !important;
-  font-size: 2.2rem !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.25em !important;
-  color: #ffffff !important;
-  text-shadow: 0 0 12px rgba(229, 184, 115, 0.8) !important;
-  margin-left: 0.25em !important; /* balances spacing */
-  z-index: 10 !important;
-  transition: text-shadow 0.3s ease !important;
-}
-
-.ticket-meta {
-  position: absolute !important;
-  bottom: 18px !important;
-  font-family: var(--_font-default) !important;
-  font-size: 1.0rem !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.28em !important;
-  color: rgba(229, 184, 115, 0.6) !important;
-  text-transform: uppercase !important;
-}
-
-/* Ticket Hover effects */
-.launch-gold-ticket:hover {
-  transform: translateY(-5px) scale(1.03) !important;
+.launch-gold-btn:hover {
+  transform: scale(1.04) !important;
   border-color: rgba(229, 184, 115, 0.95) !important;
   box-shadow: 
-    0 35px 70px rgba(0, 0, 0, 0.85),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    0 0 50px rgba(229, 184, 115, 0.35) !important;
+    0 30px 60px rgba(0, 0, 0, 0.8),
+    0 0 45px rgba(229, 184, 115, 0.4) !important;
 }
 
-.launch-gold-ticket:hover .ticket-action {
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.9), 0 0 30px rgba(229, 184, 115, 1) !important;
+.launch-gold-btn:active {
+  transform: scale(0.96) !important;
 }
 
-/* Disabled Loading / Buffering state */
-.launch-gold-ticket:disabled {
+.launch-gold-btn:disabled {
   pointer-events: none !important;
-  opacity: 0.6 !important;
-  border-color: rgba(229, 184, 115, 0.2) !important;
-  box-shadow: none !important;
-  background: linear-gradient(135deg, #0b0a07 0%, #17140e 50%, #0b0a07 100%) !important;
+  opacity: 0.5 !important;
 }
 
-.launch-gold-ticket:disabled .ticket-action {
-  text-shadow: none !important;
-  color: rgba(255, 255, 255, 0.3) !important;
-  animation: goldShimmer 2s infinite linear !important;
-}
-
-@keyframes goldShimmer {
-  0% { opacity: 0.25; }
-  50% { opacity: 0.55; }
-  100% { opacity: 0.25; }
-}
-
-/* Ticket Click Press and Vibration Animation */
-.launch-gold-ticket.clicked {
-  pointer-events: none !important;
-  transform: scale(0.95) translateY(2px) !important;
-  animation: ticketVibrate 0.25s linear 1 !important;
-  opacity: 0.8 !important;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6) !important;
-}
-
-@keyframes ticketVibrate {
-  0% { transform: scale(0.95) translateY(2px) translate(0, 0); }
-  20% { transform: scale(0.95) translateY(2px) translate(-3px, 2px); }
-  40% { transform: scale(0.95) translateY(2px) translate(2px, -2px); }
-  60% { transform: scale(0.95) translateY(2px) translate(-2px, -1px); }
-  80% { transform: scale(0.95) translateY(2px) translate(3px, 1px); }
-  100% { transform: scale(0.95) translateY(2px) translate(0, 0); }
-}
-
-/* Glass Reflection Sheen on Ticket */
-.launch-gold-ticket::after {
+/* Glass reflection shine on button */
+.launch-gold-btn::after {
   content: "" !important;
   position: absolute !important;
   top: -50% !important;
@@ -202,16 +98,15 @@
   background: linear-gradient(
     45deg,
     transparent 45%,
-    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0.35) 50%,
     transparent 55%
   ) !important;
   transform: rotate(-45deg) translate(-100%, -100%) !important;
   transition: transform 0s !important;
   pointer-events: none !important;
-  z-index: 3 !important;
 }
 
-.launch-gold-ticket:hover::after {
+.launch-gold-btn:hover::after {
   transform: rotate(-45deg) translate(100%, 100%) !important;
-  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
