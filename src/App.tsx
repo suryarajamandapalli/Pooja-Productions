@@ -45,12 +45,18 @@ const MainAppContent: React.FC = () => {
 
   useEffect(() => {
     if (view === "site") {
-      const skipLoader = sessionStorage.getItem("pooja_skip_loader") === "true";
+      let skipLoader = false;
+      try {
+        skipLoader = sessionStorage.getItem("pooja_skip_loader") === "true";
+      } catch (e) {}
+
       if (skipLoader) {
         setHomepageFade(true);
         const timer = setTimeout(() => {
           setHomepageFade(false);
-          sessionStorage.removeItem("pooja_skip_loader");
+          try {
+            sessionStorage.removeItem("pooja_skip_loader");
+          } catch (e) {}
         }, 3000);
         return () => clearTimeout(timer);
       }

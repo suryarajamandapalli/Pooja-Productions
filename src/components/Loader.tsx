@@ -3,7 +3,11 @@ import gsap from "gsap";
 
 export const Loader: React.FC = () => {
   useEffect(() => {
-    const skipLoader = sessionStorage.getItem("pooja_skip_loader") === "true";
+    let skipLoader = false;
+    try {
+      skipLoader = sessionStorage.getItem("pooja_skip_loader") === "true";
+    } catch (e) {}
+
     if (skipLoader) {
       const loader = document.getElementById("loader");
       if (loader) loader.classList.add("loaded");
