@@ -520,6 +520,20 @@ export const Contact: React.FC = () => {
                   <div className="footer-copyright">
                     © 2026 Pooja Productions. All rights reserved.
                   </div>
+                  
+                  {/* Aranea Den Footer Attribution Badge */}
+                  <a 
+                    href="https://araneaden.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="araneaden-badge d-inline-flex align-items-center gap-3"
+                  >
+                    <div className="araneaden-logo-pill">
+                      <img src="/img/araneaden_logo.png" alt="Aranea Den Logo" />
+                    </div>
+                    <span className="araneaden-badge-text">MADE BY ARANEA DEN</span>
+                  </a>
+
                   <div className="footer-links d-flex gap-4">
                     <a href="#0" className="footer-link">Privacy Policy</a>
                     <a href="#0" className="footer-link">Terms</a>
