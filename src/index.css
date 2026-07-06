@@ -1024,22 +1024,83 @@ form select option {
   }
 }
 
-/* Aranea Den Footer Attribution Link styling */
-.araneaden-link {
+/* Aranea Den Footer Attribution Container & Text */
+.araneaden-footer-link {
+  text-decoration: none !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.araneaden-footer-link:hover {
+  transform: translateY(-2px);
+}
+
+.araneaden-footer-logo {
+  height: 3.2rem !important; /* clearly visible, not tiny */
+  width: auto !important;
+  object-fit: contain !important;
+  display: block !important;
+  transition: filter 0.3s ease !important;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3)) brightness(0.95);
+}
+
+.araneaden-footer-link:hover .araneaden-footer-logo {
+  filter: drop-shadow(0 0 10px rgba(197, 168, 128, 0.4)) brightness(1.1); /* light golden glow */
+}
+
+.araneaden-footer-text {
   font-family: var(--_font-default) !important;
-  font-size: 1.2rem !important;
+  font-size: 1.1rem !important;
   font-weight: 600 !important;
   letter-spacing: 0.12em !important;
   color: rgba(255, 255, 255, 0.45) !important;
-  text-decoration: none !important;
-  transition: color 0.3s ease, transform 0.3s ease !important;
   text-transform: uppercase !important;
-  display: inline-block !important;
+  transition: color 0.3s ease !important;
 }
 
-.araneaden-link:hover {
-  color: #C5A880 !important; /* Gold on hover */
-  transform: translateY(-1px);
+.araneaden-footer-link:hover .araneaden-footer-text {
+  color: #C5A880 !important; /* gold on hover */
+}
+
+/* Background Rotating Gold Diamonds behind Footer bottom bar */
+.footer-rotating-diamonds-container {
+  position: absolute !important;
+  bottom: -220px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 580px !important;
+  height: 580px !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  overflow: visible !important;
+}
+
+.footer-diamonds-orbit {
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
+  animation: footerOrbitRotate 50s linear infinite !important;
+}
+
+@keyframes footerOrbitRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.footer-orbit-diamond {
+  animation: footerDiamondSelfRotate 12s linear infinite !important;
+}
+
+@keyframes footerDiamondSelfRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg); /* counter-rotates to stay upright! */
+  }
 }
 
 /* About/Leadership Section Left Diamond Accent */

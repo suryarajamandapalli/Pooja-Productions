@@ -525,9 +525,14 @@ export const Contact: React.FC = () => {
                     href="https://araneaden.com" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="araneaden-link"
+                    className="araneaden-footer-link d-flex flex-column align-items-center gap-2"
                   >
-                    MADE BY ARANEA DEN
+                    <img 
+                      src="/img/araneaden_logo.png" 
+                      alt="Aranea Den Logo" 
+                      className="araneaden-footer-logo"
+                    />
+                    <span className="araneaden-footer-text">MADE BY ARANEA DEN</span>
                   </a>
 
                   <div className="footer-links d-flex gap-4">
@@ -549,6 +554,37 @@ export const Contact: React.FC = () => {
                     <span>Back to Top</span>
                     <i className="ph ph-arrow-up"></i>
                   </a>
+                </div>
+
+                {/* Rotating background golden diamonds behind footer bottom */}
+                <div className="footer-rotating-diamonds-container">
+                  <div className="footer-diamonds-orbit">
+                    {[...Array(6)].map((_, i) => {
+                      const angle = (i * 360) / 6;
+                      const radius = 240; // radius of orbit
+                      const x = Math.cos((angle * Math.PI) / 180) * radius;
+                      const y = Math.sin((angle * Math.PI) / 180) * radius;
+                      return (
+                        <img
+                          key={i}
+                          src={`/Daimonds/${i % 2 === 0 ? 5 : 7}.png`}
+                          alt=""
+                          className="footer-orbit-diamond"
+                          style={{
+                            position: "absolute",
+                            left: `calc(50% + ${x}px - 35px)`,
+                            top: `calc(50% + ${y}px - 35px)`,
+                            width: "70px",
+                            height: "70px",
+                            objectFit: "contain",
+                            opacity: 0.28,
+                            filter: "drop-shadow(0 0 15px rgba(197, 168, 128, 0.4))",
+                            transform: `rotate(${angle}deg)`
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
 
               </div>
