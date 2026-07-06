@@ -105,20 +105,19 @@
   pointer-events: none;
 }
 
-/* Golden Circular Launch Button */
+/* Golden Ticket Launch Button */
 .launch-gold-btn {
   pointer-events: auto;
   position: relative;
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  border: 4px solid rgba(197, 168, 128, 0.6);
-  background: radial-gradient(circle at 50% 30%, #ffd700 0%, #c5a880 40%, #8a6f44 80%, #4a3b22 100%);
+  width: 320px !important;
+  height: 160px !important;
+  border-radius: 12px !important;
+  border: 2px solid rgba(255, 215, 0, 0.45) !important;
+  background: linear-gradient(135deg, #16130c 0%, #3a2f1a 35%, #594828 50%, #3a2f1a 65%, #16130c 100%) !important;
   box-shadow: 
-    0 15px 35px rgba(0, 0, 0, 0.6),
-    inset 0 4px 8px rgba(255, 255, 255, 0.5),
-    inset 0 -4px 8px rgba(0, 0, 0, 0.5),
-    0 0 30px rgba(197, 168, 128, 0.2);
+    0 25px 55px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 35px rgba(255, 215, 0, 0.12) !important;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -127,12 +126,75 @@
   outline: none;
   transform: scale(1);
   opacity: 1;
-  transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1),
-              opacity 0.6s cubic-bezier(0.645, 0.045, 0.355, 1),
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              width 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              border-radius 0.6s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.4s ease,
-              border-color 0.4s ease;
+              border-color 0.4s ease !important;
   z-index: 120;
   overflow: hidden;
+}
+
+/* Ticket Side Punches (Notches) */
+.ticket-notch {
+  position: absolute;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  background-color: #000000; /* matches background mask */
+  border-radius: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  border: 2px solid rgba(255, 215, 0, 0.45);
+  transition: opacity 0.3s ease;
+}
+.notch-left {
+  left: -13px;
+}
+.notch-right {
+  right: -13px;
+}
+
+/* Inner Dashed Line Design */
+.ticket-border-dashed {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  right: 14px;
+  bottom: 10px;
+  border: 1px dashed rgba(255, 215, 0, 0.4);
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.3s ease;
+}
+
+/* Ticket Header/Footer Metadata text */
+.ticket-header {
+  position: absolute;
+  top: 18px;
+  font-size: 1.0rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: rgba(255, 215, 0, 0.55);
+  text-transform: uppercase;
+  font-family: var(--_font-default);
+  z-index: 10;
+  transition: opacity 0.3s ease;
+}
+.ticket-footer {
+  position: absolute;
+  bottom: 18px;
+  font-size: 1.0rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  color: rgba(255, 215, 0, 0.55);
+  text-transform: uppercase;
+  font-family: var(--_font-default);
+  z-index: 10;
+  transition: opacity 0.3s ease;
 }
 
 /* Button Active Fade-Out State */
@@ -141,59 +203,45 @@
   transform: scale(0.65) !important;
 }
 
-/* Bevel Inner Ring Ring */
-.launch-gold-btn::before {
-  content: '';
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  right: 8px;
-  bottom: 8px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 80%);
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* Diagonal Light Sweep Effect on Hover */
+/* Interactive Cursor Gold Shine Highlight Overlay */
 .launch-btn-sweep {
   position: absolute;
-  top: -50%;
-  left: -60%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent 45%,
-    rgba(255, 255, 255, 0.6) 50%,
-    transparent 55%
-  );
-  transform: rotate(-45deg);
-  transition: transform 0s;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle 90px at var(--shine-x, -999px) var(--shine-y, -999px), rgba(255, 223, 137, 0.25) 0%, transparent 100%) !important;
   pointer-events: none;
   z-index: 3;
 }
 
-.launch-gold-btn:hover .launch-btn-sweep {
-  transform: translate(60%, 60%) rotate(-45deg);
-  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
 /* Button Hover State */
 .launch-gold-btn:hover {
-  transform: translateY(-6px) scale(1.05);
-  border-color: rgba(255, 223, 137, 0.95);
+  transform: translateY(-8px) scale(1.04);
+  border-color: rgba(255, 215, 0, 0.9) !important;
   box-shadow: 
-    0 25px 45px rgba(0, 0, 0, 0.8),
-    inset 0 4px 10px rgba(255, 255, 255, 0.6),
-    inset 0 -4px 10px rgba(0, 0, 0, 0.6),
-    0 0 50px rgba(255, 215, 0, 0.5);
+    0 35px 65px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 50px rgba(255, 215, 0, 0.3) !important;
 }
 
-/* Button Click Active State */
-.launch-gold-btn:active {
-  transform: translateY(-2px) scale(0.98);
+/* Button Morphing to Play Button on Clicked */
+.launch-gold-btn.clicked {
+  width: 90px !important;
+  height: 90px !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  background: radial-gradient(circle at 50% 30%, #ffd700 0%, #c5a880 40%, #8a6f44 80%) !important;
+  border-color: #ffd700 !important;
+  box-shadow: 0 0 45px rgba(255, 215, 0, 0.85) !important;
+}
+
+.launch-gold-btn.clicked .ticket-notch,
+.launch-gold-btn.clicked .ticket-border-dashed,
+.launch-gold-btn.clicked .ticket-header,
+.launch-gold-btn.clicked .ticket-footer {
+  display: none !important;
+  opacity: 0 !important;
 }
 
 /* Launch Button Text Styles */
@@ -206,7 +254,23 @@
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
   margin-left: 0.25em; /* offsets last letter spacing */
   z-index: 10;
-  transition: text-shadow 0.3s ease;
+  transition: text-shadow 0.3s ease, font-size 0.3s ease;
+}
+
+.launch-gold-btn.clicked .launch-btn-text {
+  font-size: 2.8rem !important;
+  margin-left: 0.15em !important;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.8) !important;
+  animation: pulsePlayButton 1.5s ease-in-out infinite alternate !important;
+}
+
+@keyframes pulsePlayButton {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
 }
 
 .launch-gold-btn:hover .launch-btn-text {

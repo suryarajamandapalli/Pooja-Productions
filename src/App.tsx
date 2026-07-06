@@ -379,12 +379,10 @@ const MainAppContent: React.FC = () => {
     return <AdminDashboard onBackToSite={navigateToSite} />;
   }
 
-  if (view === "launch") {
-    return <LaunchPage onLaunched={handleLaunched} />;
-  }
+  const showLaunchOverlay = view === "launch";
 
   return (
-    <div className={homepageFade ? "site-fade-in-premium" : ""}>
+    <div className={`${homepageFade ? "site-fade-in-premium" : ""} ${showLaunchOverlay ? "launch-overlay-active" : ""}`}>
       <Loader />
 
       {/* Welcome Popup */}
@@ -415,6 +413,11 @@ const MainAppContent: React.FC = () => {
 
       {/* 7. Scroll-to-top trigger button */}
       <ScrollToTop />
+
+      {/* Cinematic Theatre Curtain overlay loaded on top of homepage */}
+      {showLaunchOverlay && (
+        <LaunchPage onLaunched={handleLaunched} />
+      )}
     </div>
   );
 };

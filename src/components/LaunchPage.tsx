@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
 import "./LaunchPage.css";
 
 // ═══════════════════════════════════════════════════════
@@ -206,14 +207,15 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
   const [clicked, setClicked] = useState(false);
   const [pageFadeToBlack, setPageFadeToBlack] = useState(false); // Quick fade to black on ended
 
-  // Hidden dev green screen debugging panel controls
+  // Default black chroma-key thresholds (brightness 15 to 45)
   const [showDebug, setShowDebug] = useState(false);
-  const [threshold1, setThreshold1] = useState(25);
-  const [threshold2, setThreshold2] = useState(48);
+  const [threshold1, setThreshold1] = useState(15);
+  const [threshold2, setThreshold2] = useState(45);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const backgroundCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   const audioSynth = useRef<CinematicAudioSynth>(new CinematicAudioSynth());
   const animationFrameId = useRef<number | null>(null);
@@ -221,36 +223,110 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
 
   const pageFadeOutRef = useRef(false);
 
+  // Native scroll locking variables
+  useEffect(() => {
+    const preventDefault = (e: Event) => e.preventDefault();
+    const preventDefaultKeys = (e: KeyboardEvent) => {
+      const keys = ["Space", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "End", "Home"];
+      if (keys.includes(e.code)) {
+        e.preventDefault();
+      }
+    };
+
+    // Lock page scroll immediately when launch page is active
+    document.body.style.overflow = "hidden";
+    document.body.style.height = "100vh";
+    window.addEventListener("wheel", preventDefault, { passive: false });
+    window.addEventListener("touchmove", preventDefault, { passive: false });
+    window.addEventListener("keydown", preventDefaultKeys, { passive: false });
+
+    return () => {
+      // Restore page scroll on unmount
+      document.body.style.overflow = "";
+      document.body.style.height = "";
+      window.removeEventListener("wheel", preventDefault);
+      window.removeEventListener("touchmove", preventDefault);
+      window.removeEventListener("keydown", preventDefaultKeys);
+    };
+  }, []);
+
+  // Track cursor position inside the gold ticket button to drive shininess
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const btn = btnRef.current;
+    if (!btn) return;
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    btn.style.setProperty("--shine-x", `${x}px`);
+    btn.style.setProperty("--shine-y", `${y}px`);
+  };
+
   // Handle click of the centered LAUNCH button
   const handleLaunch = () => {
     if (clicked) return;
     setClicked(true);
-    setButtonRevealed(false); // Fades button away over 600ms (ease-in-out cubic)
     audioSynth.current.playClick();
+
+    const video = videoRef.current;
+    if (!video) return;
 
     // Unblock the video element synchronously inside the gestural thread.
     // This satisfies Chrome/Safari policy and locks media playback permission.
-    const video = videoRef.current;
-    if (video) {
-      video.play().then(() => {
-        video.pause();
-        video.currentTime = 0;
-      }).catch((err) => {
-        console.warn("Synchronous media pre-activation bypass notice:", err);
-      });
-    }
+    video.play().then(() => {
+      video.pause();
+      video.currentTime = 0;
 
-    // After 600ms cubic transition completely finishes:
-    setTimeout(() => {
-      setStarted(true); // set transparent wrapper and show canvas
-      audioSynth.current.playWhoosh(); // play whoosh sound on curtain slide start
-      
-      if (video) {
-        video.play().catch((err) => {
-          console.warn("Curtain video play error:", err);
+      // Start fade button to play icon transition
+      setButtonRevealed(false);
+
+      // After 600ms button transition completely finishes:
+      setTimeout(() => {
+        setStarted(true); // set transparent wrapper and show canvas
+        audioSynth.current.playWhoosh(); // play whoosh sound on curtain slide start
+
+        // Initialize background reveal CSS variables
+        gsap.set(document.documentElement, {
+          "--launch-blur": "25px",
+          "--launch-brightness": "0.15"
         });
-      }
-    }, 600);
+
+        // Scrub video.currentTime using GSAP to achieve heavy velvet custom physics easing!
+        // power2.inOut provides that slow start, fast middle, and slow finish inertia.
+        const animDuration = video.duration || 4.2;
+
+        gsap.to(video, {
+          currentTime: animDuration,
+          duration: animDuration,
+          ease: "power2.inOut",
+          onUpdate: () => {
+            // requestAnimationFrame loop processChromaKey handles drawing updated frames!
+          },
+          onComplete: () => {
+            if (!pageFadeOutRef.current) {
+              pageFadeOutRef.current = true;
+              setPageFadeToBlack(true); // Fade entire launch page to solid black
+              audioSynth.current.stopAmbience();
+              
+              setTimeout(() => {
+                onLaunched(); // Unmounts LaunchPage
+              }, 800);
+            }
+          }
+        });
+
+        // Animate homepage reveal slightly delayed to match curtain parting!
+        gsap.to(document.documentElement, {
+          "--launch-blur": "0px",
+          "--launch-brightness": "1.0",
+          duration: animDuration * 0.95,
+          ease: "power2.inOut",
+          delay: 0.15
+        });
+
+      }, 600);
+    }).catch((err) => {
+      console.warn("Synchronous media pre-activation bypass notice:", err);
+    });
   };
 
   // Resume Web Audio on first user interaction anywhere on the document
@@ -422,21 +498,20 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
       const data = frame.data;
       const len = data.length;
 
-      // Key out green background completely using anti-aliasing edge formula
+      // Key out black background completely using anti-aliasing edge formula
       for (let i = 0; i < len; i += 4) {
         const r = data[i];
         const g = data[i + 1];
         const b = data[i + 2];
 
-        // Green dominance calculation
-        const maxColor = Math.max(r, b);
-        const diff = g - maxColor;
+        // Max color channel representing pixel brightness
+        const brightness = Math.max(r, g, b);
 
-        if (g > 60 && diff > threshold2) {
-          data[i + 3] = 0; // fully transparent
-        } else if (g > 60 && diff > threshold1) {
-          const factor = (diff - threshold1) / (threshold2 - threshold1);
-          data[i + 3] = Math.round((1 - factor) * 255); // smooth alpha blend
+        if (brightness < threshold1) {
+          data[i + 3] = 0; // fully transparent black background
+        } else if (brightness < threshold2) {
+          const factor = (brightness - threshold1) / (threshold2 - threshold1);
+          data[i + 3] = Math.round(factor * 255); // smooth alpha transition edge
         }
       }
 
@@ -463,23 +538,34 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
       <div className="launch-background" style={{ opacity: 1 }} />
       <div className="launch-rays" style={{ opacity: 1 }} />
 
-
-
       {/* Background Canvas Layer (Rays/Dust behind key space) */}
       <canvas ref={backgroundCanvasRef} className="launch-canvas" style={{ zIndex: 2 }} />
 
       {/* Keyed Curtain Video Canvas Layer */}
       <canvas ref={canvasRef} className="launch-canvas" style={{ zIndex: 5 }} />
 
-      {/* Main UI Layer (Exactly ONE button) */}
+      {/* Main UI Layer (Exactly ONE gold ticket button) */}
       <div className="launch-ui">
         <button
-          className={`launch-gold-btn ${buttonRevealed ? "visible" : "fade-out"}`}
+          ref={btnRef}
+          className={`launch-gold-btn ${buttonRevealed ? "visible" : "fade-out"} ${clicked ? "clicked" : ""}`}
           onClick={handleLaunch}
+          onMouseMove={handleMouseMove}
           disabled={clicked}
         >
+          {/* Ticket circular side punches */}
+          <div className="ticket-notch notch-left"></div>
+          <div className="ticket-notch notch-right"></div>
+          
+          {/* Inner dashed line design */}
+          <div className="ticket-border-dashed"></div>
+
+          {/* Mouse cursor shiny shine element */}
           <div className="launch-btn-sweep"></div>
-          <span className="launch-btn-text">Launch</span>
+          
+          <div className="ticket-header">POOJA PRODUCTIONS</div>
+          <span className="launch-btn-text">{clicked ? "▶" : "Launch"}</span>
+          <div className="ticket-footer">ADMIT ONE</div>
         </button>
       </div>
 
@@ -492,10 +578,10 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
       {/* Light Bloom fade to homepage */}
       <div className={`launch-light-bloom ${clicked ? "active" : ""}`} />
 
-      {/* Curtain video source - starts loaded but paused, autoplays after click transition */}
+      {/* Curtain video source - starts loaded but paused, scrubbed via GSAP */}
       <video
         ref={videoRef}
-        src="/curtains.mp4"
+        src="/videoplayback.mp4"
         className="launch-video-hidden"
         preload="auto"
         muted

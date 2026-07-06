@@ -1136,3 +1136,18 @@ form select option {
   }
 }
 
+/* While Launch Curtain is active, block scroll & hide/blur the page content */
+.launch-overlay-active {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
+.launch-overlay-active .page-content,
+.launch-overlay-active .site-header,
+.launch-overlay-active .brand-identity-logo,
+.launch-overlay-active .welcome-popup-container {
+  filter: blur(var(--launch-blur, 25px)) brightness(var(--launch-brightness, 0.15)) !important;
+  pointer-events: none !important;
+  will-change: filter !important;
+}
+
