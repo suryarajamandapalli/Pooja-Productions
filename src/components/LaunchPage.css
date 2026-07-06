@@ -152,6 +152,27 @@
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.9), 0 0 30px rgba(229, 184, 115, 1) !important;
 }
 
+/* Disabled Loading / Buffering state */
+.launch-gold-ticket:disabled {
+  pointer-events: none !important;
+  opacity: 0.6 !important;
+  border-color: rgba(229, 184, 115, 0.2) !important;
+  box-shadow: none !important;
+  background: linear-gradient(135deg, #0b0a07 0%, #17140e 50%, #0b0a07 100%) !important;
+}
+
+.launch-gold-ticket:disabled .ticket-action {
+  text-shadow: none !important;
+  color: rgba(255, 255, 255, 0.3) !important;
+  animation: goldShimmer 2s infinite linear !important;
+}
+
+@keyframes goldShimmer {
+  0% { opacity: 0.25; }
+  50% { opacity: 0.55; }
+  100% { opacity: 0.25; }
+}
+
 /* Ticket Click Press and Vibration Animation */
 .launch-gold-ticket.clicked {
   pointer-events: none !important;

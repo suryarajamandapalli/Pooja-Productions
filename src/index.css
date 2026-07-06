@@ -1146,7 +1146,7 @@ form select option {
 .launch-overlay-active .site-header,
 .launch-overlay-active .brand-identity-logo,
 .launch-overlay-active .welcome-popup-container {
-  filter: blur(var(--launch-blur, 25px)) brightness(var(--launch-brightness, 0.15)) !important;
+  filter: blur(var(--launch-blur, 2px)) !important;
   pointer-events: none !important;
   will-change: filter !important;
 }
