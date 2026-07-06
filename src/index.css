@@ -1041,11 +1041,11 @@ form select option {
   display: block !important;
   mix-blend-mode: screen !important; /* blends away dark rectangle background */
   transition: filter 0.3s ease !important;
-  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3)) brightness(0.95);
+  filter: grayscale(1) contrast(2) brightness(1.2) drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3)) !important;
 }
 
 .araneaden-footer-link:hover .araneaden-footer-logo {
-  filter: drop-shadow(0 0 10px rgba(197, 168, 128, 0.4)) brightness(1.1); /* light golden glow */
+  filter: grayscale(1) contrast(2) brightness(1.4) drop-shadow(0 0 10px rgba(197, 168, 128, 0.5)) !important; /* light golden glow */
 }
 
 .araneaden-footer-text {
@@ -1075,7 +1075,7 @@ form select option {
   overflow: visible !important;
 }
 
-/* Soft cinematic volumetric glowing aura behind the diamond */
+/* Soft cinematic volumetric glowing aura behind the diamond - reduced intensity */
 .footer-single-diamond-container::before {
   content: "" !important;
   position: absolute !important;
@@ -1083,7 +1083,7 @@ form select option {
   left: 5% !important;
   width: 90% !important;
   height: 90% !important;
-  background: radial-gradient(circle, rgba(229, 184, 115, 0.28) 0%, rgba(229, 184, 115, 0.08) 55%, rgba(0, 0, 0, 0) 100%) !important;
+  background: radial-gradient(circle, rgba(229, 184, 115, 0.12) 0%, rgba(229, 184, 115, 0.03) 60%, rgba(0, 0, 0, 0) 100%) !important;
   filter: blur(50px) !important;
   z-index: -1 !important;
   pointer-events: none !important;
@@ -1094,9 +1094,9 @@ form select option {
   height: 100% !important;
   object-fit: contain !important;
   display: block !important;
-  opacity: 0.52 !important;
+  opacity: 0.18 !important; /* reduced opacity to make overlay text 100% readable */
   mix-blend-mode: screen !important;
-  filter: drop-shadow(0 0 60px rgba(229, 184, 115, 0.5)) drop-shadow(0 0 100px rgba(229, 184, 115, 0.25)) brightness(1.25) saturate(1.2) !important;
+  filter: drop-shadow(0 0 40px rgba(229, 184, 115, 0.35)) drop-shadow(0 0 80px rgba(229, 184, 115, 0.15)) brightness(1.0) saturate(1.1) !important;
   animation: footerDiamondSpin 120s linear infinite !important; /* slowed down rotation speed */
 }
 
