@@ -58,7 +58,7 @@ export const About: React.FC = () => {
                     <img
                       src="/Daimonds/3.png" 
                       alt="Decorative diamond decoration"
-                      className="slow-rotate-right leadership-left-diamond"
+                      className="leadership-left-diamond"
                     />
                     <div className="container-fluid p-0">
                       <div className="row g-0 justify-content-between align-items-center">
