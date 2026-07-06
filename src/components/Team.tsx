@@ -34,7 +34,6 @@ export const Team: React.FC = () => {
               <div className="inner__name">
                 <div className="content__block name-block">
                   <span className="section-name icon-right animate-in-up" style={{ display: "inline-flex", alignItems: "center", gap: "0.8rem" }}>
-                    <img src="/Daimonds/6.png" alt="Diamond indicator" className="slow-rotate-right" style={{ width: "20px", height: "20px", objectFit: "contain", filter: "drop-shadow(0 0 5px rgba(255,255,255,0.4))" }} />
                     <span className="section-name-caption">Crew</span>
                     <i className="ph ph-arrow-down-right"></i>
                   </span>

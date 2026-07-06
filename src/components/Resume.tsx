@@ -54,7 +54,6 @@ export const Resume: React.FC = () => {
               <div className="inner__name">
                 <div className="content__block name-block">
                   <span className="section-name icon-right animate-in-up" style={{ display: "inline-flex", alignItems: "center", gap: "0.8rem" }}>
-                    <img src="/Daimonds/5.png" alt="Diamond indicator" className="slow-rotate-right" style={{ width: "20px", height: "20px", objectFit: "contain", filter: "drop-shadow(0 0 5px rgba(255,255,255,0.4))" }} />
                     <span className="section-name-caption">Legacy</span>
                     <i className="ph ph-arrow-down-right"></i>
                   </span>
@@ -126,7 +125,7 @@ export const Resume: React.FC = () => {
                     {tools.map((tool, index) => (
                       <div className="tools-cards__item d-flex grid-item animate-card-4" key={index}>
                         <div className="tools-cards__card">
-                          <img className="tools-cards__icon animate-in-up" src={`/Daimonds/${(index % 7) + 1}.png`} alt={tool.name} style={{ filter: "drop-shadow(0 0 10px rgba(255,255,255,0.15))" }} />
+                          <img className="tools-cards__icon animate-in-up" src={tool.icon.startsWith("http") || tool.icon.startsWith("/") ? tool.icon : `/${tool.icon}`} alt={tool.name} />
                           <h6 className="tools-cards__caption tagline-tool animate-in-up">{tool.name}</h6>
                         </div>
                       </div>
@@ -138,13 +137,6 @@ export const Resume: React.FC = () => {
                 {/* Content Block - Testimonials Start */}
                 <div className="content__block pre-offcanvas-text-block" style={{ position: "relative" }}>
                   <div className="block__subtitle" style={{ position: "relative", zIndex: 5 }}>
-                    {/* Local blue diamond positioned to complement the section title */}
-                    <img
-                      src="/Daimonds/6.png"
-                      alt=""
-                      aria-hidden="true"
-                      className="testimonials-section-diamond"
-                    />
                     <p className="tagline-chapter animate-in-up">Voices of Directors & Partners</p>
                   </div>
 

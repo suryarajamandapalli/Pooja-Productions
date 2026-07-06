@@ -463,19 +463,7 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
       <div className="launch-background" style={{ opacity: 1 }} />
       <div className="launch-rays" style={{ opacity: 1 }} />
 
-      {/* Floating branding blue diamonds near corners */}
-      <div className="launch-blue-diamond" style={{ top: "10%", left: "10%", width: "24px" }}>
-        <img src="/Daimonds/3.png" alt="Branding element" />
-      </div>
-      <div className="launch-blue-diamond" style={{ top: "15%", right: "12%", width: "32px" }}>
-        <img src="/Daimonds/5.png" alt="Branding element" />
-      </div>
-      <div className="launch-blue-diamond" style={{ bottom: "20%", left: "8%", width: "28px" }}>
-        <img src="/Daimonds/5.png" alt="Branding element" />
-      </div>
-      <div className="launch-blue-diamond" style={{ bottom: "12%", right: "10%", width: "20px" }}>
-        <img src="/Daimonds/3.png" alt="Branding element" />
-      </div>
+
 
       {/* Background Canvas Layer (Rays/Dust behind key space) */}
       <canvas ref={backgroundCanvasRef} className="launch-canvas" style={{ zIndex: 2 }} />

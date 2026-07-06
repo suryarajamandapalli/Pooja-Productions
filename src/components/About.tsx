@@ -29,7 +29,6 @@ export const About: React.FC = () => {
                 {/* Content Block - Section Name Start */}
                 <div className="content__block name-block">
                   <span className="section-name icon-right animate-in-up" style={{ display: "inline-flex", alignItems: "center", gap: "0.8rem" }}>
-                    <img src="/Daimonds/1.png" alt="Diamond indicator" className="slow-rotate-right" style={{ width: "20px", height: "20px", objectFit: "contain", filter: "drop-shadow(0 0 5px rgba(255,255,255,0.4))" }} />
                     <span className="section-name-caption">About</span>
                     <i className="ph ph-arrow-down-right"></i>
                   </span>
@@ -55,22 +54,6 @@ export const About: React.FC = () => {
                 {/* Content Block - Leadership Data Start */}
                 <div className="content__block grid-block animate-in-up" style={{ marginTop: "1.5rem" }}>
                   <div className="liquid-glass-card">
-                    {/* Diamond accent — top-right corner of card */}
-                    <img
-                      src="/Daimonds/5.png"
-                      alt=""
-                      aria-hidden="true"
-                      style={{
-                        position: "absolute",
-                        top: "-55px",
-                        right: "-30px",
-                        width: "130px",
-                        opacity: 0.9,
-                        filter: "drop-shadow(0 0 20px rgba(157, 184, 206, 0.8))",
-                        pointerEvents: "none",
-                        zIndex: 20,
-                      }}
-                    />
                     <div className="container-fluid p-0">
                       <div className="row g-0 justify-content-between align-items-center">
                         <div className="col-12 col-md-4 grid-item chairman-card-img-col">
@@ -167,7 +150,6 @@ export const Studio: React.FC = () => {
                 {/* Content Block - Section Name Start */}
                 <div className="content__block name-block">
                   <span className="section-name icon-right animate-in-up" style={{ display: "inline-flex", alignItems: "center", gap: "0.8rem" }}>
-                    <img src="/Daimonds/3.png" alt="Diamond indicator" className="slow-rotate-right" style={{ width: "20px", height: "20px", objectFit: "contain", filter: "drop-shadow(0 0 5px rgba(255,255,255,0.4))" }} />
                     <span className="section-name-caption">Studio</span>
                     <i className="ph ph-arrow-down-right"></i>
                   </span>
