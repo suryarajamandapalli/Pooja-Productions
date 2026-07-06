@@ -665,6 +665,18 @@ form select option {
   }
 }
 
+@media only screen and (max-width: 575px) {
+  .testimonials-slider {
+    padding-bottom: 4.4rem !important; /* space only for fraction pagination */
+  }
+  .mxd-slider-btn {
+    display: none !important; /* hide navigation arrows on small mobile devices */
+  }
+  .swiper-pagination.mxd-swiper-pagination-fraction {
+    bottom: 0 !important;
+  }
+}
+
 /* 6. Card Polish (Consistent glass effect, borders, shadows, auto height) */
 .testimonials-card {
   background: rgba(255, 255, 255, 0.012) !important;
@@ -681,6 +693,12 @@ form select option {
   display: flex !important;
   flex-direction: column !important;
   overflow: visible !important;
+}
+
+@media only screen and (max-width: 575px) {
+  .testimonials-card {
+    padding: 2rem !important;
+  }
 }
 
 @media only screen and (min-width: 768px) {
@@ -704,16 +722,27 @@ form select option {
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-start !important;
-  padding-right: 2.4rem !important;
+  padding-right: 0 !important;
+}
+
+@media only screen and (min-width: 992px) {
+  .testimonials-card__tdata {
+    padding-right: 2.4rem !important;
+  }
 }
 
 .testimonials-card__timage {
-  padding-left: 2.4rem !important;
+  padding-left: 0 !important;
+}
+
+@media only screen and (min-width: 992px) {
+  .testimonials-card__timage {
+    padding-left: 2.4rem !important;
+  }
 }
 
 @media only screen and (max-width: 991px) {
   .testimonials-card__timage {
-    padding-left: 0 !important;
     margin-top: 3.2rem !important;
   }
 }
@@ -724,6 +753,19 @@ form select option {
   min-height: 280px !important;
   border-radius: 12px !important;
   overflow: hidden !important;
+}
+
+@media only screen and (max-width: 991px) {
+  .timage__inner {
+    height: 320px !important;
+    min-height: 0 !important;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .timage__inner {
+    height: 240px !important;
+  }
 }
 
 .timage__inner img {
@@ -755,6 +797,14 @@ form select option {
   overflow: hidden !important;
 }
 
+@media only screen and (max-width: 575px) {
+  .tauthor__avatar {
+    width: 60px !important;
+    height: 60px !important;
+    margin-right: 16px !important;
+  }
+}
+
 .tauthor__info {
   display: flex !important;
   flex-direction: column !important;
@@ -768,6 +818,12 @@ form select option {
   margin: 0 !important;
   line-height: 1.15 !important;
   letter-spacing: -0.015em !important;
+}
+
+@media only screen and (max-width: 575px) {
+  .tauthor__name {
+    font-size: 1.8rem !important;
+  }
 }
 
 .tauthor__position {
@@ -798,6 +854,12 @@ form select option {
   flex-grow: 1 !important;
 }
 
+@media only screen and (max-width: 575px) {
+  .testimonials-card__descr {
+    margin-top: 1.6rem !important;
+  }
+}
+
 .testimonials-card__descr p {
   font-size: 1.6rem !important;
   line-height: 1.65 !important; /* readable line height */
@@ -807,6 +869,13 @@ form select option {
   overflow-wrap: break-word !important;
   word-break: normal !important;
   margin: 0 !important;
+}
+
+@media only screen and (max-width: 575px) {
+  .testimonials-card__descr p {
+    font-size: 1.45rem !important;
+    line-height: 1.55 !important;
+  }
 }
 
 @media only screen and (min-width: 1400px) {
@@ -824,6 +893,12 @@ form select option {
   padding-top: 0 !important;
   margin-bottom: 0 !important;
   align-self: flex-start !important;
+}
+
+@media only screen and (max-width: 575px) {
+  .testimonials-card__btnholder {
+    margin-top: 2rem !important;
+  }
 }
 
 .testimonials-card__btnholder a.btn-line {
