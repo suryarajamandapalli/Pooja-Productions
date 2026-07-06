@@ -8,10 +8,6 @@ interface LaunchPageProps {
 
 export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
   const [clicked, setClicked] = useState(false);
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   // Lock scroll on mount
@@ -28,6 +24,12 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
     window.addEventListener("touchmove", preventScroll, { passive: false });
     window.addEventListener("keydown", preventKeys, { passive: false });
 
+    // Set initial blurred and darkened state for the background site
+    gsap.set(document.documentElement, {
+      "--launch-blur": "20px",
+      "--launch-brightness": "0.15"
+    });
+
     return () => {
       document.body.style.overflow = "";
       document.body.style.height = "";
@@ -37,195 +39,134 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
     };
   }, []);
 
-  // Canvas drawing loop
-  useEffect(() => {
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    if (!video || !canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animFrameId: number;
-
-    // Handle high-DPI scaling
-    const scale = window.devicePixelRatio || 1;
-    const resizeCanvas = () => {
-      if (!canvas) return;
-      canvas.width = window.innerWidth * scale;
-      canvas.height = window.innerHeight * scale;
-      ctx.scale(scale, scale);
-    };
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
-
-    // Temp buffer canvas for pixel operations
-    const bufferCanvas = document.createElement("canvas");
-    const bufferCtx = bufferCanvas.getContext("2d");
-
-    const renderLoop = () => {
-      if (!video || !canvas || !ctx || !bufferCtx) return;
-
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-
-      // Draw frames when video is loaded and either playing or ready
-      if (video.readyState >= 2) {
-        bufferCanvas.width = video.videoWidth;
-        bufferCanvas.height = video.videoHeight;
-        
-        // Draw video frame to buffer
-        bufferCtx.drawImage(video, 0, 0);
-
-        // Read buffer pixel values
-        const frameData = bufferCtx.getImageData(0, 0, video.videoWidth, video.videoHeight);
-        const data = frameData.data;
-        const len = data.length;
-
-        // Key out black color in the curtain video
-        // Thresholds: pixels with max brightness < 16 are transparent, > 48 are opaque.
-        for (let i = 0; i < len; i += 4) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-
-          // Max value represents the brightness of the pixel
-          const brightness = Math.max(r, g, b);
-
-          if (brightness < 16) {
-            data[i + 3] = 0; // fully transparent background
-          } else if (brightness < 48) {
-            const factor = (brightness - 16) / 32;
-            data[i + 3] = Math.round(factor * 255); // smooth alpha transition edge
-          }
-        }
-
-        // Put frame data to buffer canvas
-        bufferCtx.putImageData(frameData, 0, 0);
-
-        // Draw buffer canvas back to viewport canvas stretched to fill screen (object-fit: cover equivalent)
-        ctx.clearRect(0, 0, w, h);
-        
-        // Stretched cover rendering
-        const videoRatio = video.videoWidth / video.videoHeight;
-        const canvasRatio = w / h;
-        let drawW = w;
-        let drawH = h;
-        let drawX = 0;
-        let drawY = 0;
-
-        if (canvasRatio > videoRatio) {
-          drawH = w / videoRatio;
-          drawY = (h - drawH) / 2;
-        } else {
-          drawW = h * videoRatio;
-          drawX = (w - drawW) / 2;
-        }
-
-        ctx.drawImage(bufferCanvas, drawX, drawY, drawW, drawH);
-      }
-
-      animFrameId = requestAnimationFrame(renderLoop);
-    };
-
-    renderLoop();
-
-    return () => {
-      window.removeEventListener("resize", resizeCanvas);
-      cancelAnimationFrame(animFrameId);
-    };
-  }, [videoLoaded]);
-
-  // Handle clicking the gold Launch button
+  // Handle clicking the gold Launch switch button
   const handleLaunchClick = () => {
     if (clicked) return;
     setClicked(true);
 
-    const video = videoRef.current;
-    if (!video) return;
+    const leftStrips = document.querySelectorAll(".curtain-strip-l");
+    const rightStrips = document.querySelectorAll(".curtain-strip-r");
+    const shadows = document.querySelectorAll(".strip-shadow");
 
-    // First unlock video element playback on touch thread
-    video.play().then(() => {
-      video.pause();
-      video.currentTime = 0;
+    // Initialize GSAP Timeline (curtains open over 5.2 seconds for a slow, heavy, realistic velvet feel)
+    const tl = gsap.timeline({
+      paused: true,
+      onComplete: () => {
+        // Destroy curtain layer and complete launch
+        gsap.to(containerRef.current, {
+          opacity: 0,
+          duration: 0.6,
+          ease: "power2.out",
+          onComplete: onLaunched
+        });
+      }
+    });
 
-      // Animate homepage reveal filters on root document element
-      gsap.set(document.documentElement, {
-        "--launch-blur": "25px",
-        "--launch-brightness": "0.15"
-      });
+    // Left curtain strips (staggered starting from the center strip index 4 to leftmost index 0)
+    tl.to(leftStrips, {
+      xPercent: (i) => -100 * (i + 1) / 5, // pulls each strip left
+      scaleX: 0.12,
+      transformOrigin: "left center",
+      duration: 5.2,
+      ease: "power2.inOut",
+      stagger: {
+        amount: 0.9,
+        from: "end"
+      }
+    }, 0);
 
-      const videoDuration = video.duration || 4.2;
+    // Right curtain strips (staggered starting from the center strip index 0 to rightmost index 4)
+    tl.to(rightStrips, {
+      xPercent: (i) => 100 * (5 - i) / 5, // pulls each strip right
+      scaleX: 0.12,
+      transformOrigin: "right center",
+      duration: 5.2,
+      ease: "power2.inOut",
+      stagger: {
+        amount: 0.9,
+        from: "start"
+      }
+    }, 0);
 
-      // Scrub video.currentTime using GSAP to achieve velvet curtains opening physics!
-      // power2.inOut provides heavy velvet start inertia, fast middle transition, and slow settle deceleration.
-      gsap.to(video, {
-        currentTime: videoDuration,
-        duration: videoDuration,
-        ease: "power2.inOut",
-        onComplete: () => {
-          // Complete transition and navigate home
-          gsap.to(containerRef.current, {
-            opacity: 0,
-            duration: 0.6,
-            ease: "power2.out",
-            onComplete: onLaunched
-          });
-        }
-      });
+    // Shadows deepen in the folds to create a realistic 3D gathering effect
+    tl.to(shadows, {
+      opacity: 0.65,
+      duration: 5.2,
+      ease: "power2.inOut"
+    }, 0);
 
-      // Synchronized reveal timeline of the homepage container
+    // Wait exactly 300ms after the click animation finishes before opening curtains
+    setTimeout(() => {
+      tl.play();
+
+      // Synchronized reveal of the homepage container (unblur and brighten)
       gsap.to(document.documentElement, {
         "--launch-blur": "0px",
         "--launch-brightness": "1.0",
-        duration: videoDuration * 0.9,
+        duration: 4.8,
         ease: "power2.inOut",
-        delay: 0.15
+        delay: 0.2
       });
-    }).catch((err) => {
-      console.warn("Video activation failure:", err);
-    });
-  };
-
-  const handleLoadedData = () => {
-    setVideoLoaded(true);
+    }, 300);
   };
 
   return (
     <div ref={containerRef} className="new-launch-container">
-      {/* Volumetric Gold Cinema Spotlight Aura behind Curtains */}
+      {/* Volumetric spotlight rays behind curtains */}
       <div className="launch-aura"></div>
       <div className="launch-spotlight"></div>
 
-      {/* Screen Canvas where keyed curtains are drawn */}
-      <canvas ref={canvasRef} className="launch-curtain-canvas" />
+      {/* Cinematic Curtains Layer (5 vertical strips on left, 5 on right) */}
+      <div className="launch-curtains-stage">
+        {/* Left Curtain */}
+        {[...Array(5)].map((_, i) => (
+          <div
+            key={`left-${i}`}
+            className="curtain-strip curtain-strip-l"
+            style={{
+              left: `${i * 10}vw`,
+              backgroundImage: "url(/img/velvet_curtains.jpg)",
+              backgroundPosition: `-${i * 10}vw center`,
+              backgroundSize: "100vw 100vh"
+            }}
+          >
+            <div className="strip-shadow" />
+          </div>
+        ))}
 
-      {/* Centered Golden Theatre ticket button */}
-      {!clicked && (
-        <div className="launch-btn-wrapper">
-          <button className="launch-gold-ticket" onClick={handleLaunchClick}>
-            <div className="ticket-notch notch-l"></div>
-            <div className="ticket-notch notch-r"></div>
-            
-            <div className="ticket-inner-border"></div>
-            
-            <div className="ticket-title">POOJA PRODUCTIONS</div>
-            <span className="ticket-action">LAUNCH</span>
-            <div className="ticket-meta">ADMIT ONE</div>
-          </button>
-        </div>
-      )}
+        {/* Right Curtain */}
+        {[...Array(5)].map((_, i) => (
+          <div
+            key={`right-${i}`}
+            className="curtain-strip curtain-strip-r"
+            style={{
+              left: `${(5 + i) * 10}vw`,
+              backgroundImage: "url(/img/velvet_curtains.jpg)",
+              backgroundPosition: `-${(5 + i) * 10}vw center`,
+              backgroundSize: "100vw 100vh"
+            }}
+          >
+            <div className="strip-shadow" />
+          </div>
+        ))}
+      </div>
 
-      {/* Video Element (Hidden in DOM, used as canvas frame source) */}
-      <video
-        ref={videoRef}
-        src="/launch_video.mp4"
-        onLoadedData={handleLoadedData}
-        className="launch-video-source"
-        preload="auto"
-        muted
-        playsInline
-      />
+      {/* Centered Gold Theatre switch button */}
+      <div className="launch-btn-wrapper">
+        <button
+          className={`launch-gold-ticket ${clicked ? "clicked" : ""}`}
+          onClick={handleLaunchClick}
+          disabled={clicked}
+        >
+          <div className="ticket-notch notch-l"></div>
+          <div className="ticket-notch notch-r"></div>
+          <div className="ticket-inner-border"></div>
+          
+          <div className="ticket-title">POOJA PRODUCTIONS</div>
+          <span className="ticket-action">LAUNCH</span>
+          <div className="ticket-meta">ADMIT ONE</div>
+        </button>
+      </div>
     </div>
   );
 };

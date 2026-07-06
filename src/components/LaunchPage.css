@@ -21,7 +21,7 @@
   left: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  background: radial-gradient(circle at 50% 25%, rgba(197, 168, 128, 0.16) 0%, rgba(0, 0, 0, 0) 70%) !important;
+  background: radial-gradient(circle at 50% 25%, rgba(197, 168, 128, 0.12) 0%, rgba(0, 0, 0, 0) 70%) !important;
   pointer-events: none !important;
   z-index: 1 !important;
 }
@@ -32,26 +32,52 @@
   left: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  background: radial-gradient(circle at 50% 100%, rgba(71, 113, 160, 0.04) 0%, rgba(0, 0, 0, 0) 60%) !important;
+  background: radial-gradient(circle at 50% 100%, rgba(71, 113, 160, 0.03) 0%, rgba(0, 0, 0, 0) 60%) !important;
   pointer-events: none !important;
   z-index: 2 !important;
 }
 
-/* Keyed Curtain Video Canvas */
-.launch-curtain-canvas {
+/* Curtain Stage Wrapper */
+.launch-curtains-stage {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 5 !important;
+  pointer-events: none !important;
+}
+
+/* Vertical Curtain Strip Segment */
+.curtain-strip {
+  position: absolute !important;
+  top: 0 !important;
+  width: 10vw !important;
+  height: 100vh !important;
+  background-repeat: no-repeat !important;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6) !important;
+  overflow: hidden !important;
+  will-change: transform !important;
+}
+
+/* Realistic 3D Draping Shadows */
+.strip-shadow {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  display: block !important;
-  z-index: 5 !important;
+  background: linear-gradient(
+    to right, 
+    rgba(0, 0, 0, 0.9) 0%, 
+    transparent 45%, 
+    transparent 55%, 
+    rgba(0, 0, 0, 0.9) 100%
+  ) !important;
+  opacity: 0.15;
   pointer-events: none !important;
-}
-
-/* Hidden Source Video */
-.launch-video-source {
-  display: none !important;
+  will-change: opacity !important;
+  transition: opacity 0.3s ease !important;
 }
 
 /* Centered Button Wrapper */
@@ -72,10 +98,10 @@
 .launch-gold-ticket {
   pointer-events: auto !important;
   position: relative !important;
-  width: 300px !important;
-  height: 150px !important;
+  width: 320px !important;
+  height: 160px !important;
   border-radius: 12px !important;
-  border: 2px solid rgba(229, 184, 115, 0.5) !important;
+  border: 2px solid rgba(229, 184, 115, 0.45) !important;
   background: linear-gradient(135deg, #13100a 0%, #302615 35%, #4b3d22 50%, #302615 65%, #13100a 100%) !important;
   box-shadow: 
     0 30px 65px rgba(0, 0, 0, 0.8),
@@ -90,6 +116,7 @@
   overflow: hidden !important;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.4s ease !important;
 }
 
@@ -174,17 +201,22 @@
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.9), 0 0 30px rgba(229, 184, 115, 1) !important;
 }
 
-/* Ticket Click Press and Wobble Animation */
-.launch-gold-ticket:active {
-  transform: translateY(2px) scale(0.96) !important;
-  animation: ticketWobble 0.25s linear infinite !important;
+/* Ticket Click Press and Vibration Animation */
+.launch-gold-ticket.clicked {
+  pointer-events: none !important;
+  transform: scale(0.95) translateY(2px) !important;
+  animation: ticketVibrate 0.25s linear 1 !important;
+  opacity: 0.8 !important;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6) !important;
 }
 
-@keyframes ticketWobble {
-  0% { transform: translateY(2px) scale(0.96) rotate(0deg); }
-  25% { transform: translateY(2px) scale(0.96) rotate(-0.5deg); }
-  75% { transform: translateY(2px) scale(0.96) rotate(0.5deg); }
-  100% { transform: translateY(2px) scale(0.96) rotate(0deg); }
+@keyframes ticketVibrate {
+  0% { transform: scale(0.95) translateY(2px) translate(0, 0); }
+  20% { transform: scale(0.95) translateY(2px) translate(-3px, 2px); }
+  40% { transform: scale(0.95) translateY(2px) translate(2px, -2px); }
+  60% { transform: scale(0.95) translateY(2px) translate(-2px, -1px); }
+  80% { transform: scale(0.95) translateY(2px) translate(3px, 1px); }
+  100% { transform: scale(0.95) translateY(2px) translate(0, 0); }
 }
 
 /* Glass Reflection Sheen on Ticket */
