@@ -1061,45 +1061,36 @@ form select option {
   color: #C5A880 !important; /* gold on hover */
 }
 
-/* Background Rotating Gold Diamonds behind Footer bottom bar */
-.footer-rotating-diamonds-container {
+/* Background Single Centered Gold Diamond behind Footer bottom bar */
+.footer-single-diamond-container {
   position: absolute !important;
-  bottom: -220px !important;
+  bottom: -150px !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
-  width: 580px !important;
-  height: 580px !important;
+  width: 320px !important;
+  height: 320px !important;
   pointer-events: none !important;
   z-index: 1 !important;
   overflow: visible !important;
 }
 
-.footer-diamonds-orbit {
+.footer-single-diamond {
   width: 100% !important;
   height: 100% !important;
-  position: relative !important;
-  animation: footerOrbitRotate 50s linear infinite !important;
+  object-fit: contain !important;
+  display: block !important;
+  opacity: 0.38 !important;
+  mix-blend-mode: screen !important;
+  filter: drop-shadow(0 0 25px rgba(197, 168, 128, 0.5)) !important;
+  animation: footerDiamondSpin 25s linear infinite !important;
 }
 
-@keyframes footerOrbitRotate {
+@keyframes footerDiamondSpin {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
-  }
-}
-
-.footer-orbit-diamond {
-  animation: footerDiamondSelfRotate 12s linear infinite !important;
-}
-
-@keyframes footerDiamondSelfRotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(-360deg); /* counter-rotates to stay upright! */
   }
 }
 

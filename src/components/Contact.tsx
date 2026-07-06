@@ -556,36 +556,13 @@ export const Contact: React.FC = () => {
                   </a>
                 </div>
 
-                {/* Rotating background golden diamonds behind footer bottom */}
-                <div className="footer-rotating-diamonds-container">
-                  <div className="footer-diamonds-orbit">
-                    {[...Array(6)].map((_, i) => {
-                      const angle = (i * 360) / 6;
-                      const radius = 240; // radius of orbit
-                      const x = Math.cos((angle * Math.PI) / 180) * radius;
-                      const y = Math.sin((angle * Math.PI) / 180) * radius;
-                      return (
-                        <img
-                          key={i}
-                          src="/img/golden_glowing_diamond.jpg"
-                          alt=""
-                          className="footer-orbit-diamond"
-                          style={{
-                            position: "absolute",
-                            left: `calc(50% + ${x}px - 35px)`,
-                            top: `calc(50% + ${y}px - 35px)`,
-                            width: "70px",
-                            height: "70px",
-                            objectFit: "contain",
-                            opacity: 0.35,
-                            mixBlendMode: "screen",
-                            filter: "drop-shadow(0 0 15px rgba(197, 168, 128, 0.45))",
-                            transform: `rotate(${angle}deg)`
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
+                {/* Single centered glowing gold diamond behind footer bottom */}
+                <div className="footer-single-diamond-container">
+                  <img
+                    src="/img/footer_gold_diamond.jpg"
+                    alt="Glowing Gold Diamond"
+                    className="footer-single-diamond"
+                  />
                 </div>
 
               </div>
