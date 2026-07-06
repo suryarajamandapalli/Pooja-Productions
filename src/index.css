@@ -967,3 +967,30 @@ form select option {
   transform: translateY(-1px);
 }
 
+/* About/Leadership Section Left Diamond Accent */
+.leadership-left-diamond {
+  position: absolute !important;
+  top: 35% !important;
+  left: -85px !important;
+  width: 140px !important;
+  height: auto !important;
+  opacity: 0.85 !important;
+  filter: drop-shadow(0 0 35px rgba(71, 113, 160, 0.65)) !important;
+  pointer-events: none !important;
+  z-index: 20 !important;
+}
+
+@media only screen and (max-width: 1199px) {
+  .leadership-left-diamond {
+    width: 90px !important;
+    left: -40px !important;
+    top: -45px !important; /* float nicely on tablet sizes */
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .leadership-left-diamond {
+    display: none !important; /* hide on mobile to prevent overlapping portrait */
+  }
+}
+

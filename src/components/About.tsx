@@ -54,6 +54,12 @@ export const About: React.FC = () => {
                 {/* Content Block - Leadership Data Start */}
                 <div className="content__block grid-block animate-in-up" style={{ marginTop: "1.5rem" }}>
                   <div className="liquid-glass-card">
+                    {/* Decorative diamond on the left side */}
+                    <img
+                      src="/Daimonds/3.png" 
+                      alt="Decorative diamond decoration"
+                      className="slow-rotate-right leadership-left-diamond"
+                    />
                     <div className="container-fluid p-0">
                       <div className="row g-0 justify-content-between align-items-center">
                         <div className="col-12 col-md-4 grid-item chairman-card-img-col">
