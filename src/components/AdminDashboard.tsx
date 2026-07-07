@@ -845,6 +845,35 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                     style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
                   />
                 </div>
+
+                {/* Aranea Den Footer Attribution Customizer */}
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Aranea Den Footer Logo Path / URL</label>
+                  <div style={{ display: "flex", gap: "1rem" }}>
+                    <input
+                      type="text"
+                      value={data.about.araneadenLogo || ""}
+                      onChange={(e) => updateField("about", "araneadenLogo", e.target.value)}
+                      style={{ flex: 1, padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                    />
+                    <button
+                      onClick={() => handleInlineUpload((url) => updateField("about", "araneadenLogo", url))}
+                      style={{ padding: "1.2rem 1.8rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.8rem", cursor: "pointer", fontWeight: 700, fontSize: "1.4rem", whiteSpace: "nowrap" }}
+                    >
+                      📎 Upload
+                    </button>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Aranea Den Footer Text Caption</label>
+                  <input
+                    type="text"
+                    value={data.about.araneadenText || ""}
+                    onChange={(e) => updateField("about", "araneadenText", e.target.value)}
+                    style={{ padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF" }}
+                  />
+                </div>
               </div>
 
               {/* LEADERSHIP & VISION DETAILS */}

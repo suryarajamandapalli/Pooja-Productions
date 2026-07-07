@@ -42,6 +42,8 @@ export interface AboutContent {
   linkedin?: string;
   vimeo?: string;
   youtube?: string;
+  araneadenLogo?: string;
+  araneadenText?: string;
 }
 
 export interface LeadershipContent {
@@ -236,6 +238,11 @@ const ensureDefaults = (loaded: WebsiteData): WebsiteData => {
       ...welcome,
       primaryBtnLink: welcome.primaryBtnLink || defaultWelcomePopup.primaryBtnLink,
       secondaryBtnLink: welcome.secondaryBtnLink || defaultWelcomePopup.secondaryBtnLink,
+    },
+    about: {
+      ...(loaded.about || {}),
+      araneadenLogo: loaded.about?.araneadenLogo || "/img/araneaden_logo.png",
+      araneadenText: loaded.about?.araneadenText || "MADE BY ARANEA DEN",
     },
     navigation: loaded.navigation || defaultNavigation,
   };

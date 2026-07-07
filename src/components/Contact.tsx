@@ -572,11 +572,11 @@ export const Contact: React.FC = () => {
                     className="araneaden-footer-link d-flex flex-column align-items-center gap-2"
                   >
                     <img 
-                      src="/img/araneaden_logo.png" 
+                      src={about?.araneadenLogo || "/img/araneaden_logo.png"} 
                       alt="Aranea Den Logo" 
                       className="araneaden-footer-logo"
                     />
-                    <span className="araneaden-footer-text">MADE BY ARANEA DEN</span>
+                    <span className="araneaden-footer-text">{about?.araneadenText || "MADE BY ARANEA DEN"}</span>
                   </a>
                 </div>
 
