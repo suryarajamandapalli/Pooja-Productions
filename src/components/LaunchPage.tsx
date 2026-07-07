@@ -1,3 +1,19 @@
+/**
+ * LaunchPage — Premium Theatre Curtain Reveal
+ *
+ * Architecture:
+ *  - Layer 1 (below): Homepage — rendered, interactive, never animated
+ *  - Layer 2 (above): WebGL canvas performing real-time green-screen chroma key
+ *    on the curtain video. GPU-accelerated fragment shader removes green,
+ *    reveals the homepage through the transparent gaps.
+ *
+ * Chroma key technique:
+ *  - HSV colour space green detection (handles tonal variation in green screens)
+ *  - Spill suppression (removes green cast on curtain edges)
+ *  - Soft edge feathering via smoothstep alpha blending
+ *  - No CPU pixel loops — all processing in GLSL fragment shader on GPU
+ */
+
 import React, { useEffect, useRef, useState } from "react";
 import "./LaunchPage.css";
 
@@ -5,235 +21,300 @@ interface LaunchPageProps {
   onLaunched: () => void;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// GLSL Vertex Shader
+// ─────────────────────────────────────────────────────────────────────────────
+const VERT_SRC = `
+  attribute vec2 a_position;
+  attribute vec2 a_texCoord;
+  varying vec2 v_texCoord;
+  void main() {
+    gl_Position = vec4(a_position, 0.0, 1.0);
+    v_texCoord  = a_texCoord;
+  }
+`;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GLSL Fragment Shader — Professional chroma key in HSV space
+// ─────────────────────────────────────────────────────────────────────────────
+const FRAG_SRC = `
+  precision mediump float;
+  uniform sampler2D u_video;
+  uniform float u_similarity;   // hue-similarity tolerance  (0–1)
+  uniform float u_smoothness;   // edge-feathering width     (0–1)
+  uniform float u_spill;        // spill-suppression strength(0–1)
+  uniform vec3  u_keyColor;     // the key colour in RGB (0–1)
+  varying vec2  v_texCoord;
+
+  // RGB → HSV conversion
+  vec3 rgb2hsv(vec3 c) {
+    vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0);
+    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+  }
+
+  void main() {
+    vec4  src = texture2D(u_video, v_texCoord);
+    vec3  hsv = rgb2hsv(src.rgb);
+    vec3  keyHSV = rgb2hsv(u_keyColor);
+
+    // Hue distance in HSV (circular, 0–0.5 range)
+    float hueDist   = abs(hsv.x - keyHSV.x);
+    if (hueDist > 0.5) hueDist = 1.0 - hueDist;
+
+    // Saturation-weighted mask: don't key very dark / grey pixels
+    float satWeight = hsv.y;
+    float mask      = hueDist / (u_similarity + 0.0001);
+    mask            = clamp(mask, 0.0, 1.0);
+    mask            = smoothstep(0.0, u_smoothness + 0.0001, mask);
+
+    // Spill suppression: reduce residual green tint on keyed edges
+    float greenExcess = src.g - max(src.r, src.b);
+    vec3  deSpill = src.rgb;
+    if (greenExcess > 0.0) {
+      deSpill.g -= greenExcess * u_spill * (1.0 - mask);
+    }
+
+    gl_FragColor = vec4(deSpill, mask * satWeight + (1.0 - satWeight));
+  }
+`;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// WebGL helper — compile a shader
+// ─────────────────────────────────────────────────────────────────────────────
+function compileShader(gl: WebGLRenderingContext, type: number, src: string): WebGLShader {
+  const shader = gl.createShader(type)!;
+  gl.shaderSource(shader, src);
+  gl.compileShader(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    throw new Error("Shader compile error: " + gl.getShaderInfoLog(shader));
+  }
+  return shader;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Component
+// ─────────────────────────────────────────────────────────────────────────────
 export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
-  const [clicked, setClicked] = useState(false);
-  const [videoReady, setVideoReady] = useState(false);
+  const [launched, setLaunched] = useState(false);
+  const [ready, setReady]       = useState(false);
 
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const bufferCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const animationFrameId = useRef<number | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const videoRef  = useRef<HTMLVideoElement>(null);
+  const rafRef    = useRef<number>(0);
+  const glRef     = useRef<WebGLRenderingContext | null>(null);
+  const texRef    = useRef<WebGLTexture | null>(null);
+  const progRef   = useRef<WebGLProgram | null>(null);
 
-  // Lock scrolling
+  // ── Lock scroll while overlay is active ───────────────────────────────────
   useEffect(() => {
-    const preventScroll = (e: Event) => e.preventDefault();
-    const preventKeys = (e: KeyboardEvent) => {
-      const keys = ["Space", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "End", "Home"];
-      if (keys.includes(e.code)) e.preventDefault();
-    };
-
     document.body.style.overflow = "hidden";
-    document.body.style.height = "100vh";
-    window.addEventListener("wheel", preventScroll, { passive: false });
-    window.addEventListener("touchmove", preventScroll, { passive: false });
-    window.addEventListener("keydown", preventKeys, { passive: false });
-
+    const block = (e: Event) => e.preventDefault();
+    window.addEventListener("wheel",     block, { passive: false });
+    window.addEventListener("touchmove", block, { passive: false });
     return () => {
       document.body.style.overflow = "";
-      document.body.style.height = "";
-      window.removeEventListener("wheel", preventScroll);
-      window.removeEventListener("touchmove", preventScroll);
-      window.removeEventListener("keydown", preventKeys);
+      window.removeEventListener("wheel",     block);
+      window.removeEventListener("touchmove", block);
     };
   }, []);
 
-  // Set up canvas resolution and sizing
+  // ── Initialise WebGL once canvas is mounted ───────────────────────────────
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      
-      const video = videoRef.current;
-      if (video && video.paused && video.currentTime === 0) {
-        drawFrame(video, canvas);
-      }
-    };
+    const gl = canvas.getContext("webgl", {
+      alpha:             true,   // transparent background — homepage shows through
+      premultipliedAlpha: false,
+      antialias:         false,
+      preserveDrawingBuffer: false,
+    }) as WebGLRenderingContext | null;
 
-    window.addEventListener("resize", handleResize);
-    handleResize();
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const drawFrame = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const w = canvas.width;
-    const h = canvas.height;
-
-    // Fast offscreen canvas
-    if (!bufferCanvasRef.current) {
-      bufferCanvasRef.current = document.createElement("canvas");
-    }
-    const bufferCanvas = bufferCanvasRef.current;
-    bufferCanvas.width = 960;
-    bufferCanvas.height = 540;
-    
-    const bufferCtx = bufferCanvas.getContext("2d");
-    if (!bufferCtx) return;
-
-    // Draw frame to buffer (stretched cover)
-    const vw = video.videoWidth || 960;
-    const vh = video.videoHeight || 540;
-    const vr = vw / vh;
-    const tr = 960 / 540;
-
-    let sx = 0, sy = 0, sw = vw, sh = vh;
-    if (vr > tr) {
-      sw = vh * tr;
-      sx = (vw - sw) / 2;
-    } else {
-      sh = vw / tr;
-      sy = (vh - sh) / 2;
-    }
-
-    bufferCtx.drawImage(video, sx, sy, sw, sh, 0, 0, 960, 540);
-
-    const frame = bufferCtx.getImageData(0, 0, 960, 540);
-    const data = frame.data;
-    const len = data.length;
-
-    // Key out ONLY pure/near-black background pixels (r, g, b all below 14)
-    // Preserves red curtain folds and fabric shadows perfectly
-    const threshold = 14;
-    for (let i = 0; i < len; i += 4) {
-      const r = data[i];
-      const g = data[i + 1];
-      const b = data[i + 2];
-
-      if (r < threshold && g < threshold && b < threshold) {
-        data[i + 3] = 0; // Transparent
-      }
-    }
-
-    bufferCtx.putImageData(frame, 0, 0);
-
-    // Draw buffer to visible screen canvas (object-fit: cover equivalent)
-    ctx.clearRect(0, 0, w, h);
-    ctx.drawImage(bufferCanvas, 0, 0, w, h);
-  };
-
-  const handleVideoLoad = () => {
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    if (video && canvas) {
-      drawFrame(video, canvas);
-      setVideoReady(true);
-    }
-  };
-
-  const startAnimation = async () => {
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    if (!video || !canvas) return;
-
-    console.log("startAnimation triggered");
-    console.log("1. video.paused:", video.paused);
-    console.log("2. video.readyState:", video.readyState);
-    console.log("3. video.currentTime before play:", video.currentTime);
-
-    const renderLoop = () => {
-      if (video && !video.ended) {
-        drawFrame(video, canvas);
-        console.log("Render frame at video.currentTime:", video.currentTime, "paused:", video.paused);
-        animationFrameId.current = requestAnimationFrame(renderLoop);
-      } else {
-        console.log("renderLoop exit, video.ended:", video?.ended);
-      }
-    };
-
-    try {
-      await video.play();
-      console.log("video.play() resolved successfully. video.paused:", video.paused);
-      animationFrameId.current = requestAnimationFrame(renderLoop);
-    } catch (err) {
-      console.error("video.play() failed with error:", err);
-      // Fallback: unmount and show site immediately so page isn't blocked on failure
+    if (!gl) {
+      console.error("WebGL not supported — falling back immediately");
       onLaunched();
+      return;
     }
-  };
 
-  const handleVideoEnded = () => {
-    console.log("Video ended event fired");
-    if (animationFrameId.current) {
-      cancelAnimationFrame(animationFrameId.current);
+    glRef.current = gl;
+
+    // Enable alpha blending
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    // Compile shaders & link program
+    const vert = compileShader(gl, gl.VERTEX_SHADER,   VERT_SRC);
+    const frag = compileShader(gl, gl.FRAGMENT_SHADER, FRAG_SRC);
+    const prog = gl.createProgram()!;
+    gl.attachShader(prog, vert);
+    gl.attachShader(prog, frag);
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+      throw new Error("Program link error: " + gl.getProgramInfoLog(prog));
     }
-    // Instantly remove everything
-    onLaunched();
-  };
+    gl.useProgram(prog);
+    progRef.current = prog;
 
-  const handleLaunchClick = () => {
-    if (clicked || !videoReady) return;
-    setClicked(true);
-    startAnimation();
-  };
+    // Full-screen quad (two triangles)
+    const positions = new Float32Array([
+      -1, -1,  1, -1,  -1,  1,
+      -1,  1,  1, -1,   1,  1,
+    ]);
+    const texCoords = new Float32Array([
+      0, 1,  1, 1,  0, 0,
+      0, 0,  1, 1,  1, 0,
+    ]);
 
-  // Pre-load check on mount
+    const posBuf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+    const posLoc = gl.getAttribLocation(prog, "a_position");
+    gl.enableVertexAttribArray(posLoc);
+    gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+    const texBuf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, texBuf);
+    gl.bufferData(gl.ARRAY_BUFFER, texCoords, gl.STATIC_DRAW);
+    const texLoc = gl.getAttribLocation(prog, "a_texCoord");
+    gl.enableVertexAttribArray(texLoc);
+    gl.vertexAttribPointer(texLoc, 2, gl.FLOAT, false, 0, 0);
+
+    // Bind position buffer to use in draw
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+    gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+    // Create video texture
+    const tex = gl.createTexture()!;
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    texRef.current = tex;
+
+    // Set uniform chroma key parameters
+    // Tuned for a standard green screen (Chroma Key Green / 0,177,64)
+    const keyR = 0.0  / 255;
+    const keyG = 177.0 / 255;
+    const keyB = 64.0  / 255;
+    gl.uniform3f(gl.getUniformLocation(prog, "u_keyColor"),    keyR, keyG, keyB);
+    gl.uniform1f(gl.getUniformLocation(prog, "u_similarity"),  0.38);  // hue tolerance
+    gl.uniform1f(gl.getUniformLocation(prog, "u_smoothness"),  0.18);  // feathering
+    gl.uniform1f(gl.getUniformLocation(prog, "u_spill"),       0.85);  // spill suppression
+    gl.uniform1i(gl.getUniformLocation(prog, "u_video"),       0);
+
+    // Resize canvas to match window
+    const resize = () => {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    };
+    resize();
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
+  }, []); // eslint-disable-line
+
+  // ── Video ready event ─────────────────────────────────────────────────────
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    const handleReady = () => {
-      console.log("handleReady readyState:", video.readyState);
-      if (video.readyState === 4 && !videoReady) {
-        handleVideoLoad();
-      }
-    };
+    const onReady = () => setReady(true);
+    video.addEventListener("canplay",        onReady);
+    video.addEventListener("canplaythrough", onReady);
+    video.addEventListener("loadeddata",     onReady);
 
-    video.addEventListener("canplaythrough", handleReady);
-    video.addEventListener("loadeddata", handleReady);
-    video.addEventListener("progress", handleReady);
-
-    // Fallback: poll readyState every 200ms to ensure it updates immediately if cached
-    const interval = setInterval(() => {
-      if (video.readyState === 4 && !videoReady) {
-        console.log("Polling fallback detected readyState === 4");
-        handleReady();
-        clearInterval(interval);
-      }
-    }, 200);
-
-    // Initial check
-    if (video.readyState === 4) {
-      handleReady();
-    }
+    // If already ready (browser cache)
+    if (video.readyState >= 3) onReady();
 
     return () => {
-      video.removeEventListener("canplaythrough", handleReady);
-      video.removeEventListener("loadeddata", handleReady);
-      video.removeEventListener("progress", handleReady);
-      clearInterval(interval);
+      video.removeEventListener("canplay",        onReady);
+      video.removeEventListener("canplaythrough", onReady);
+      video.removeEventListener("loadeddata",     onReady);
     };
-  }, [videoReady]);
+  }, []);
+
+  // ── Render loop — uploads each video frame to GPU texture ─────────────────
+  const renderLoop = () => {
+    const gl     = glRef.current;
+    const tex    = texRef.current;
+    const prog   = progRef.current;
+    const video  = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!gl || !tex || !prog || !video || !canvas) return;
+
+    if (video.readyState >= 2) {
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      // Upload current video frame into the GPU texture
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+
+    if (!video.ended) {
+      rafRef.current = requestAnimationFrame(renderLoop);
+    }
+  };
+
+  // ── Handle Launch button click ─────────────────────────────────────────────
+  const handleLaunch = async () => {
+    if (launched || !ready) return;
+    setLaunched(true);
+
+    const video = videoRef.current;
+    if (!video) { onLaunched(); return; }
+
+    try {
+      await video.play();
+    } catch (err) {
+      console.error("video.play() failed:", err);
+      onLaunched();
+      return;
+    }
+
+    rafRef.current = requestAnimationFrame(renderLoop);
+  };
+
+  // ── Video ended — freeze 100ms then destroy overlay ───────────────────────
+  const handleVideoEnded = () => {
+    cancelAnimationFrame(rafRef.current);
+    setTimeout(() => {
+      onLaunched();
+    }, 100);
+  };
 
   return (
-    <div className="launch-stage-overlay">
-      <canvas ref={canvasRef} className="launch-stage-canvas" />
+    <div className="launch-stage">
+      {/* WebGL canvas — GPU chroma-keyed curtain */}
+      <canvas ref={canvasRef} className="launch-webgl-canvas" />
 
-      {!clicked && (
-        <div className="launch-btn-container">
+      {/* Launch button — only visible before clicked */}
+      {!launched && (
+        <div className="launch-btn-wrap">
           <button
-            className="launch-gold-btn"
-            onClick={handleLaunchClick}
-            disabled={!videoReady}
+            className="launch-btn"
+            onClick={handleLaunch}
+            disabled={!ready}
           >
-            LAUNCH
+            {ready ? "LAUNCH" : "Loading…"}
           </button>
         </div>
       )}
 
+      {/* Hidden video element — source for GPU texture */}
       <video
         ref={videoRef}
-        src="/launch_video.mp4"
+        src="/launch_curtain.mp4"
         onEnded={handleVideoEnded}
-        className="launch-video-hidden"
+        style={{ display: "none" }}
         preload="auto"
         muted
         playsInline
+        crossOrigin="anonymous"
       />
     </div>
   );
