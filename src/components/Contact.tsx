@@ -563,15 +563,8 @@ export const Contact: React.FC = () => {
                 </div>
                 {/* Content Block - Contact Data End */}
 
-                {/* Flat Bottom Bar */}
-                <div className="footer-divider"></div>
-
-                <div className="footer-bottom-bar d-flex flex-column flex-md-row align-items-center justify-content-between gap-4" style={{ paddingBottom: "4rem" }}>
-                  <div className="footer-copyright">
-                    © 2026 Pooja Productions. All rights reserved.
-                  </div>
-                  
-                  {/* Aranea Den Footer Attribution */}
+                {/* Aranea Den Footer Attribution - Centered Above Divider */}
+                <div className="d-flex justify-content-center mb-4">
                   <a 
                     href="https://araneaden.com" 
                     target="_blank" 
@@ -585,26 +578,37 @@ export const Contact: React.FC = () => {
                     />
                     <span className="araneaden-footer-text">MADE BY ARANEA DEN</span>
                   </a>
+                </div>
 
-                  <div className="footer-links d-flex gap-4">
-                    <a href="#0" className="footer-link">Privacy Policy</a>
-                    <a href="#0" className="footer-link">Terms</a>
-                    {isInstallable && (
-                      <a href="#0" className="footer-link install-link-pwa" onClick={handleInstallClick}>
-                        <i className="ph ph-download-simple me-1"></i> Install App
-                      </a>
-                    )}
+                {/* Flat Bottom Bar */}
+                <div className="footer-divider" style={{ marginTop: "1rem" }}></div>
+
+                <div className="footer-bottom-bar d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4" style={{ paddingBottom: "4rem" }}>
+                  <div className="footer-copyright text-center text-lg-start">
+                    © 2026 Pooja Productions. All rights reserved.
                   </div>
-                  <div className="footer-socials d-flex gap-3">
-                    {[
-                      { icon: "ph-instagram-logo", url: about?.instagram || "https://www.instagram.com/" },
-                      { icon: "ph-youtube-logo", url: about?.youtube || "https://www.youtube.com/" },
-                      { icon: "ph-linkedin-logo", url: about?.linkedin || "https://www.linkedin.com/" }
-                    ].map((soc, i) => (
-                      <a key={i} href={soc.url} target="_blank" rel="noopener noreferrer" className="footer-social-icon">
-                        <i className={`ph ${soc.icon}`}></i>
-                      </a>
-                    ))}
+
+                  <div className="d-flex flex-column flex-md-row align-items-center gap-4">
+                    <div className="footer-links d-flex gap-4">
+                      <a href="#0" className="footer-link">Privacy Policy</a>
+                      <a href="#0" className="footer-link">Terms</a>
+                      {isInstallable && (
+                        <a href="#0" className="footer-link install-link-pwa" onClick={handleInstallClick}>
+                          <i className="ph ph-download-simple me-1"></i> Install App
+                        </a>
+                      )}
+                    </div>
+                    <div className="footer-socials d-flex gap-3">
+                      {[
+                        { icon: "ph-instagram-logo", url: about?.instagram || "https://www.instagram.com/" },
+                        { icon: "ph-youtube-logo", url: about?.youtube || "https://www.youtube.com/" },
+                        { icon: "ph-linkedin-logo", url: about?.linkedin || "https://www.linkedin.com/" }
+                      ].map((soc, i) => (
+                        <a key={i} href={soc.url} target="_blank" rel="noopener noreferrer" className="footer-social-icon">
+                          <i className={`ph ${soc.icon}`}></i>
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
