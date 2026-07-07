@@ -89,7 +89,8 @@ const MainAppContent: React.FC = () => {
   };
 
   const handleLaunched = () => {
-    sessionStorage.setItem("pooja_skip_loader", "true");
+    // Do NOT set pooja_skip_loader — we want the full preloader
+    // animation to play after the curtain reveal for a premium experience.
     window.history.pushState(null, "", "/");
     setView("site");
   };
