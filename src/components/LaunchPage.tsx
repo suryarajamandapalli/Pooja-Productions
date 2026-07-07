@@ -1,17 +1,24 @@
 /**
- * LaunchPage — Premium Theatre Curtain Reveal
+ * LaunchPage — Luxury Cinema Curtain Reveal
  *
- * Architecture:
- *  - Layer 1 (below): Homepage — rendered, interactive, never animated
- *  - Layer 2 (above): WebGL canvas performing real-time green-screen chroma key
- *    on the curtain video. GPU-accelerated fragment shader removes green,
- *    reveals the homepage through the transparent gaps.
+ * LAYERING (bottom → top):
+ *   [0] Homepage — rendered in DOM, fully invisible before launch
+ *   [1] .launch-stage (position:fixed, z:999999)
+ *         ├─ .launch-black-base  — solid black, covers homepage 100%
+ *         │    Removed the instant video.play() is called.
+ *         │    After removal: homepage becomes visible through
+ *         │    the transparent (chroma-keyed) canvas pixels.
+ *         ├─ .launch-webgl-canvas — WebGL chroma-key, alpha:true
+ *         └─ .launch-btn-wrap   — gold button, hidden after click
  *
- * Chroma key technique:
- *  - HSV colour space green detection (handles tonal variation in green screens)
- *  - Spill suppression (removes green cast on curtain edges)
- *  - Soft edge feathering via smoothstep alpha blending
- *  - No CPU pixel loops — all processing in GLSL fragment shader on GPU
+ * The homepage NEVER animates. It is simply revealed through the
+ * transparent gaps created by removing the green screen pixels.
+ *
+ * Chroma key:
+ *   • HSV-space green detection (handles tonal range of green screens)
+ *   • Spill suppression removes green bleed on curtain edges
+ *   • Smoothstep feathering gives soft film-quality edges
+ *   • All processing in GLSL — zero CPU pixel loops
  */
 
 import React, { useEffect, useRef, useState } from "react";
@@ -21,173 +28,134 @@ interface LaunchPageProps {
   onLaunched: () => void;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// GLSL Vertex Shader
-// ─────────────────────────────────────────────────────────────────────────────
-const VERT_SRC = `
-  attribute vec2 a_position;
-  attribute vec2 a_texCoord;
-  varying vec2 v_texCoord;
+// ─── GLSL: Vertex Shader ──────────────────────────────────────────────────────
+const VERT = `
+  attribute vec2 a_pos;
+  attribute vec2 a_uv;
+  varying   vec2 v_uv;
   void main() {
-    gl_Position = vec4(a_position, 0.0, 1.0);
-    v_texCoord  = a_texCoord;
+    gl_Position = vec4(a_pos, 0.0, 1.0);
+    v_uv = a_uv;
   }
 `;
 
-// ─────────────────────────────────────────────────────────────────────────────
-// GLSL Fragment Shader — Professional chroma key in HSV space
-// ─────────────────────────────────────────────────────────────────────────────
-const FRAG_SRC = `
+// ─── GLSL: Fragment Shader — HSV chroma key ───────────────────────────────────
+const FRAG = `
   precision mediump float;
-  uniform sampler2D u_video;
-  uniform float u_similarity;   // hue-similarity tolerance  (0–1)
-  uniform float u_smoothness;   // edge-feathering width     (0–1)
-  uniform float u_spill;        // spill-suppression strength(0–1)
-  uniform vec3  u_keyColor;     // the key colour in RGB (0–1)
-  varying vec2  v_texCoord;
+  uniform sampler2D u_tex;
+  uniform vec3  u_key;         // key colour (RGB 0-1)
+  uniform float u_sim;         // hue similarity  (0-1)
+  uniform float u_soft;        // edge softness   (0-1)
+  uniform float u_spill;       // spill removal   (0-1)
+  varying vec2  v_uv;
 
-  // RGB → HSV conversion
   vec3 rgb2hsv(vec3 c) {
     vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0);
     vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
     vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
     float d = q.x - min(q.w, q.y);
-    float e = 1.0e-10;
-    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+    return vec3(abs(q.z + (q.w - q.y) / (6.0*d + 1e-10)), d / (q.x + 1e-10), q.x);
   }
 
   void main() {
-    vec4  src = texture2D(u_video, v_texCoord);
-    vec3  hsv = rgb2hsv(src.rgb);
-    vec3  keyHSV = rgb2hsv(u_keyColor);
+    vec4  col    = texture2D(u_tex, v_uv);
+    vec3  hsv    = rgb2hsv(col.rgb);
+    vec3  keyHSV = rgb2hsv(u_key);
 
-    // Hue distance in HSV (circular, 0–0.5 range)
-    float hueDist   = abs(hsv.x - keyHSV.x);
-    if (hueDist > 0.5) hueDist = 1.0 - hueDist;
+    // Circular hue distance
+    float hd = abs(hsv.x - keyHSV.x);
+    if (hd > 0.5) hd = 1.0 - hd;
 
-    // Saturation-weighted mask: don't key very dark / grey pixels
-    float satWeight = hsv.y;
-    float mask      = hueDist / (u_similarity + 0.0001);
-    mask            = clamp(mask, 0.0, 1.0);
-    mask            = smoothstep(0.0, u_smoothness + 0.0001, mask);
+    // Alpha: 0 = fully transparent (key colour), 1 = fully opaque (curtain)
+    float alpha = smoothstep(0.0, u_soft + 0.001, hd / (u_sim + 0.001));
 
-    // Spill suppression: reduce residual green tint on keyed edges
-    float greenExcess = src.g - max(src.r, src.b);
-    vec3  deSpill = src.rgb;
-    if (greenExcess > 0.0) {
-      deSpill.g -= greenExcess * u_spill * (1.0 - mask);
-    }
+    // Spill suppression — pull green channel down on semi-transparent edges
+    vec3 out_col = col.rgb;
+    float excess = col.g - max(col.r, col.b);
+    if (excess > 0.0) out_col.g -= excess * u_spill * (1.0 - alpha);
 
-    gl_FragColor = vec4(deSpill, mask * satWeight + (1.0 - satWeight));
+    gl_FragColor = vec4(out_col, alpha);
   }
 `;
 
-// ─────────────────────────────────────────────────────────────────────────────
-// WebGL helper — compile a shader
-// ─────────────────────────────────────────────────────────────────────────────
-function compileShader(gl: WebGLRenderingContext, type: number, src: string): WebGLShader {
-  const shader = gl.createShader(type)!;
-  gl.shaderSource(shader, src);
-  gl.compileShader(shader);
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    throw new Error("Shader compile error: " + gl.getShaderInfoLog(shader));
-  }
-  return shader;
+// ─── WebGL helper ─────────────────────────────────────────────────────────────
+function mkShader(gl: WebGLRenderingContext, type: number, src: string) {
+  const s = gl.createShader(type)!;
+  gl.shaderSource(s, src);
+  gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
+    throw new Error(gl.getShaderInfoLog(s)!);
+  return s;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Component
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Component ────────────────────────────────────────────────────────────────
 export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
-  const [launched, setLaunched] = useState(false);
-  const [ready, setReady]       = useState(false);
+  const [videoReady,   setVideoReady]   = useState(false);   // canplay fired
+  const [launched,     setLaunched]     = useState(false);   // button clicked
+  const [videoPlaying, setVideoPlaying] = useState(false);   // play() resolved
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef  = useRef<HTMLVideoElement>(null);
-  const rafRef    = useRef<number>(0);
   const glRef     = useRef<WebGLRenderingContext | null>(null);
   const texRef    = useRef<WebGLTexture | null>(null);
-  const progRef   = useRef<WebGLProgram | null>(null);
+  const rafRef    = useRef<number>(0);
 
-  // ── Lock scroll while overlay is active ───────────────────────────────────
+  // ── Lock scroll ─────────────────────────────────────────────────────────────
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    const block = (e: Event) => e.preventDefault();
-    window.addEventListener("wheel",     block, { passive: false });
-    window.addEventListener("touchmove", block, { passive: false });
+    const no = (e: Event) => e.preventDefault();
+    window.addEventListener("wheel",     no, { passive: false });
+    window.addEventListener("touchmove", no, { passive: false });
     return () => {
       document.body.style.overflow = "";
-      window.removeEventListener("wheel",     block);
-      window.removeEventListener("touchmove", block);
+      window.removeEventListener("wheel",     no);
+      window.removeEventListener("touchmove", no);
     };
   }, []);
 
-  // ── Initialise WebGL once canvas is mounted ───────────────────────────────
+  // ── Boot WebGL once ──────────────────────────────────────────────────────────
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
+    const canvas = canvasRef.current!;
     const gl = canvas.getContext("webgl", {
-      alpha:             true,   // transparent background — homepage shows through
+      alpha: true,               // transparent — homepage shows through keyed pixels
       premultipliedAlpha: false,
-      antialias:         false,
-      preserveDrawingBuffer: false,
+      antialias: false,
     }) as WebGLRenderingContext | null;
 
-    if (!gl) {
-      console.error("WebGL not supported — falling back immediately");
-      onLaunched();
-      return;
-    }
-
+    if (!gl) { console.error("WebGL unavailable"); onLaunched(); return; }
     glRef.current = gl;
 
-    // Enable alpha blending
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-    // Compile shaders & link program
-    const vert = compileShader(gl, gl.VERTEX_SHADER,   VERT_SRC);
-    const frag = compileShader(gl, gl.FRAGMENT_SHADER, FRAG_SRC);
+    // Link program
     const prog = gl.createProgram()!;
-    gl.attachShader(prog, vert);
-    gl.attachShader(prog, frag);
+    gl.attachShader(prog, mkShader(gl, gl.VERTEX_SHADER,   VERT));
+    gl.attachShader(prog, mkShader(gl, gl.FRAGMENT_SHADER, FRAG));
     gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-      throw new Error("Program link error: " + gl.getProgramInfoLog(prog));
-    }
     gl.useProgram(prog);
-    progRef.current = prog;
 
-    // Full-screen quad (two triangles)
-    const positions = new Float32Array([
-      -1, -1,  1, -1,  -1,  1,
-      -1,  1,  1, -1,   1,  1,
-    ]);
-    const texCoords = new Float32Array([
-      0, 1,  1, 1,  0, 0,
-      0, 0,  1, 1,  1, 0,
-    ]);
+    // Full-screen quad
+    const buf = (data: Float32Array) => {
+      const b = gl.createBuffer()!;
+      gl.bindBuffer(gl.ARRAY_BUFFER, b);
+      gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+      return b;
+    };
+    const posBuf = buf(new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]));
+    const uvBuf  = buf(new Float32Array([ 0, 1, 1, 1,  0,0,  0,0, 1, 1, 1,0]));
 
-    const posBuf = gl.createBuffer();
+    const posLoc = gl.getAttribLocation(prog, "a_pos");
     gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
-    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-    const posLoc = gl.getAttribLocation(prog, "a_position");
     gl.enableVertexAttribArray(posLoc);
     gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
 
-    const texBuf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, texBuf);
-    gl.bufferData(gl.ARRAY_BUFFER, texCoords, gl.STATIC_DRAW);
-    const texLoc = gl.getAttribLocation(prog, "a_texCoord");
-    gl.enableVertexAttribArray(texLoc);
-    gl.vertexAttribPointer(texLoc, 2, gl.FLOAT, false, 0, 0);
+    const uvLoc = gl.getAttribLocation(prog, "a_uv");
+    gl.bindBuffer(gl.ARRAY_BUFFER, uvBuf);
+    gl.enableVertexAttribArray(uvLoc);
+    gl.vertexAttribPointer(uvLoc, 2, gl.FLOAT, false, 0, 0);
 
-    // Bind position buffer to use in draw
-    gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
-    gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
-
-    // Create video texture
+    // Video texture
     const tex = gl.createTexture()!;
     gl.bindTexture(gl.TEXTURE_2D, tex);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -196,18 +164,14 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     texRef.current = tex;
 
-    // Set uniform chroma key parameters
-    // Tuned for a standard green screen (Chroma Key Green / 0,177,64)
-    const keyR = 0.0  / 255;
-    const keyG = 177.0 / 255;
-    const keyB = 64.0  / 255;
-    gl.uniform3f(gl.getUniformLocation(prog, "u_keyColor"),    keyR, keyG, keyB);
-    gl.uniform1f(gl.getUniformLocation(prog, "u_similarity"),  0.38);  // hue tolerance
-    gl.uniform1f(gl.getUniformLocation(prog, "u_smoothness"),  0.18);  // feathering
-    gl.uniform1f(gl.getUniformLocation(prog, "u_spill"),       0.85);  // spill suppression
-    gl.uniform1i(gl.getUniformLocation(prog, "u_video"),       0);
+    // Chroma key uniforms — standard green screen (0, 177, 64)
+    gl.uniform3f(gl.getUniformLocation(prog, "u_key"),   0.0, 177/255, 64/255);
+    gl.uniform1f(gl.getUniformLocation(prog, "u_sim"),   0.40);
+    gl.uniform1f(gl.getUniformLocation(prog, "u_soft"),  0.20);
+    gl.uniform1f(gl.getUniformLocation(prog, "u_spill"), 0.90);
+    gl.uniform1i(gl.getUniformLocation(prog, "u_tex"),   0);
 
-    // Resize canvas to match window
+    // Resize handler
     const resize = () => {
       canvas.width  = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -218,98 +182,92 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
     return () => window.removeEventListener("resize", resize);
   }, []); // eslint-disable-line
 
-  // ── Video ready event ─────────────────────────────────────────────────────
+  // ── Listen for video ready ───────────────────────────────────────────────────
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const onReady = () => setReady(true);
-    video.addEventListener("canplay",        onReady);
-    video.addEventListener("canplaythrough", onReady);
-    video.addEventListener("loadeddata",     onReady);
-
-    // If already ready (browser cache)
-    if (video.readyState >= 3) onReady();
-
+    const v = videoRef.current!;
+    const mark = () => setVideoReady(true);
+    v.addEventListener("canplay",        mark);
+    v.addEventListener("canplaythrough", mark);
+    v.addEventListener("loadeddata",     mark);
+    if (v.readyState >= 2) mark();
     return () => {
-      video.removeEventListener("canplay",        onReady);
-      video.removeEventListener("canplaythrough", onReady);
-      video.removeEventListener("loadeddata",     onReady);
+      v.removeEventListener("canplay",        mark);
+      v.removeEventListener("canplaythrough", mark);
+      v.removeEventListener("loadeddata",     mark);
     };
   }, []);
 
-  // ── Render loop — uploads each video frame to GPU texture ─────────────────
+  // ── RAF render loop ──────────────────────────────────────────────────────────
   const renderLoop = () => {
-    const gl     = glRef.current;
-    const tex    = texRef.current;
-    const prog   = progRef.current;
-    const video  = videoRef.current;
-    const canvas = canvasRef.current;
-    if (!gl || !tex || !prog || !video || !canvas) return;
+    const gl  = glRef.current;
+    const tex = texRef.current;
+    const v   = videoRef.current;
+    if (!gl || !tex || !v || v.readyState < 2) return;
 
-    if (video.readyState >= 2) {
-      gl.bindTexture(gl.TEXTURE_2D, tex);
-      // Upload current video frame into the GPU texture
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-    }
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, v);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-    if (!video.ended) {
-      rafRef.current = requestAnimationFrame(renderLoop);
-    }
+    if (!v.ended) rafRef.current = requestAnimationFrame(renderLoop);
   };
 
-  // ── Handle Launch button click ─────────────────────────────────────────────
+  // ── Launch button click ──────────────────────────────────────────────────────
   const handleLaunch = async () => {
-    if (launched || !ready) return;
+    if (launched || !videoReady) return;
     setLaunched(true);
 
-    const video = videoRef.current;
-    if (!video) { onLaunched(); return; }
-
+    const v = videoRef.current!;
     try {
-      await video.play();
+      await v.play();
     } catch (err) {
-      console.error("video.play() failed:", err);
+      console.error("play() failed:", err);
       onLaunched();
       return;
     }
 
+    // Black base is removed now — homepage will show through transparent canvas pixels
+    setVideoPlaying(true);
     rafRef.current = requestAnimationFrame(renderLoop);
   };
 
-  // ── Video ended — freeze 100ms then destroy overlay ───────────────────────
-  const handleVideoEnded = () => {
+  // ── Video ends ───────────────────────────────────────────────────────────────
+  const handleEnded = () => {
     cancelAnimationFrame(rafRef.current);
-    setTimeout(() => {
-      onLaunched();
-    }, 100);
+    setTimeout(onLaunched, 100);
   };
 
   return (
     <div className="launch-stage">
-      {/* WebGL canvas — GPU chroma-keyed curtain */}
+
+      {/*
+        BLACK BASE — completely hides the homepage until the curtain video starts.
+        Removed the moment video.play() resolves. After removal, the homepage
+        becomes visible only through the transparent (chroma-keyed) canvas pixels.
+      */}
+      {!videoPlaying && <div className="launch-black-base" />}
+
+      {/* WebGL chroma-key canvas — GPU rendered, alpha:true */}
       <canvas ref={canvasRef} className="launch-webgl-canvas" />
 
-      {/* Launch button — only visible before clicked */}
+      {/* Gold LAUNCH button — only while not yet clicked */}
       {!launched && (
         <div className="launch-btn-wrap">
           <button
             className="launch-btn"
             onClick={handleLaunch}
-            disabled={!ready}
+            disabled={!videoReady}
           >
-            {ready ? "LAUNCH" : "Loading…"}
+            {videoReady ? "LAUNCH" : "Loading…"}
           </button>
         </div>
       )}
 
-      {/* Hidden video element — source for GPU texture */}
+      {/* Hidden source video */}
       <video
         ref={videoRef}
         src="/launch_curtain.mp4"
-        onEnded={handleVideoEnded}
+        onEnded={handleEnded}
         style={{ display: "none" }}
         preload="auto"
         muted

@@ -383,10 +383,9 @@ const MainAppContent: React.FC = () => {
 
   return (
     <div className={`${homepageFade ? "site-fade-in-premium" : ""} ${showLaunchOverlay ? "launch-overlay-active" : ""}`}>
-      <Loader />
-
-      {/* Welcome Popup */}
-      <WelcomePopup />
+      {/* Loader and WelcomePopup are suppressed during launch — they'd bleed through the WebGL canvas */}
+      {!showLaunchOverlay && <Loader />}
+      {!showLaunchOverlay && <WelcomePopup />}
 
       {/* 2. Brand Identity / Logo */}
       <Logo />
