@@ -396,6 +396,36 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
     rafRef.current = requestAnimationFrame(renderLoop);
   }, [launched, videoReady, onLaunched, renderLoop]);
 
+  const [logs, setLogs] = useState<string[]>([]);
+
+  // ── Console Log Interceptor for debugging ────────────────────────────────
+  useEffect(() => {
+    const origLog = console.log;
+    const origError = console.error;
+
+    console.log = (...args) => {
+      origLog(...args);
+      const str = args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ');
+      setLogs(prev => [...prev.slice(-6), `[LOG] ${str}`]);
+    };
+
+    console.error = (...args) => {
+      origError(...args);
+      const str = args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ');
+      setLogs(prev => [...prev.slice(-6), `[ERR] ${str}`]);
+    };
+
+    console.log("Visual debugger active");
+    if (videoRef.current) {
+      console.log("Video initial readyState:", videoRef.current.readyState);
+    }
+
+    return () => {
+      console.log = origLog;
+      console.error = origError;
+    };
+  }, []);
+
   // ── Video ended ────────────────────────────────────────────────────────
   const handleEnded = useCallback(() => {
     console.log("[LaunchPage] Video ended");
@@ -443,6 +473,33 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
         muted
         playsInline
       />
+
+      {/* ── ON-SCREEN DEBUG DISPLAY ───────────────────────────────────── */}
+      <div style={{
+        position: "absolute",
+        bottom: "20px",
+        left: "20px",
+        backgroundColor: "rgba(0, 0, 0, 0.85)",
+        color: "#00ff00",
+        padding: "15px",
+        borderRadius: "8px",
+        fontFamily: "monospace",
+        fontSize: "11px",
+        maxWidth: "450px",
+        zIndex: 9999999,
+        pointerEvents: "none",
+        border: "1px solid #333",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.8)"
+      }}>
+        <div style={{ fontWeight: "bold", borderBottom: "1px solid #333", marginBottom: "8px", paddingBottom: "4px", color: "#C5A880" }}>
+          Launch Debug Console (Active)
+        </div>
+        {logs.map((log, idx) => (
+          <div key={idx} style={{ whiteSpace: "pre-wrap", margin: "3px 0", color: log.startsWith("[ERR]") ? "#ff5555" : "#00ff00" }}>
+            {log}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
