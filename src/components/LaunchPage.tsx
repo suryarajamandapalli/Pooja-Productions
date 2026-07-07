@@ -8,24 +8,11 @@ interface LaunchPageProps {
 export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
   const [clicked, setClicked] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [showInstallInstructions, setShowInstallInstructions] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const bufferCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationFrameId = useRef<number | null>(null);
-
-  // Capture PWA installation trigger
-  useEffect(() => {
-    const handleInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      console.log("beforeinstallprompt PWA trigger available");
-    };
-    window.addEventListener("beforeinstallprompt", handleInstallPrompt);
-    return () => window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
-  }, []);
 
   // Lock scrolling
   useEffect(() => {
@@ -185,22 +172,6 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
     startAnimation();
   };
 
-  const handleInstallClick = () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
-        if (choiceResult.outcome === "accepted") {
-          console.log("User accepted PWA installation");
-        } else {
-          console.log("User dismissed PWA installation");
-        }
-        setDeferredPrompt(null);
-      });
-    } else {
-      setShowInstallInstructions(true);
-    }
-  };
-
   // Pre-load check on mount
   useEffect(() => {
     const video = videoRef.current;
@@ -245,52 +216,13 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
 
       {!clicked && (
         <div className="launch-btn-container">
-          <div className="launch-layout-group">
-            <button
-              className="launch-gold-btn"
-              onClick={handleLaunchClick}
-              disabled={!videoReady}
-            >
-              LAUNCH
-            </button>
-
-            {/* Install PWA App Button */}
-            <button
-              className="launch-download-btn"
-              onClick={handleInstallClick}
-              title="Install this website as a Windows app"
-            >
-              <i className="ph-bold ph-download-simple"></i>
-              <span>Install App</span>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {showInstallInstructions && (
-        <div className="install-modal-overlay" onClick={() => setShowInstallInstructions(false)}>
-          <div className="install-modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="install-modal-close" onClick={() => setShowInstallInstructions(false)}>✕</button>
-            <h3>INSTALL AS APPLICATION</h3>
-            <p className="install-modal-desc">To run Pooja Productions as a dedicated Windows Application:</p>
-            <div className="install-steps">
-              <div className="install-step">
-                <span className="step-num">1</span>
-                <p>Look at the right end of your browser's address bar at the top of the window.</p>
-              </div>
-              <div className="install-step">
-                <span className="step-num">2</span>
-                <p>Click the <strong>Install App</strong> icon <i className="ph-bold ph-monitor-play"></i> or <strong>(+)</strong> plus icon.</p>
-              </div>
-              <div className="install-step">
-                <span className="step-num">3</span>
-                <p>Confirm the prompt, and the website will open in its own borderless window!</p>
-              </div>
-            </div>
-            <div className="install-fallback-tip">
-              Alternative: Click the browser settings menu <i className="ph-bold ph-dots-three-vertical"></i> at the top-right, go to <strong>Save and share</strong>, and select <strong>Install page as app</strong>.
-            </div>
-          </div>
+          <button
+            className="launch-gold-btn"
+            onClick={handleLaunchClick}
+            disabled={!videoReady}
+          >
+            LAUNCH
+          </button>
         </div>
       )}
 

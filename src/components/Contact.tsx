@@ -7,6 +7,36 @@ export const Contact: React.FC = () => {
 
   const [activeForm, setActiveForm] = useState<"hello" | "pitch">("hello");
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "submitting">("idle");
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showInstallInstructions, setShowInstallInstructions] = useState(false);
+
+  // Capture PWA installation trigger in the website footer
+  React.useEffect(() => {
+    const handleInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      console.log("beforeinstallprompt PWA trigger available in footer");
+    };
+    window.addEventListener("beforeinstallprompt", handleInstallPrompt);
+    return () => window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
+  }, []);
+
+  const handleInstallClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
+        if (choiceResult.outcome === "accepted") {
+          console.log("User accepted PWA installation");
+        } else {
+          console.log("User dismissed PWA installation");
+        }
+        setDeferredPrompt(null);
+      });
+    } else {
+      setShowInstallInstructions(true);
+    }
+  };
 
   React.useEffect(() => {
     const handleHash = () => {
@@ -530,6 +560,9 @@ export const Contact: React.FC = () => {
                   <div className="footer-links d-flex gap-4">
                     <a href="#0" className="footer-link">Privacy Policy</a>
                     <a href="#0" className="footer-link">Terms</a>
+                    <a href="#0" className="footer-link install-link-pwa" onClick={handleInstallClick}>
+                      <i className="ph ph-download-simple me-1"></i> Install App
+                    </a>
                   </div>
                   <div className="footer-socials d-flex gap-3">
                     {[
@@ -563,6 +596,33 @@ export const Contact: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {showInstallInstructions && (
+        <div className="install-modal-overlay" onClick={() => setShowInstallInstructions(false)}>
+          <div className="install-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="install-modal-close" onClick={() => setShowInstallInstructions(false)}>✕</button>
+            <h3>INSTALL AS APPLICATION</h3>
+            <p className="install-modal-desc">To run Pooja Productions as a dedicated Windows Application:</p>
+            <div className="install-steps">
+              <div className="install-step">
+                <span className="step-num">1</span>
+                <p>Look at the right end of your browser's address bar at the top of the window.</p>
+              </div>
+              <div className="install-step">
+                <span className="step-num">2</span>
+                <p>Click the <strong>Install App</strong> icon <i className="ph-bold ph-monitor-play"></i> or <strong>(+)</strong> plus icon.</p>
+              </div>
+              <div className="install-step">
+                <span className="step-num">3</span>
+                <p>Confirm the prompt, and the website will open in its own borderless window!</p>
+              </div>
+            </div>
+            <div className="install-fallback-tip">
+              Alternative: Click the browser settings menu <i className="ph-bold ph-dots-three-vertical"></i> at the top-right, go to <strong>Save and share</strong>, and select <strong>Install page as app</strong>.
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
