@@ -7,33 +7,62 @@ export const Contact: React.FC = () => {
 
   const [activeForm, setActiveForm] = useState<"hello" | "pitch">("hello");
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "submitting">("idle");
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallInstructions, setShowInstallInstructions] = useState(false);
+  const [isInstallable, setIsInstallable] = useState(!!(window as any).deferredPrompt);
 
-  // Capture PWA installation trigger in the website footer
+  // Capture PWA installation trigger in the website footer globally
   React.useEffect(() => {
-    const handleInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      console.log("beforeinstallprompt PWA trigger available in footer");
+    const handleInstallPrompt = () => {
+      console.log("PWA install trigger detected in footer via global window event");
+      setIsInstallable(true);
     };
-    window.addEventListener("beforeinstallprompt", handleInstallPrompt);
-    return () => window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
+
+    window.addEventListener("pwa-prompt-ready", handleInstallPrompt);
+    
+    // Also listener check in case standard beforeinstallprompt triggers inside Contact lifecycle
+    const handleBeforePrompt = (e: Event) => {
+      e.preventDefault();
+      (window as any).deferredPrompt = e;
+      setIsInstallable(true);
+    };
+    window.addEventListener("beforeinstallprompt", handleBeforePrompt);
+    
+    // Listen for successful installation to hide the button immediately
+    const handleAppInstalled = () => {
+      console.log("PWA was installed successfully!");
+      setIsInstallable(false);
+      (window as any).deferredPrompt = null;
+    };
+    window.addEventListener("appinstalled", handleAppInstalled);
+    
+    // Double check state immediately on mount
+    if ((window as any).deferredPrompt) {
+      setIsInstallable(true);
+    }
+
+    return () => {
+      window.removeEventListener("pwa-prompt-ready", handleInstallPrompt);
+      window.removeEventListener("beforeinstallprompt", handleBeforePrompt);
+      window.removeEventListener("appinstalled", handleAppInstalled);
+    };
   }, []);
 
   const handleInstallClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
+    const promptEvent = (window as any).deferredPrompt;
+    if (promptEvent) {
+      promptEvent.prompt();
+      promptEvent.userChoice.then((choiceResult: { outcome: string }) => {
         if (choiceResult.outcome === "accepted") {
           console.log("User accepted PWA installation");
+          setIsInstallable(false);
         } else {
           console.log("User dismissed PWA installation");
         }
-        setDeferredPrompt(null);
+        (window as any).deferredPrompt = null;
       });
     } else {
+      console.log("No deferred PWA install prompt available. Showing instruction sheet.");
       setShowInstallInstructions(true);
     }
   };
@@ -560,9 +589,11 @@ export const Contact: React.FC = () => {
                   <div className="footer-links d-flex gap-4">
                     <a href="#0" className="footer-link">Privacy Policy</a>
                     <a href="#0" className="footer-link">Terms</a>
-                    <a href="#0" className="footer-link install-link-pwa" onClick={handleInstallClick}>
-                      <i className="ph ph-download-simple me-1"></i> Install App
-                    </a>
+                    {isInstallable && (
+                      <a href="#0" className="footer-link install-link-pwa" onClick={handleInstallClick}>
+                        <i className="ph ph-download-simple me-1"></i> Install App
+                      </a>
+                    )}
                   </div>
                   <div className="footer-socials d-flex gap-3">
                     {[
