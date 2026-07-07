@@ -1,8 +1,8 @@
 /* ==========================================================================
-   LAUNCH PAGE — PREMIUM STATIC CINEMA CURTAINS
+   LAUNCH PAGE — LUXURY CINEMA CURTAIN OVERLAY
    ========================================================================== */
 
-/* Fullscreen fixed container overlaying everything */
+/* Fixed full-screen container on top of everything */
 .launch-stage {
   position: fixed !important;
   inset: 0 !important;
@@ -11,60 +11,35 @@
   z-index: 999999 !important;
   overflow: hidden !important;
   pointer-events: all !important;
-  user-select: none !important;
-  background: #000000 !important;
+  /* transparent — homepage shows through chroma-keyed canvas pixels */
+  background: transparent !important;
 }
 
-/* Curtain halves layout */
-.curtain-half {
-  position: absolute !important;
-  top: 0 !important;
-  height: 100vh !important;
-  width: 50.5vw !important; /* Slight overlap to prevent sub-pixel gaps at joint */
-  overflow: hidden !important;
-  z-index: 2 !important;
-  will-change: transform !important;
-}
-
-.curtain-left {
-  left: 0 !important;
-  border-right: 1px solid rgba(0, 0, 0, 0.4) !important; /* Subtle seam line */
-}
-
-.curtain-right {
-  right: 0 !important;
-}
-
-/* High-res image split settings */
-.curtain-img {
-  position: absolute !important;
-  top: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  object-fit: cover !important;
-  pointer-events: none !important;
-}
-
-/* Align image positioning so it joins perfectly in the middle */
-.curtain-left .curtain-img {
-  left: 0 !important;
-}
-
-.curtain-right .curtain-img {
-  right: 0 !important;
-}
-
-/* Soft cinematic shading gradient for premium velvet lighting */
-.curtain-shading {
+/*
+  Solid black layer — sits inside .launch-stage, covers the homepage 100%.
+  Removed the instant video.play() resolves.
+  While present:  visitor sees nothing but black (and the curtain frame).
+  After removal:  homepage becomes visible through transparent canvas pixels.
+*/
+.launch-black-base {
   position: absolute !important;
   inset: 0 !important;
-  background: 
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.5) 100%),
-    radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.45) 100%) !important;
-  pointer-events: none !important;
+  background: #000000 !important;
+  z-index: 1 !important;
 }
 
-/* Centered Button Wrapper */
+/* WebGL canvas — GPU rendered chroma key, alpha:true */
+.launch-webgl-canvas {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: block !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+
+/* Button wrapper — centered */
 .launch-btn-wrap {
   position: absolute !important;
   inset: 0 !important;
@@ -74,7 +49,7 @@
   z-index: 10 !important;
 }
 
-/* Premium Gold Launch Button */
+/* Premium gold Launch button */
 .launch-btn {
   position: relative !important;
   padding: 22px 72px !important;
@@ -92,7 +67,7 @@
   overflow: hidden !important;
   box-shadow:
     0 0 60px rgba(229, 184, 115, 0.18),
-    0 20px 50px rgba(0, 0, 0, 0.8),
+    0 20px 50px rgba(0, 0, 0, 0.80),
     inset 0 1px 0 rgba(229, 184, 115, 0.12) !important;
   transition:
     transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
@@ -105,7 +80,7 @@
   border-color: rgba(229, 184, 115, 1) !important;
   box-shadow:
     0 0 90px rgba(229, 184, 115, 0.42),
-    0 28px 60px rgba(0, 0, 0, 0.9),
+    0 28px 60px rgba(0, 0, 0, 0.90),
     inset 0 1px 0 rgba(229, 184, 115, 0.22) !important;
 }
 
@@ -113,7 +88,12 @@
   transform: scale(0.97) !important;
 }
 
-/* Shine Sweep Effect */
+.launch-btn:disabled {
+  pointer-events: none !important;
+  opacity: 0.4 !important;
+}
+
+/* Shimmer sweep on hover */
 .launch-btn::after {
   content: "" !important;
   position: absolute !important;
@@ -132,4 +112,16 @@
 .launch-btn:hover::after {
   transform: translateX(120%) skewX(-12deg) !important;
   transition: transform 1.0s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Visually hidden video tag to prevent browser from optimizing out the decoder */
+.launch-hidden-video-element {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0.001 !important;
+  pointer-events: none !important;
+  left: -100px !important;
+  top: -100px !important;
+  visibility: hidden !important;
 }
