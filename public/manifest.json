@@ -1,0 +1,21 @@
+{
+  "short_name": "Pooja Productions",
+  "name": "Pooja Productions - Premium Film Production House",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/logo_symbol.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/launch",
+  "background_color": "#141414",
+  "theme_color": "#141414",
+  "display": "standalone",
+  "orientation": "portrait"
+}

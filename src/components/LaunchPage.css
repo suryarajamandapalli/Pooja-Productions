@@ -110,3 +110,185 @@
   transform: rotate(-45deg) translate(100%, 100%) !important;
   transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
+
+/* Vertical layout grouping for Launch + Download Buttons */
+.launch-layout-group {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 20px !important;
+  pointer-events: auto !important;
+}
+
+/* Low-key Gold Outline Download Button */
+.launch-download-btn {
+  pointer-events: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  padding: 12px 28px !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.15em !important;
+  color: rgba(229, 184, 115, 0.8) !important;
+  text-transform: uppercase !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(229, 184, 115, 0.25) !important;
+  background: rgba(0, 0, 0, 0.45) !important;
+  cursor: pointer !important;
+  outline: none !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+.launch-download-btn i {
+  font-size: 1.1rem !important;
+  transition: transform 0.3s ease !important;
+}
+
+.launch-download-btn:hover {
+  border-color: rgba(229, 184, 115, 0.85) !important;
+  background: rgba(229, 184, 115, 0.1) !important;
+  color: #ffffff !important;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(229, 184, 115, 0.2) !important;
+}
+
+.launch-download-btn:hover i {
+  transform: translateY(2px) !important;
+}
+
+.launch-download-btn:active {
+  transform: scale(0.96) !important;
+}
+
+/* PWA App Installation Overlay Modal */
+.install-modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  z-index: 1000000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: auto !important;
+}
+
+.install-modal-content {
+  position: relative !important;
+  width: 90% !important;
+  max-width: 480px !important;
+  background: #0f0f0c !important;
+  border: 1px solid rgba(229, 184, 115, 0.3) !important;
+  border-radius: 12px !important;
+  padding: 40px 30px !important;
+  box-shadow: 
+    0 30px 80px rgba(0, 0, 0, 0.95),
+    0 0 40px rgba(229, 184, 115, 0.1) !important;
+  text-align: left !important;
+}
+
+.install-modal-close {
+  position: absolute !important;
+  top: 15px !important;
+  right: 20px !important;
+  background: none !important;
+  border: none !important;
+  font-size: 1.4rem !important;
+  color: rgba(229, 184, 115, 0.5) !important;
+  cursor: pointer !important;
+  outline: none !important;
+  transition: color 0.3s ease !important;
+}
+
+.install-modal-close:hover {
+  color: #ffffff !important;
+}
+
+.install-modal-content h3 {
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.18em !important;
+  color: #ffffff !important;
+  margin: 0 0 10px 0 !important;
+  text-transform: uppercase !important;
+  border-left: 3px solid rgba(229, 184, 115, 0.8) !important;
+  padding-left: 12px !important;
+}
+
+.install-modal-desc {
+  font-size: 0.95rem !important;
+  color: #aaaaaa !important;
+  line-height: 1.5 !important;
+  margin: 0 0 25px 0 !important;
+}
+
+.install-steps {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+  margin-bottom: 25px !important;
+}
+
+.install-step {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 15px !important;
+}
+
+.step-num {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  background: rgba(229, 184, 115, 0.15) !important;
+  border: 1px solid rgba(229, 184, 115, 0.4) !important;
+  color: rgba(229, 184, 115, 0.9) !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  flex-shrink: 0 !important;
+  margin-top: 2px !important;
+}
+
+.install-step p {
+  font-size: 0.92rem !important;
+  color: #cccccc !important;
+  line-height: 1.5 !important;
+  margin: 0 !important;
+}
+
+.install-step strong {
+  color: #ffffff !important;
+}
+
+.install-step i {
+  color: rgba(229, 184, 115, 0.9) !important;
+  margin: 0 2px !important;
+  font-size: 1.05rem !important;
+}
+
+.install-fallback-tip {
+  font-size: 0.85rem !important;
+  color: #777777 !important;
+  line-height: 1.5 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding-top: 15px !important;
+  margin-top: 20px !important;
+}
+
+.install-fallback-tip strong {
+  color: #999999 !important;
+}
+
+.install-fallback-tip i {
+  color: #888888 !important;
+  margin: 0 1px !important;
+}
