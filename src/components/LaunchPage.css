@@ -1,205 +1,193 @@
 /* =============================================================================
-   LAUNCH PAGE — Premium Cinema Opening
+   LAUNCH PAGE — Premium Cinema Curtain Reveal
    ============================================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;600;700&display=swap');
 
-/* ── Stage: covers 100% of viewport ─────────────────────────────────────── */
+/* ── Stage: fixed full-screen container ─────────────────────────────────── */
 .lp-stage {
   position: fixed;
   inset: 0;
   z-index: 999999;
-  background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  /* No background — transparent so homepage shows through canvas holes */
   overflow: hidden;
 }
 
-/* ── Video fills entire stage ────────────────────────────────────────────── */
-.lp-video {
+/* ── Black base: covers homepage before curtain plays (z:2) ──────────────── */
+.lp-black-base {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  z-index: 2;
+}
+
+/* ── WebGL canvas: chroma-keyed curtain output (z:5) ─────────────────────── */
+.lp-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: block;
+}
+
+/* ── Video source: MUST be opacity:0 NOT display:none (z:1) ─────────────────
+   opacity:0 keeps Chrome's video decode pipeline fully active.
+   display:none stops frame decoding → texImage2D → black texture.           */
+.lp-video-src {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
-  display: block;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
 }
 
-/* ── Vignette for depth ──────────────────────────────────────────────────── */
-.lp-vignette {
+/* ── UI: gold LAUNCH button (z:10) ──────────────────────────────────────── */
+.lp-ui {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(
-      ellipse at center,
-      transparent 40%,
-      rgba(0, 0, 0, 0.55) 100%
-    );
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* ── Button wrapper — centred in stage ───────────────────────────────────── */
-.lp-btn-wrap {
-  position: relative;
   z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  animation: lp-fade-in 1.2s ease forwards;
+  justify-content: center;
+  gap: 18px;
+  animation: lp-fade-in 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes lp-fade-in {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0);    }
 }
 
-/* ── Studio label ────────────────────────────────────────────────────────── */
-.lp-studio-label {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 5px;
-  color: rgba(197, 168, 128, 0.7);
-  text-transform: uppercase;
+/* ── Studio name label ───────────────────────────────────────────────────── */
+.lp-studio {
   margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: rgba(197, 168, 128, 0.65);
 }
 
 /* ── Tagline ─────────────────────────────────────────────────────────────── */
 .lp-tagline {
+  margin: 0;
   font-family: 'Cormorant Garamond', serif;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 300;
   font-style: italic;
-  color: rgba(197, 168, 128, 0.5);
   letter-spacing: 2px;
-  margin: 0;
+  color: rgba(197, 168, 128, 0.45);
 }
 
-/* ── The gold button ─────────────────────────────────────────────────────── */
+/* ── Circular LAUNCH button ─────────────────────────────────────────────── */
 .lp-btn {
   all: unset;
   cursor: pointer;
   position: relative;
-  width: 180px;
-  height: 180px;
+  width: 170px;
+  height: 170px;
   border-radius: 50%;
-  border: 1px solid rgba(197, 168, 128, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-              box-shadow 0.35s ease;
-}
-
-/* Outer glow ring */
-.lp-btn::before {
-  content: '';
-  position: absolute;
-  inset: -12px;
-  border-radius: 50%;
-  border: 1px solid rgba(197, 168, 128, 0.15);
-  animation: lp-pulse 2.8s ease-in-out infinite;
-}
-
-/* Second ring */
-.lp-btn::after {
-  content: '';
-  position: absolute;
-  inset: -24px;
-  border-radius: 50%;
-  border: 1px solid rgba(197, 168, 128, 0.07);
-  animation: lp-pulse 2.8s ease-in-out 0.8s infinite;
-}
-
-@keyframes lp-pulse {
-  0%, 100% { transform: scale(1);    opacity: 1; }
-  50%       { transform: scale(1.06); opacity: 0.5; }
-}
-
-.lp-btn--ready {
-  background: radial-gradient(
-    circle at 40% 35%,
-    rgba(197, 168, 128, 0.18) 0%,
-    rgba(0, 0, 0, 0.6) 70%
-  );
-  box-shadow:
-    0 0 40px rgba(197, 168, 128, 0.12),
-    0 0 80px rgba(197, 168, 128, 0.05),
-    inset 0 0 30px rgba(197, 168, 128, 0.05);
-}
-
-.lp-btn--ready:hover {
-  transform: scale(1.07);
-  box-shadow:
-    0 0 60px rgba(197, 168, 128, 0.25),
-    0 0 100px rgba(197, 168, 128, 0.12),
-    inset 0 0 40px rgba(197, 168, 128, 0.1);
-}
-
-.lp-btn--ready:active {
-  transform: scale(0.97);
-}
-
-.lp-btn--loading {
-  opacity: 0.4;
-  cursor: default;
-}
-
-/* ── Inner content ───────────────────────────────────────────────────────── */
-.lp-btn-inner {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 4px;
-  color: #C5A880;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 5px;
   text-transform: uppercase;
+  color: #C5A880;
+  border: 1px solid rgba(197, 168, 128, 0.3);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.4s ease;
 }
 
-/* ── Play icon ───────────────────────────────────────────────────────────── */
-.lp-btn-icon {
-  width: 40px;
-  height: 40px;
+/* Pulsing outer ring 1 */
+.lp-btn::before {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 1px solid rgba(197, 168, 128, 0.18);
+  animation: lp-ring 3s ease-in-out infinite;
+}
+
+/* Pulsing outer ring 2 */
+.lp-btn::after {
+  content: '';
+  position: absolute;
+  inset: -28px;
+  border-radius: 50%;
+  border: 1px solid rgba(197, 168, 128, 0.08);
+  animation: lp-ring 3s ease-in-out 1s infinite;
+}
+
+@keyframes lp-ring {
+  0%, 100% { transform: scale(1);    opacity: 0.9; }
+  50%       { transform: scale(1.07); opacity: 0.4; }
+}
+
+.lp-btn-active {
+  background: radial-gradient(
+    circle at 40% 35%,
+    rgba(197, 168, 128, 0.16) 0%,
+    rgba(0, 0, 0, 0.55) 70%
+  );
+  box-shadow:
+    0 0 50px rgba(197, 168, 128, 0.15),
+    0 0 90px rgba(197, 168, 128, 0.06),
+    inset 0 0 30px rgba(197, 168, 128, 0.06);
+}
+
+.lp-btn-active:hover {
+  transform: scale(1.08);
+  box-shadow:
+    0 0 70px rgba(197, 168, 128, 0.28),
+    0 0 120px rgba(197, 168, 128, 0.12),
+    inset 0 0 40px rgba(197, 168, 128, 0.1);
+}
+
+.lp-btn-active:active {
+  transform: scale(0.96);
+}
+
+.lp-btn-loading {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* ── Play icon SVG ───────────────────────────────────────────────────────── */
+.lp-play-icon {
+  width: 42px;
+  height: 42px;
   color: #C5A880;
-  filter: drop-shadow(0 0 8px rgba(197, 168, 128, 0.6));
+  filter: drop-shadow(0 0 10px rgba(197, 168, 128, 0.7));
+  flex-shrink: 0;
 }
 
 /* ── Loading spinner ─────────────────────────────────────────────────────── */
 .lp-spinner {
-  display: inline-block;
+  display: block;
   width: 36px;
   height: 36px;
-  border: 2px solid rgba(197, 168, 128, 0.2);
-  border-top-color: rgba(197, 168, 128, 0.8);
+  border: 2px solid rgba(197, 168, 128, 0.18);
+  border-top-color: rgba(197, 168, 128, 0.85);
   border-radius: 50%;
-  animation: lp-spin 0.9s linear infinite;
+  animation: lp-spin 0.85s linear infinite;
 }
 
 @keyframes lp-spin {
   to { transform: rotate(360deg); }
 }
 
-/* ── Responsive ──────────────────────────────────────────────────────────── */
-@media (max-width: 600px) {
-  .lp-btn {
-    width: 140px;
-    height: 140px;
-  }
-
-  .lp-btn-icon {
-    width: 30px;
-    height: 30px;
-  }
-
-  .lp-btn-inner {
-    font-size: 10px;
-    letter-spacing: 3px;
-  }
+/* ── Mobile ───────────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .lp-btn { width: 136px; height: 136px; }
+  .lp-play-icon { width: 32px; height: 32px; }
+  .lp-btn { font-size: 9px; letter-spacing: 4px; }
 }
