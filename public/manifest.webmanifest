@@ -1,0 +1,29 @@
+{
+  "name": "Pooja Productions - Premium Film Production House",
+  "short_name": "Pooja Productions",
+  "description": "Pooja Productions is a prestigious film production house producing award-winning feature films, documentaries, and visual stories.",
+  "start_url": "/launch",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#141414",
+  "theme_color": "#141414",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/img/pwa_icon_192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/img/pwa_icon_512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/img/pwa_icon_maskable.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ]
+}
