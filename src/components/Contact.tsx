@@ -583,7 +583,7 @@ export const Contact: React.FC = () => {
                 {/* Flat Bottom Bar */}
                 <div className="footer-divider" style={{ marginTop: "1rem" }}></div>
 
-                <div className="footer-bottom-bar d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4" style={{ paddingBottom: "4rem" }}>
+                <div className="footer-bottom-bar d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4" style={{ paddingBottom: "1.5rem" }}>
                   <div className="footer-copyright text-center text-lg-start">
                     © 2026 Pooja Productions. All rights reserved.
                   </div>
@@ -612,12 +612,21 @@ export const Contact: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Single centered glowing gold diamond behind footer bottom */}
-                <div className="footer-single-diamond-container">
+                {/* Right glowing gold diamond */}
+                <div className="footer-diamond-right">
                   <img
                     src="/img/footer_gold_diamond_final.png"
-                    alt="Glowing Gold Diamond"
+                    alt="Glowing Gold Diamond Right"
                     className="footer-single-diamond"
+                  />
+                </div>
+
+                {/* Left glowing gold diamond */}
+                <div className="footer-diamond-left">
+                  <img
+                    src="/img/footer_gold_diamond_final.png"
+                    alt="Glowing Gold Diamond Left"
+                    className="footer-single-diamond footer-diamond-left-img"
                   />
                 </div>
 

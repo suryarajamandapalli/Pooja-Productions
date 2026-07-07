@@ -1062,29 +1062,54 @@ form select option {
   color: #C5A880 !important; /* gold on hover */
 }
 
-/* Background Single Centered Gold Diamond behind Footer bottom bar */
-.footer-single-diamond-container {
+/* Background Gold Diamond - RIGHT side */
+.footer-diamond-right {
   position: absolute !important;
-  bottom: -280px !important; /* sits lower to account for larger size */
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  width: 560px !important; /* enlarged size */
-  height: 560px !important; /* enlarged size */
+  bottom: -260px !important;
+  right: -120px !important;
+  width: 520px !important;
+  height: 520px !important;
   pointer-events: none !important;
   z-index: 1 !important;
   overflow: visible !important;
 }
 
-/* Soft cinematic volumetric glowing aura behind the diamond - reduced intensity */
-.footer-single-diamond-container::before {
+/* Background Gold Diamond - LEFT side */
+.footer-diamond-left {
+  position: absolute !important;
+  bottom: -200px !important;
+  left: -100px !important;
+  width: 380px !important;
+  height: 380px !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  overflow: visible !important;
+}
+
+/* Aura glow on right diamond */
+.footer-diamond-right::before {
   content: "" !important;
   position: absolute !important;
   top: 5% !important;
   left: 5% !important;
   width: 90% !important;
   height: 90% !important;
-  background: radial-gradient(circle, rgba(229, 184, 115, 0.12) 0%, rgba(229, 184, 115, 0.03) 60%, rgba(0, 0, 0, 0) 100%) !important;
+  background: radial-gradient(circle, rgba(229, 184, 115, 0.14) 0%, rgba(229, 184, 115, 0.04) 60%, rgba(0, 0, 0, 0) 100%) !important;
   filter: blur(50px) !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+}
+
+/* Aura glow on left diamond */
+.footer-diamond-left::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 5% !important;
+  left: 5% !important;
+  width: 90% !important;
+  height: 90% !important;
+  background: radial-gradient(circle, rgba(229, 184, 115, 0.10) 0%, rgba(229, 184, 115, 0.03) 60%, rgba(0, 0, 0, 0) 100%) !important;
+  filter: blur(40px) !important;
   z-index: -1 !important;
   pointer-events: none !important;
 }
@@ -1094,18 +1119,48 @@ form select option {
   height: 100% !important;
   object-fit: contain !important;
   display: block !important;
-  opacity: 0.18 !important; /* reduced opacity to make overlay text 100% readable */
+  opacity: 0.20 !important;
   mix-blend-mode: screen !important;
   filter: drop-shadow(0 0 40px rgba(229, 184, 115, 0.35)) drop-shadow(0 0 80px rgba(229, 184, 115, 0.15)) brightness(1.0) saturate(1.1) !important;
-  animation: footerDiamondSpin 120s linear infinite !important; /* slowed down rotation speed */
+  animation: footerDiamondSpin 120s linear infinite !important;
+}
+
+/* Left diamond counter-rotates for visual variety */
+.footer-diamond-left-img {
+  animation: footerDiamondSpinReverse 140s linear infinite !important;
+  opacity: 0.13 !important;
 }
 
 @keyframes footerDiamondSpin {
-  from {
-    transform: rotate(0deg);
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes footerDiamondSpinReverse {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@media only screen and (max-width: 991px) {
+  .footer-diamond-right {
+    width: 320px !important;
+    bottom: -180px !important;
+    right: -60px !important;
   }
-  to {
-    transform: rotate(360deg);
+  .footer-diamond-left {
+    width: 240px !important;
+    bottom: -140px !important;
+    left: -50px !important;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .footer-diamond-left {
+    display: none !important;
+  }
+  .footer-diamond-right {
+    width: 260px !important;
+    right: -40px !important;
   }
 }
 
