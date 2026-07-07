@@ -113,3 +113,18 @@
   transform: translateX(120%) skewX(-12deg) !important;
   transition: transform 1.0s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
+
+/*
+  Visually hidden video tag — we DO NOT use display:none because it disables
+  the browser's video decoding loop, causing GPU texture uploads to remain black/stuck.
+*/
+.launch-hidden-video-element {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0.001 !important;
+  pointer-events: none !important;
+  left: -100px !important;
+  top: -100px !important;
+  visibility: hidden !important;
+}

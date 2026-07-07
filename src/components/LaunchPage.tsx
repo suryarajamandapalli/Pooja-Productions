@@ -170,6 +170,7 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
   const textureRef  = useRef<WebGLTexture | null>(null);
   const rafRef      = useRef<number>(0);
   const firstDrawn  = useRef(false);
+  const frameCount  = useRef(0);
 
   // ── Lock scroll ─────────────────────────────────────────────────────────
   useEffect(() => {
@@ -319,6 +320,12 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
 
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    frameCount.current++;
+    if (frameCount.current % 60 === 0) {
+      console.log("[LaunchPage] drawn frame #", frameCount.current, "currentTime:", video.currentTime);
+    }
+
     return true;
   }, []);
 
@@ -468,7 +475,7 @@ export const LaunchPage: React.FC<LaunchPageProps> = ({ onLaunched }) => {
         ref={videoRef}
         src="/launch_curtain.mp4"
         onEnded={handleEnded}
-        style={{ display: "none" }}
+        className="launch-hidden-video-element"
         preload="auto"
         muted
         playsInline
