@@ -923,6 +923,12 @@ form select option {
   overflow: hidden !important;
   position: relative !important;
   padding-top: 10rem !important; /* Premium compact padding top */
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+.bottom__background {
+  height: 100% !important;
 }
 
 @media only screen and (max-width: 1199px) {
@@ -1109,8 +1115,8 @@ form select option {
   width: 520px !important;
   height: 520px !important;
   pointer-events: none !important;
-  z-index: 1 !important;
-  overflow: visible !important;
+  z-index: 0 !important;
+  overflow: hidden !important;
 }
 
 /* Background Gold Diamond - LEFT side */
@@ -1121,8 +1127,8 @@ form select option {
   width: 380px !important;
   height: 380px !important;
   pointer-events: none !important;
-  z-index: 1 !important;
-  overflow: visible !important;
+  z-index: 0 !important;
+  overflow: hidden !important;
 }
 
 /* Aura glow on right diamond */
@@ -1161,14 +1167,14 @@ form select option {
   opacity: 0.20 !important;
   mix-blend-mode: screen !important;
   filter: drop-shadow(0 0 40px rgba(229, 184, 115, 0.35)) drop-shadow(0 0 80px rgba(229, 184, 115, 0.15)) brightness(1.0) saturate(1.1) !important;
-  animation: footerDiamondSpin 55s linear infinite !important;
+  animation: footerDiamondSpin 50s linear infinite !important;
   will-change: transform !important;
   transform: translate3d(0, 0, 0) !important;
 }
 
 /* Left diamond rotates in the same direction as the right one */
 .footer-diamond-left-img {
-  animation: footerDiamondSpin 60s linear infinite !important;
+  animation: footerDiamondSpin 50s linear infinite !important;
   opacity: 0.13 !important;
 }
 
