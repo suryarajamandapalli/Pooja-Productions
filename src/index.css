@@ -940,6 +940,73 @@ form select option {
   width: 100% !important;
 }
 
+/* Luxury Custom Outlined Button */
+.btn-luxury-footer {
+  border: 1px solid #C5A880 !important;
+  background: transparent !important;
+  color: #C5A880 !important;
+  padding: 1.4rem 3.6rem !important;
+  font-size: 1.4rem !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 0 !important; /* Elegant sharp corners */
+}
+
+.btn-luxury-footer:hover {
+  background: #C5A880 !important;
+  color: #000000 !important;
+  box-shadow: 0 0 20px rgba(197, 168, 128, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Heading top section */
+.footer-top-heading {
+  font-family: "Urbanist", sans-serif !important;
+  font-size: clamp(2.8rem, 5vw, 5.2rem) !important;
+  font-weight: 300 !important;
+  letter-spacing: 0.08em !important;
+  color: #FFFFFF !important;
+  text-transform: uppercase !important;
+  margin-bottom: 2.5rem !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+}
+
+/* Spacing between sections */
+.footer-top-section {
+  padding-bottom: 8rem !important;
+  padding-top: 4rem !important;
+}
+
+.footer-middle-section {
+  padding-bottom: 8rem !important;
+}
+
+.footer-lower-section {
+  padding-bottom: 6rem !important;
+}
+
+/* Center Logo styling */
+.footer-company-logo {
+  height: 4.8rem !important; /* premium visible size */
+  width: auto !important;
+  object-fit: contain !important;
+  margin: 0 auto !important;
+  display: block !important;
+}
+
+/* Gold Divider */
+.footer-divider-gold {
+  width: 100% !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, rgba(197, 168, 128, 0) 0%, rgba(197, 168, 128, 0.4) 50%, rgba(197, 168, 128, 0) 100%) !important;
+  margin-bottom: 3rem !important;
+}
+
 @media only screen and (max-width: 1199px) {
   #contact.contact {
     padding-top: 8rem !important;
@@ -1119,10 +1186,10 @@ form select option {
 /* Background Gold Diamond - RIGHT side */
 .footer-diamond-right {
   position: absolute !important;
-  bottom: -312px !important;
-  right: -312px !important;
-  width: 480px !important;
-  height: 480px !important;
+  bottom: -235px !important;
+  right: -305px !important;
+  width: 470px !important;
+  height: 470px !important;
   pointer-events: none !important;
   z-index: 0 !important;
   overflow: visible !important;
@@ -1131,10 +1198,10 @@ form select option {
 /* Background Gold Diamond - LEFT side */
 .footer-diamond-left {
   position: absolute !important;
-  bottom: -312px !important;
-  left: -312px !important;
-  width: 480px !important;
-  height: 480px !important;
+  bottom: -235px !important;
+  left: -305px !important;
+  width: 470px !important;
+  height: 470px !important;
   pointer-events: none !important;
   z-index: 0 !important;
   overflow: visible !important;
@@ -1147,6 +1214,7 @@ form select option {
   display: block !important;
   opacity: 0.10 !important;
   mix-blend-mode: screen !important;
+  filter: brightness(1.0) saturate(1.1) !important;
   animation: footerDiamondSpin 60s linear infinite !important;
   will-change: transform !important;
   transform: translate3d(0, 0, 0) !important;
@@ -1155,7 +1223,7 @@ form select option {
 /* Left diamond rotates in the same direction as the right one */
 .footer-diamond-left-img {
   animation: footerDiamondSpin 60s linear infinite !important;
-  opacity: 0.09 !important;
+  opacity: 0.10 !important;
 }
 
 @keyframes footerDiamondSpin {
