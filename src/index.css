@@ -936,7 +936,7 @@ form select option {
   margin: 0 auto !important;
   padding-inline: clamp(24px, 4vw, 80px) !important;
   position: relative !important;
-  z-index: 5 !important;
+  z-index: 10 !important;
   width: 100% !important;
 }
 
@@ -1125,7 +1125,7 @@ form select option {
   height: 360px !important;
   pointer-events: none !important;
   z-index: 0 !important;
-  overflow: hidden !important;
+  overflow: visible !important;
 }
 
 /* Background Gold Diamond - LEFT side */
@@ -1137,35 +1137,7 @@ form select option {
   height: 360px !important;
   pointer-events: none !important;
   z-index: 0 !important;
-  overflow: hidden !important;
-}
-
-/* Aura glow on right diamond */
-.footer-diamond-right::before {
-  content: "" !important;
-  position: absolute !important;
-  top: 5% !important;
-  left: 5% !important;
-  width: 90% !important;
-  height: 90% !important;
-  background: radial-gradient(circle, rgba(229, 184, 115, 0.14) 0%, rgba(229, 184, 115, 0.04) 60%, rgba(0, 0, 0, 0) 100%) !important;
-  filter: blur(50px) !important;
-  z-index: -1 !important;
-  pointer-events: none !important;
-}
-
-/* Aura glow on left diamond */
-.footer-diamond-left::before {
-  content: "" !important;
-  position: absolute !important;
-  top: 5% !important;
-  left: 5% !important;
-  width: 90% !important;
-  height: 90% !important;
-  background: radial-gradient(circle, rgba(229, 184, 115, 0.10) 0%, rgba(229, 184, 115, 0.03) 60%, rgba(0, 0, 0, 0) 100%) !important;
-  filter: blur(40px) !important;
-  z-index: -1 !important;
-  pointer-events: none !important;
+  overflow: visible !important;
 }
 
 .footer-single-diamond {
