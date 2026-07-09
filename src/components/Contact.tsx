@@ -141,26 +141,19 @@ export const Contact: React.FC = () => {
   }
 
   return (
-    <section id="contact" className="inner contact inner-grid-bottom no-padding-bottom">
-      <div className="inner__wrapper">
-        <div className="container-fluid p-0">
-          <div className="row g-0">
-            {/* Inner Section Name Start */}
-            <div className="col-12 col-xl-2">
-              <div className="inner__name">
-                <div className="content__block name-block">
-                  <span className="section-name icon-right animate-in-up" style={{ display: "inline-flex", alignItems: "center", gap: "0.8rem" }}>
-                    <span className="section-name-caption">Contact</span>
-                    <i className="ph ph-arrow-down-right"></i>
-                  </span>
-                </div>
-              </div>
-            </div>
-            {/* Inner Section Name End */}
+    <section id="contact" className="inner contact inner-grid-bottom no-padding-bottom" style={{ position: "relative", overflow: "hidden" }}>
+      <div className="footer-custom-container">
+        {/* Inner Section Name Start */}
+        <div className="d-flex justify-content-center mb-4">
+          <span className="section-name icon-right animate-in-up" style={{ display: "inline-flex", alignItems: "center", gap: "0.8rem" }}>
+            <span className="section-name-caption">Contact</span>
+            <i className="ph ph-arrow-down-right"></i>
+          </span>
+        </div>
+        {/* Inner Section Name End */}
 
-            {/* Inner Section Content Start */}
-            <div className="col-12 col-xl-8">
-              <div className="inner__content">
+        {/* Inner Section Content Start */}
+        <div className="inner__content">
                 {/* Content Block - H2 Section Title Start */}
                 <div className="content__block section-form-title">
                   <div className="block__descr">
@@ -539,7 +532,7 @@ export const Contact: React.FC = () => {
                           </a>
                         </p>
                       </div>
-                      <div className="col-12 col-md-6 col-lg-2 contact-data__item grid-item">
+                      <div className="col-12 col-md-6 col-lg-3 contact-data__item grid-item">
                         <p className="contact-data__title tagline-chapter animate-in-up">Phone</p>
                         <p className="contact-data__text small type-basic-160lh">
                           <a className="link-small-160lh animate-in-up" href={`tel:${about.phone || "+919347474144"}`}>
@@ -612,33 +605,24 @@ export const Contact: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Right glowing gold diamond */}
-                <div className="footer-diamond-right">
-                  <img
-                    src="/img/footer_gold_diamond_final.png"
-                    alt="Glowing Gold Diamond Right"
-                    className="footer-single-diamond"
-                  />
-                </div>
-
-                {/* Left glowing gold diamond */}
-                <div className="footer-diamond-left">
-                  <img
-                    src="/img/footer_gold_diamond_final.png"
-                    alt="Glowing Gold Diamond Left"
-                    className="footer-single-diamond footer-diamond-left-img"
-                  />
-                </div>
-
-              </div>
-            </div>
-            {/* Inner Section Content End */}
-
-            {/* Inner Section Aside Start */}
-            <div className="col-12 col-xl-2"></div>
-            {/* Inner Section Aside End */}
-          </div>
         </div>
+      </div>
+
+      {/* Decorative Gold Diamonds moved outside container to snap to viewport edges */}
+      <div className="footer-diamond-right">
+        <img
+          src="/img/footer_gold_diamond_final.png"
+          alt="Glowing Gold Diamond Right"
+          className="footer-single-diamond"
+        />
+      </div>
+
+      <div className="footer-diamond-left">
+        <img
+          src="/img/footer_gold_diamond_final.png"
+          alt="Glowing Gold Diamond Left"
+          className="footer-single-diamond footer-diamond-left-img"
+        />
       </div>
 
       {showInstallInstructions && (
