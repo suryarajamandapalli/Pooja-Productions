@@ -1119,10 +1119,10 @@ form select option {
 /* Background Gold Diamond - RIGHT side */
 .footer-diamond-right {
   position: absolute !important;
-  bottom: -180px !important;
-  right: -180px !important;
-  width: 360px !important;
-  height: 360px !important;
+  bottom: -312px !important;
+  right: -312px !important;
+  width: 480px !important;
+  height: 480px !important;
   pointer-events: none !important;
   z-index: 0 !important;
   overflow: visible !important;
@@ -1131,10 +1131,10 @@ form select option {
 /* Background Gold Diamond - LEFT side */
 .footer-diamond-left {
   position: absolute !important;
-  bottom: -180px !important;
-  left: -180px !important;
-  width: 360px !important;
-  height: 360px !important;
+  bottom: -312px !important;
+  left: -312px !important;
+  width: 480px !important;
+  height: 480px !important;
   pointer-events: none !important;
   z-index: 0 !important;
   overflow: visible !important;
@@ -1145,9 +1145,8 @@ form select option {
   height: 100% !important;
   object-fit: contain !important;
   display: block !important;
-  opacity: 0.20 !important;
+  opacity: 0.10 !important;
   mix-blend-mode: screen !important;
-  filter: drop-shadow(0 0 40px rgba(229, 184, 115, 0.35)) drop-shadow(0 0 80px rgba(229, 184, 115, 0.15)) brightness(1.0) saturate(1.1) !important;
   animation: footerDiamondSpin 60s linear infinite !important;
   will-change: transform !important;
   transform: translate3d(0, 0, 0) !important;
@@ -1156,7 +1155,7 @@ form select option {
 /* Left diamond rotates in the same direction as the right one */
 .footer-diamond-left-img {
   animation: footerDiamondSpin 60s linear infinite !important;
-  opacity: 0.13 !important;
+  opacity: 0.09 !important;
 }
 
 @keyframes footerDiamondSpin {
