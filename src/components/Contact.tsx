@@ -539,7 +539,7 @@ export const Contact: React.FC = () => {
                           </a>
                         </p>
                       </div>
-                      <div className="col-12 col-md-6 col-lg-3 contact-data__item grid-item">
+                      <div className="col-12 col-md-6 col-lg-2 contact-data__item grid-item">
                         <p className="contact-data__title tagline-chapter animate-in-up">Phone</p>
                         <p className="contact-data__text small type-basic-160lh">
                           <a className="link-small-160lh animate-in-up" href={`tel:${about.phone || "+919347474144"}`}>

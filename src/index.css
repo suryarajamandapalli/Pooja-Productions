@@ -501,13 +501,14 @@ form select option {
 /* Polish font sizes and word wrap in footer to prevent overlaps on smaller screens */
 .contact-data__text {
   font-size: 1.35rem !important;
-  word-break: break-all;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
 }
 
 @media only screen and (min-width: 768px) {
   .contact-data__text {
     font-size: 1.45rem !important;
-    word-break: normal;
+    word-break: normal !important;
   }
 }
 /* ═══════════════════════════════════════════════════════
@@ -917,6 +918,12 @@ form select option {
    FOOTER BOTTOM BAR — UI & Spacing Polish (Flat Dark Style)
    ═══════════════════════════════════════════════════════ */
 
+/* Prevent footer diamonds from causing unwanted bottom blank scroll space and horizontal layout breaks */
+#contact.contact {
+  overflow: hidden !important;
+  position: relative !important;
+}
+
 /* Footer Divider Line */
 .footer-divider {
   width: 100% !important;
@@ -925,6 +932,19 @@ form select option {
   margin: 4.8rem 0 3.6rem 0 !important;
   position: relative !important;
   z-index: 5 !important;
+}
+
+.footer-links {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  gap: 2rem !important;
+}
+
+@media only screen and (min-width: 768px) {
+  .footer-links {
+    gap: 4rem !important;
+  }
 }
 
 /* Footer Bottom Bar Styling */
@@ -1125,9 +1145,9 @@ form select option {
   animation: footerDiamondSpin 120s linear infinite !important;
 }
 
-/* Left diamond counter-rotates for visual variety */
+/* Left diamond rotates in the same direction as the right one */
 .footer-diamond-left-img {
-  animation: footerDiamondSpinReverse 140s linear infinite !important;
+  animation: footerDiamondSpin 140s linear infinite !important;
   opacity: 0.13 !important;
 }
 
@@ -1156,11 +1176,16 @@ form select option {
 
 @media only screen and (max-width: 575px) {
   .footer-diamond-left {
-    display: none !important;
+    display: block !important;
+    width: 180px !important;
+    bottom: -90px !important;
+    left: -45px !important;
   }
   .footer-diamond-right {
-    width: 260px !important;
-    right: -40px !important;
+    display: block !important;
+    width: 180px !important;
+    bottom: -90px !important;
+    right: -45px !important;
   }
 }
 
