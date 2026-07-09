@@ -564,7 +564,7 @@ export const Contact: React.FC = () => {
                 {/* Content Block - Contact Data End */}
 
                 {/* Aranea Den Footer Attribution - Centered Above Divider */}
-                <div className="d-flex justify-content-center mb-4">
+                <div className="d-flex justify-content-center" style={{ marginTop: "2.5rem", marginBottom: "1rem" }}>
                   <a 
                     href="https://araneaden.com" 
                     target="_blank" 
