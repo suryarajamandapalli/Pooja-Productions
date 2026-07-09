@@ -922,6 +922,25 @@ form select option {
 #contact.contact {
   overflow: hidden !important;
   position: relative !important;
+  padding-top: 10rem !important; /* Premium compact padding top */
+}
+
+@media only screen and (max-width: 1199px) {
+  #contact.contact {
+    padding-top: 8rem !important;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  #contact.contact {
+    padding-top: 5rem !important; /* Compact padding top on mobile */
+  }
+  .contact-data__title {
+    margin-bottom: 1.2rem !important; /* compact spacing on mobile */
+  }
+  .contact-data__item {
+    margin-bottom: 2.2rem !important; /* compact item stack on mobile */
+  }
 }
 
 /* Footer Divider Line */
@@ -1142,12 +1161,14 @@ form select option {
   opacity: 0.20 !important;
   mix-blend-mode: screen !important;
   filter: drop-shadow(0 0 40px rgba(229, 184, 115, 0.35)) drop-shadow(0 0 80px rgba(229, 184, 115, 0.15)) brightness(1.0) saturate(1.1) !important;
-  animation: footerDiamondSpin 120s linear infinite !important;
+  animation: footerDiamondSpin 55s linear infinite !important;
+  will-change: transform !important;
+  transform: translate3d(0, 0, 0) !important;
 }
 
 /* Left diamond rotates in the same direction as the right one */
 .footer-diamond-left-img {
-  animation: footerDiamondSpin 140s linear infinite !important;
+  animation: footerDiamondSpin 60s linear infinite !important;
   opacity: 0.13 !important;
 }
 
