@@ -1111,7 +1111,7 @@ form select option {
 .footer-diamond-right {
   position: absolute !important;
   bottom: -260px !important;
-  right: -120px !important;
+  right: -260px !important;
   width: 520px !important;
   height: 520px !important;
   pointer-events: none !important;
@@ -1123,7 +1123,7 @@ form select option {
 .footer-diamond-left {
   position: absolute !important;
   bottom: -200px !important;
-  left: -100px !important;
+  left: -190px !important;
   width: 380px !important;
   height: 380px !important;
   pointer-events: none !important;
@@ -1191,13 +1191,13 @@ form select option {
 @media only screen and (max-width: 991px) {
   .footer-diamond-right {
     width: 320px !important;
-    bottom: -180px !important;
-    right: -60px !important;
+    bottom: -160px !important;
+    right: -160px !important;
   }
   .footer-diamond-left {
     width: 240px !important;
-    bottom: -140px !important;
-    left: -50px !important;
+    bottom: -120px !important;
+    left: -120px !important;
   }
 }
 
@@ -1206,13 +1206,13 @@ form select option {
     display: block !important;
     width: 180px !important;
     bottom: -90px !important;
-    left: -45px !important;
+    left: -90px !important;
   }
   .footer-diamond-right {
     display: block !important;
     width: 180px !important;
     bottom: -90px !important;
-    right: -45px !important;
+    right: -90px !important;
   }
 }
 
