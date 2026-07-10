@@ -1,8 +1,5 @@
-const CACHE_NAME = 'pooja-productions-cache-v1';
+const CACHE_NAME = 'pooja-productions-cache-v2';
 const ASSETS_TO_CACHE = [
-  '/',
-  '/launch',
-  '/index.html',
   '/manifest.webmanifest',
   '/favicon.png',
   '/logo_symbol.png',
