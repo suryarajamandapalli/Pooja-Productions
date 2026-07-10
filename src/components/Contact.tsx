@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import { useCMS } from "./CMSContext";
 
 export const Contact: React.FC = () => {
-  const { data, addSubmission } = useCMS();
+  const { data } = useCMS();
   const about = data?.about;
 
-  const [activeForm, setActiveForm] = useState<"hello" | "pitch">("hello");
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "submitting">("idle");
   const [showInstallInstructions, setShowInstallInstructions] = useState(false);
   const [isInstallable, setIsInstallable] = useState(!!(window as any).deferredPrompt);
 
@@ -67,556 +65,235 @@ export const Contact: React.FC = () => {
     }
   };
 
-  React.useEffect(() => {
-    const handleHash = () => {
-      const hash = window.location.hash;
-      if (hash === "#lets-pitch" || hash === "#lets-connect") {
-        setActiveForm("pitch");
-      } else if (hash === "#contact" || hash === "#say-hello") {
-        setActiveForm("hello");
-      }
-    };
-    handleHash();
-    window.addEventListener("hashchange", handleHash);
-    return () => window.removeEventListener("hashchange", handleHash);
-  }, []);
 
-  const [helloData, setHelloData] = useState({
-    name: "",
-    company: "",
-    email: "",
-    phone: "",
-    message: ""
-  });
-
-  const [pitchData, setPitchData] = useState({
-    firstName: "",
-    lastName: "",
-    mobileNumber: "",
-    emailId: "",
-    previousExperience: "",
-    swaTitle: "",
-    swaNumber: "",
-    swaDate: "",
-    workingTitle: "",
-    genre: "",
-    typeOfFilm: "",
-    logline: "",
-    synopsis: "",
-    agreeTerms: false,
-    agreeCopyright: false
-  });
-
-  const handleHelloSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitStatus("submitting");
-    await addSubmission("contact", { ...helloData });
-    setSubmitStatus("success");
-    setTimeout(() => {
-      setSubmitStatus("idle");
-      setHelloData({ name: "", company: "", email: "", phone: "", message: "" });
-    }, 5000);
-  };
-
-  const handlePitchSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitStatus("submitting");
-    await addSubmission("pitch", { ...pitchData });
-    setSubmitStatus("success");
-    setTimeout(() => {
-      setSubmitStatus("idle");
-      setPitchData({
-        firstName: "", lastName: "", mobileNumber: "", emailId: "",
-        previousExperience: "", swaTitle: "", swaNumber: "", swaDate: "",
-        workingTitle: "", genre: "", typeOfFilm: "", logline: "",
-        synopsis: "", agreeTerms: false, agreeCopyright: false
-      });
-    }, 5000);
-  };
-
-
-
-  const [showForm, setShowForm] = useState(false);
 
   if (!about) {
     return null;
   }
 
   return (
-    <section id="contact" className="inner contact inner-grid-bottom no-padding-bottom" style={{ position: "relative", overflow: "hidden" }}>
-      <div className="footer-custom-container">
-        
-        {/* Top Section: Heading and Luxury Submit Request Button */}
-        <div className="footer-top-section text-center">
-          <h2 className="footer-top-heading">Let's Create Something Extraordinary</h2>
-          <button 
-            className="btn btn-luxury-footer mx-auto" 
-            onClick={() => setShowForm(!showForm)}
-            style={{ marginTop: "1.5rem" }}
-          >
-            <span className="btn-caption">{showForm ? "Close Request" : "Submit Request"}</span>
-          </button>
-        </div>
-
-        {/* Collapsible Form Container */}
-        <div 
-          className="footer-form-collapse" 
-          style={{ 
-            maxHeight: showForm ? "2500px" : "0px", 
-            overflow: "hidden", 
-            transition: "max-height 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease, margin-bottom 0.6s ease",
-            opacity: showForm ? 1 : 0,
-            visibility: showForm ? "visible" : "hidden",
-            marginBottom: showForm ? "8rem" : "0rem"
+    <section
+      id="contact"
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        background: "transparent",
+        padding: "0",
+        margin: "0",
+      }}
+    >
+      {/* â”€â”€ DIAMOND LEFT (small) â”€â”€ */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "-160px",
+          left: "-200px",
+          width: "320px",
+          height: "320px",
+          pointerEvents: "none",
+          zIndex: 0,
+          overflow: "visible",
+        }}
+      >
+        <img
+          src="/img/footer_gold_diamond_final.png"
+          alt=""
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            display: "block",
+            opacity: 0.10,
+            mixBlendMode: "screen",
+            filter: "none",
+            animation: "ft-spin 60s linear infinite",
           }}
-        >
-          {/* Tab Switcher Start */}
-          <div className="content__block animate-in-up d-flex justify-content-center" style={{ marginBottom: "3rem", paddingBottom: "2rem" }}>
-            <div className="d-flex justify-content-center" style={{ gap: "1.5rem" }}>
-              <button 
-                onClick={() => {
-                  setActiveForm("hello");
-                  setSubmitStatus("idle");
-                }}
-                className={`btn form-tab-btn ${activeForm === "hello" ? "btn-default" : "btn-line"}`}
-                style={{ padding: "10px 24px" }}
-              >
-                {activeForm === "hello" && <em></em>}
-                <span className="btn-caption">Say Hello</span>
-              </button>
-              <button 
-                onClick={() => {
-                  setActiveForm("pitch");
-                  setSubmitStatus("idle");
-                }}
-                className={`btn form-tab-btn ${activeForm === "pitch" ? "btn-default" : "btn-line"}`}
-                style={{ padding: "10px 24px" }}
-              >
-                {activeForm === "pitch" && <em></em>}
-                <span className="btn-caption">Let's Pitch</span>
-              </button>
-            </div>
-          </div>
+        />
+      </div>
 
-          {/* Forms Section */}
-          <div className="content__block grid-block pre-grid-items mx-auto" style={{ maxWidth: "1000px" }}>
-            <div className="form-container" style={{ width: "100%", position: "relative" }}>
-              <div className={`form__reply centered text-center ${submitStatus === "success" ? "is-visible" : ""}`}>
-                <i className="ph-thin ph-smiley reply__icon"></i>
-                <p className="reply__title">Done!</p>
-                {activeForm === "hello" ? (
-                  <span className="reply__text">Thanks for your message. We'll get back as soon as possible.</span>
-                ) : (
-                  <span className="reply__text">Thanks for your pitch. Our creative team will review it and get back as soon as possible.</span>
-                )}
-              </div>
+      {/* â”€â”€ DIAMOND RIGHT (large) â”€â”€ */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "-235px",
+          right: "-305px",
+          width: "540px",
+          height: "540px",
+          pointerEvents: "none",
+          zIndex: 0,
+          overflow: "visible",
+        }}
+      >
+        <img
+          src="/img/footer_gold_diamond_final.png"
+          alt=""
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            display: "block",
+            opacity: 0.10,
+            mixBlendMode: "screen",
+            filter: "none",
+            animation: "ft-spin 60s linear infinite",
+          }}
+        />
+      </div>
 
-              {activeForm === "hello" ? (
-                <form
-                  className={`form contact-form ${submitStatus === "success" ? "is-hidden" : ""}`}
-                  id="contact-form"
-                  onSubmit={handleHelloSubmit}
-                >
-                  <div className="container-fluid p-0">
-                    <div className="row gx-0">
-                      <div className="col-12 col-md-6 form__item animate-in-up">
-                        <input 
-                          type="text" 
-                          name="Name" 
-                          placeholder="Your name*" 
-                          value={helloData.name}
-                          onChange={(e) => setHelloData({ ...helloData, name: e.target.value })}
-                          required 
-                        />
-                      </div>
-                      <div className="col-12 col-md-6 form__item animate-in-up">
-                        <input 
-                          type="text" 
-                          name="Company" 
-                          placeholder="Company name" 
-                          value={helloData.company}
-                          onChange={(e) => setHelloData({ ...helloData, company: e.target.value })}
-                        />
-                      </div>
-                      <div className="col-12 col-md-6 form__item animate-in-up">
-                        <input 
-                          type="email" 
-                          name="E-mail" 
-                          placeholder="Email*" 
-                          value={helloData.email}
-                          onChange={(e) => setHelloData({ ...helloData, email: e.target.value })}
-                          required 
-                        />
-                      </div>
-                      <div className="col-12 col-md-6 form__item animate-in-up">
-                        <input 
-                          type="tel" 
-                          name="Phone" 
-                          placeholder="Phone" 
-                          value={helloData.phone}
-                          onChange={(e) => setHelloData({ ...helloData, phone: e.target.value })}
-                        />
-                      </div>
-                      <div className="col-12 form__item animate-in-up">
-                        <textarea 
-                          name="Message" 
-                          placeholder="A few words about your project*" 
-                          value={helloData.message}
-                          onChange={(e) => setHelloData({ ...helloData, message: e.target.value })}
-                          required 
-                        />
-                      </div>
-                      <div className="col-12 form__item animate-in-up">
-                        <button className="btn btn-default" type="submit" style={{ padding: "10px 24px" }}>
-                          <em></em>
-                          <span className="btn-caption">Send Message</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              ) : (
-                <form 
-                  className={`form contact-form ${submitStatus === "success" ? "is-hidden" : ""}`}
-                  id="pitch-form" 
-                  onSubmit={handlePitchSubmit}
-                >
-                  <div className="container-fluid p-0">
-                    <div className="row gx-0">
-                      <div className="col-12 col-md-6 form__item animate-in-up">
-                        <input
-                          type="text"
-                          name="firstName"
-                          placeholder="First Name*"
-                          value={pitchData.firstName}
-                          onChange={(e) => setPitchData({ ...pitchData, firstName: e.target.value })}
-                          required
-                        />
-                      </div>
-                      <div className="col-12 col-md-6 form__item animate-in-up">
-                        <input
-                          type="text"
-                          name="lastName"
-                          placeholder="Last Name*"
-                          value={pitchData.lastName}
-                          onChange={(e) => setPitchData({ ...pitchData, lastName: e.target.value })}
-                          required
-                        />
-                      </div>
-                      <div className="col-12 col-md-6 form__item animate-in-up">
-                        <input
-                          type="tel"
-                          name="mobileNumber"
-                          placeholder="Mobile Number*"
-                          value={pitchData.mobileNumber}
-                          onChange={(e) => setPitchData({ ...pitchData, mobileNumber: e.target.value })}
-                          required
-                        />
-                      </div>
-                      <div className="col-12 col-md-6 form__item animate-in-up">
-                        <input
-                          type="email"
-                          name="emailId"
-                          placeholder="Email ID*"
-                          value={pitchData.emailId}
-                          onChange={(e) => setPitchData({ ...pitchData, emailId: e.target.value })}
-                          required
-                        />
-                      </div>
-                      <div className="col-12 form__item animate-in-up">
-                        <input
-                          type="text"
-                          name="previousExperience"
-                          placeholder="Previous Experience (If any)"
-                          value={pitchData.previousExperience}
-                          onChange={(e) => setPitchData({ ...pitchData, previousExperience: e.target.value })}
-                        />
-                      </div>
-                      <div className="col-12 col-md-6 form__item animate-in-up">
-                        <input
-                          type="text"
-                          name="swaTitle"
-                          placeholder="SWA Registered Title"
-                          value={pitchData.swaTitle}
-                          onChange={(e) => setPitchData({ ...pitchData, swaTitle: e.target.value })}
-                        />
-                      </div>
-                      <div className="col-12 col-md-6 form__item animate-in-up">
-                        <input
-                          type="text"
-                          name="swaNumber"
-                          placeholder="SWA Registration Number"
-                          value={pitchData.swaNumber}
-                          onChange={(e) => setPitchData({ ...pitchData, swaNumber: e.target.value })}
-                        />
-                      </div>
-                      <div className="col-12 form__item animate-in-up" style={{ padding: "1.6rem 0.4rem 0.5rem 0.4rem", borderBottom: "1px solid var(--stroke-elements)" }}>
-                        <label style={{ color: "var(--t-muted)", fontSize: "1.4rem", display: "block", marginBottom: "0.2rem" }}>SWA Registration Date</label>
-                        <input
-                          type="date"
-                          name="swaDate"
-                          value={pitchData.swaDate}
-                          onChange={(e) => setPitchData({ ...pitchData, swaDate: e.target.value })}
-                          style={{ border: "none", padding: "0.5rem 0", fontSize: "1.8rem", color: pitchData.swaDate ? "var(--t-bright)" : "var(--t-muted)" }}
-                        />
-                      </div>
-                      <div className="col-12 col-md-6 form__item animate-in-up">
-                        <input
-                          type="text"
-                          name="workingTitle"
-                          placeholder="Story Working Title*"
-                          value={pitchData.workingTitle}
-                          onChange={(e) => setPitchData({ ...pitchData, workingTitle: e.target.value })}
-                          required
-                        />
-                      </div>
-                      <div className="col-12 col-md-3 form__item animate-in-up">
-                        <select
-                          name="genre"
-                          value={pitchData.genre}
-                          onChange={(e) => setPitchData({ ...pitchData, genre: e.target.value })}
-                          required
-                        >
-                          <option value="" disabled hidden>Select Genre*</option>
-                          <option value="action">Action</option>
-                          <option value="drama">Drama</option>
-                          <option value="thriller">Thriller</option>
-                          <option value="comedy">Comedy</option>
-                          <option value="scifi">Sci-Fi</option>
-                          <option value="other">Other</option>
-                        </select>
-                      </div>
-                      <div className="col-12 col-md-3 form__item animate-in-up">
-                        <select
-                          name="typeOfFilm"
-                          value={pitchData.typeOfFilm}
-                          onChange={(e) => setPitchData({ ...pitchData, typeOfFilm: e.target.value })}
-                          required
-                        >
-                          <option value="" disabled hidden>Type of Film*</option>
-                          <option value="feature">Feature Film</option>
-                          <option value="short">Short Film</option>
-                          <option value="series">Web Series</option>
-                          <option value="documentary">Documentary</option>
-                        </select>
-                      </div>
-                      <div className="col-12 form__item animate-in-up">
-                        <input
-                          type="text"
-                          name="logline"
-                          placeholder="Story Logline*"
-                          value={pitchData.logline}
-                          onChange={(e) => setPitchData({ ...pitchData, logline: e.target.value })}
-                          required
-                        />
-                      </div>
-                      <div className="col-12 form__item animate-in-up">
-                        <textarea
-                          name="synopsis"
-                          placeholder="Story Synopsis / Purpose of Collaboration*"
-                          value={pitchData.synopsis}
-                          onChange={(e) => setPitchData({ ...pitchData, synopsis: e.target.value })}
-                          required
-                        />
-                      </div>
-                      <div className="col-12 form__item animate-in-up" style={{ marginTop: "2rem" }}>
-                        <label className="form-checkbox-label">
-                          <input 
-                            type="checkbox" 
-                            name="agreeTerms" 
-                            checked={pitchData.agreeTerms}
-                            onChange={(e) => setPitchData({ ...pitchData, agreeTerms: e.target.checked })}
-                            required 
-                          />
-                          I agree that the concept submitted is original and unregistered under any third party.
-                        </label>
-                      </div>
-                      <div className="col-12 form__item animate-in-up">
-                        <label className="form-checkbox-label">
-                          <input 
-                            type="checkbox" 
-                            name="agreeCopyright" 
-                            checked={pitchData.agreeCopyright}
-                            onChange={(e) => setPitchData({ ...pitchData, agreeCopyright: e.target.checked })}
-                            required 
-                          />
-                          I agree that Pooja Productions holds no liability for similarity with other under-development projects.
-                        </label>
-                      </div>
-                      <div className="col-12 form__item animate-in-up" style={{ marginTop: "2rem" }}>
-                        <button className="btn btn-default" type="submit" style={{ padding: "10px 24px" }}>
-                          <em></em>
-                          <span className="btn-caption">Submit Pitch</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              )}
-            </div>
-          </div>
-        </div>
+      {/* â”€â”€ FOOTER CONTENT â”€â”€ */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 2,
+          maxWidth: "1400px",
+          margin: "0 auto",
+          padding: "6rem clamp(24px, 4vw, 80px) 0",
+        }}
+      >
 
-        {/* Middle Section: perfectly aligned 4-column grid */}
-        <div className="footer-middle-section">
-          <div className="container-fluid p-0">
-            <div className="row gy-5">
-              <div className="col-12 col-md-6 col-lg-3 contact-data__item grid-item text-center">
-                <p className="contact-data__title tagline-chapter animate-in-up">Address</p>
-                <p className="contact-data__text small type-basic-160lh">
-                  <a
-                    className="link-small-160lh animate-in-up"
-                    href={about.mapUrl || "https://maps.google.com/?q=Hyderabad"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {(() => {
-                      const addr = about.address || "";
-                      if (!addr) {
-                        return (
-                          <>
-                            Door No. 7-66/2/216,217,229 & 230/302<br />
-                            Raidurgh, Navkhalsa, Serilingampally,<br />
-                            Hyderabad, Telangana-500008
-                          </>
-                        );
-                      }
-                      const lines = addr.includes("\n") ? addr.split("\n") : (() => {
-                        const parts = addr.split(",");
-                        if (parts.length > 2) {
-                          const line1 = parts.slice(0, 3).join(",").trim();
-                          const line2 = parts.slice(3, 6).join(",").trim();
-                          const line3 = parts.slice(6).join(",").trim();
-                          return [line1, line2, line3].filter(Boolean);
-                        }
-                        return [addr];
-                      })();
-                      return lines.map((line, idx) => (
-                        <React.Fragment key={idx}>
-                          {line}
-                          {idx < lines.length - 1 && <br />}
-                        </React.Fragment>
-                      ));
-                    })()}
-                  </a>
-                </p>
-              </div>
-
-              <div className="col-12 col-md-6 col-lg-3 contact-data__item grid-item text-center">
-                <p className="contact-data__title tagline-chapter animate-in-up">Website</p>
-                <p className="contact-data__text small type-basic-160lh">
-                  <a
-                    className="link-small-160lh animate-in-up"
-                    href="https://www.poojaproductions.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    www.poojaproductions.com
-                  </a>
-                </p>
-              </div>
-
-              <div className="col-12 col-md-6 col-lg-3 contact-data__item grid-item text-center">
-                <p className="contact-data__title tagline-chapter animate-in-up">Phone</p>
-                <p className="contact-data__text small type-basic-160lh">
-                  <a className="link-small-160lh animate-in-up" href={`tel:${about.phone || "+919347474144"}`}>
-                    {about.phone || "+919347474144"}
-                  </a>
-                </p>
-              </div>
-
-              <div className="col-12 col-md-6 col-lg-3 contact-data__item grid-item text-center">
-                <p className="contact-data__title tagline-chapter animate-in-up">Email</p>
-                <p className="contact-data__text small type-basic-160lh">
-                  <a
-                    className="link-small-160lh animate-in-up"
-                    href={`mailto:${about.email || "poojaproductions70mm@gmail.com"}`}
-                  >
-                    {about.email || "poojaproductions70mm@gmail.com"}
-                  </a>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Lower Section: center company logo and attribution */}
-        <div className="footer-lower-section text-center">
-          <img src="/logo.png" alt="Pooja Productions" className="footer-company-logo mb-4 animate-in-up" />
-          <div className="animate-in-up">
-            <a 
-              href="https://araneaden.com" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="araneaden-footer-link d-flex flex-column align-items-center gap-2"
+        {/* â”€â”€ SECTION 1: Address / Website / Phone / Email â”€â”€ */}
+        <div className="ft-grid">
+          {/* Address */}
+          <div className="ft-col">
+            <p className="ft-label">Address</p>
+            <a
+              className="ft-value"
+              href={about.mapUrl || "https://maps.google.com/?q=Hyderabad"}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <img 
-                src={about?.araneadenLogo || "/img/araneaden_logo.png"} 
-                alt="Aranea Den Logo" 
-                className="araneaden-footer-logo"
-              />
-              <span className="araneaden-footer-text">{about?.araneadenText || "MADE BY ARANEA DEN"}</span>
+              {(() => {
+                const addr = about.address || "";
+                if (!addr) {
+                  return (
+                    <>
+                      Door No. 7-66/2/216,217,229 &amp; 230/302<br />
+                      Raidurgh, Navkhalsa, Serilingampally,<br />
+                      Hyderabad, Telangana-500008
+                    </>
+                  );
+                }
+                const parts = addr.split(",");
+                if (parts.length > 2) {
+                  return (
+                    <>
+                      {parts.slice(0, 3).join(",").trim()}<br />
+                      {parts.slice(3, 6).join(",").trim()}<br />
+                      {parts.slice(6).join(",").trim()}
+                    </>
+                  );
+                }
+                return addr;
+              })()}
+            </a>
+          </div>
+
+          {/* Website */}
+          <div className="ft-col">
+            <p className="ft-label">Website</p>
+            <a
+              className="ft-value"
+              href="https://www.poojaproductions.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              www.poojaproductions.com
+            </a>
+          </div>
+
+          {/* Phone */}
+          <div className="ft-col">
+            <p className="ft-label">Phone</p>
+            <a className="ft-value" href={`tel:${about.phone || "+919347474144"}`}>
+              {about.phone || "+919347474144"}
+            </a>
+          </div>
+
+          {/* Email */}
+          <div className="ft-col">
+            <p className="ft-label">Email</p>
+            <a
+              className="ft-value"
+              href={`mailto:${about.email || "poojaproductions70mm@gmail.com"}`}
+            >
+              {about.email || "poojaproductions70mm@gmail.com"}
             </a>
           </div>
         </div>
 
-        {/* Bottom Section: thin gold divider, copyright, policies, socials */}
-        <div className="footer-divider-gold"></div>
+        {/* â”€â”€ SECTION 2: empty â”€â”€ */}
+        <div style={{ height: "4rem" }} />
 
-        <div className="footer-bottom-bar d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4" style={{ paddingBottom: "1.5rem" }}>
-          {/* Left copyright */}
-          <div className="footer-copyright text-center text-lg-start col-lg-4 p-0">
-            ©2026 Pooja Productions
-          </div>
+        {/* â”€â”€ SECTION 3: gold divider â”€â”€ */}
+        <div className="ft-divider" />
 
-          {/* Center policies */}
-          <div className="footer-links d-flex justify-content-center gap-4 col-lg-4 p-0">
-            <a href="#0" className="footer-link">Privacy Policy</a>
-            <a href="#0" className="footer-link">Terms</a>
+        {/* â”€â”€ SECTION 4: copyright | links | socials â”€â”€ */}
+        <div className="ft-bottom-bar">
+          {/* Left */}
+          <span className="ft-copyright">Â©2026 Pooja Productions</span>
+
+          {/* Center */}
+          <div className="ft-links">
+            <a href="#0" className="ft-link">Privacy Policy</a>
+            <a href="#0" className="ft-link">Terms</a>
             {isInstallable && (
-              <a href="#0" className="footer-link install-link-pwa" onClick={handleInstallClick}>
-                <i className="ph ph-download-simple me-1"></i> Install App
+              <a href="#0" className="ft-link" onClick={handleInstallClick}>
+                Install App
               </a>
             )}
           </div>
 
-          {/* Right socials */}
-          <div className="footer-socials d-flex justify-content-center justify-content-lg-end gap-3 col-lg-4 p-0">
-            {[
-              { icon: "ph-instagram-logo", url: about?.instagram || "https://www.instagram.com/", name: "Instagram" },
-              { icon: "ph-youtube-logo", url: about?.youtube || "https://www.youtube.com/", name: "YouTube" },
-              { icon: "ph-linkedin-logo", url: about?.linkedin || "https://www.linkedin.com/", name: "LinkedIn" }
-            ].map((soc, i) => (
-              <a key={i} href={soc.url} target="_blank" rel="noopener noreferrer" className="footer-social-icon" title={soc.name}>
-                <i className={`ph ${soc.icon}`}></i>
-              </a>
-            ))}
+          {/* Right */}
+          <div className="ft-socials">
+            <a
+              href={about?.instagram || "https://www.instagram.com/"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ft-social"
+              title="Instagram"
+            >
+              <i className="ph ph-instagram-logo" />
+            </a>
+            <a
+              href={about?.youtube || "https://www.youtube.com/"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ft-social"
+              title="YouTube"
+            >
+              <i className="ph ph-youtube-logo" />
+            </a>
+            <a
+              href={about?.linkedin || "https://www.linkedin.com/"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ft-social"
+              title="LinkedIn"
+            >
+              <i className="ph ph-linkedin-logo" />
+            </a>
           </div>
+        </div>
+
+        {/* â”€â”€ SECTION 5: Made by Aranea Den â€” bottom center â”€â”€ */}
+        <div className="ft-made-by">
+          <a
+            href="https://araneaden.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ft-made-by-link"
+          >
+            {about?.araneadenText || "Made by Aranea Den"}
+          </a>
         </div>
 
       </div>
 
-      {/* Decorative Gold Diamonds snapped to viewport edges */}
-      <div className="footer-diamond-right">
-        <img
-          src="/img/footer_gold_diamond_final.png"
-          alt="Glowing Gold Diamond Right"
-          className="footer-single-diamond"
-        />
-      </div>
-
-      <div className="footer-diamond-left">
-        <img
-          src="/img/footer_gold_diamond_final.png"
-          alt="Glowing Gold Diamond Left"
-          className="footer-single-diamond footer-diamond-left-img"
-        />
-      </div>
-
+      {/* PWA install instructions modal */}
       {showInstallInstructions && (
         <div className="install-modal-overlay" onClick={() => setShowInstallInstructions(false)}>
           <div className="install-modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="install-modal-close" onClick={() => setShowInstallInstructions(false)}>✕</button>
+            <button className="install-modal-close" onClick={() => setShowInstallInstructions(false)}>âœ•</button>
             <h3>INSTALL AS APPLICATION</h3>
             <p className="install-modal-desc">To run Pooja Productions as a dedicated Windows Application:</p>
             <div className="install-steps">
