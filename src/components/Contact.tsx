@@ -230,8 +230,37 @@ export const Contact: React.FC = () => {
 
         {/* â”€â”€ SECTION 4: copyright | links | socials â”€â”€ */}
         <div className="ft-bottom-bar">
-          {/* Left */}
-          <span className="ft-copyright">{"\u00a9"}2026 Pooja Productions</span>
+          {/* Left: Copyright & Developer Credit */}
+          <div className="ft-copyright-group" style={{ display: "flex", alignItems: "center", gap: "1.5rem", flexWrap: "wrap" }}>
+            <span className="ft-copyright">{"\u00a9"}2026 Pooja Productions</span>
+            <span className="ft-credit-sep" style={{ color: "rgba(255, 255, 255, 0.15)" }}>|</span>
+            <a
+              href="https://araneaden.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ft-made-by-link"
+              style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none" }}
+            >
+              <img
+                src={about?.araneadenLogo || "/img/araneaden_logo.png"}
+                alt="Aranea Den Logo"
+                style={{
+                  height: "16px",
+                  width: "auto",
+                  opacity: 0.4,
+                  filter: "grayscale(1) contrast(1.5) brightness(1.2)",
+                  mixBlendMode: "screen",
+                  display: "block",
+                  transition: "opacity 0.3s ease"
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.7"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.4"; }}
+              />
+              <span style={{ fontSize: "1.1rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255, 255, 255, 0.25)" }}>
+                {about?.araneadenText || "MADE BY ARANEA DEN"}
+              </span>
+            </a>
+          </div>
 
           {/* Center */}
           <div className="ft-links">
@@ -276,35 +305,7 @@ export const Contact: React.FC = () => {
           </div>
         </div>
 
-        {/* ── SECTION 5: Made by Aranea Den — bottom center ── */}
-        <div className="ft-made-by" style={{ display: "flex", justifyContent: "center", marginTop: "4rem", paddingBottom: "2rem" }}>
-          <a
-            href="https://araneaden.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ft-made-by-link"
-            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px", textDecoration: "none" }}
-          >
-            <img
-              src={about?.araneadenLogo || "/img/araneaden_logo.png"}
-              alt="Aranea Den Logo"
-              style={{
-                maxWidth: "120px",
-                height: "auto",
-                opacity: 0.4,
-                filter: "grayscale(1) contrast(1.5) brightness(1.2)",
-                mixBlendMode: "screen",
-                display: "block",
-                transition: "opacity 0.3s ease"
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.7"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.4"; }}
-            />
-            <span style={{ fontSize: "1.0rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255, 255, 255, 0.25)" }}>
-              {about?.araneadenText || "MADE BY ARANEA DEN"}
-            </span>
-          </a>
-        </div>
+
 
       </div>
 
