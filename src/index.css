@@ -958,7 +958,7 @@ form select option {
 
 .ft-label {
   font-family: var(--_font-default) !important;
-  font-size: 1.1rem !important;
+  font-size: clamp(1.2rem, 1.4vw, 1.4rem) !important;
   font-weight: 600 !important;
   letter-spacing: 0.2em !important;
   text-transform: uppercase !important;
@@ -968,7 +968,7 @@ form select option {
 
 .ft-value {
   font-family: var(--_font-default) !important;
-  font-size: 1.4rem !important;
+  font-size: clamp(1.5rem, 1.8vw, 1.8rem) !important;
   line-height: 1.6 !important;
   color: rgba(255, 255, 255, 0.7) !important;
   text-decoration: none !important;
@@ -993,7 +993,7 @@ form select option {
   flex-wrap: wrap !important;
   gap: 2rem !important;
   font-family: var(--_font-default) !important;
-  font-size: 1.3rem !important;
+  font-size: clamp(1.4rem, 1.6vw, 1.6rem) !important;
   color: rgba(255, 255, 255, 0.5) !important;
 }
 
@@ -1064,7 +1064,7 @@ form select option {
 
 .ft-made-by-link {
   font-family: var(--_font-default) !important;
-  font-size: 1.0rem !important;
+  font-size: clamp(1.1rem, 1.3vw, 1.3rem) !important;
   letter-spacing: 0.15em !important;
   text-transform: uppercase !important;
   color: rgba(255, 255, 255, 0.25) !important; /* Low opacity, very small */

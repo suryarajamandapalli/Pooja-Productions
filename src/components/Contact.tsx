@@ -103,9 +103,9 @@ export const Contact: React.FC = () => {
             height: "100%",
             objectFit: "contain",
             display: "block",
-            opacity: 0.22,
+            opacity: 0.32,
             mixBlendMode: "screen",
-            filter: "brightness(1.4) contrast(1.2)",
+            filter: "brightness(1.5) contrast(1.2) drop-shadow(0 0 35px rgba(197, 168, 128, 0.45))",
             maskImage: "radial-gradient(circle, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 75%)",
             WebkitMaskImage: "radial-gradient(circle, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 75%)",
             animation: "ft-spin 60s linear infinite",
@@ -134,9 +134,9 @@ export const Contact: React.FC = () => {
             height: "100%",
             objectFit: "contain",
             display: "block",
-            opacity: 0.22,
+            opacity: 0.32,
             mixBlendMode: "screen",
-            filter: "brightness(1.4) contrast(1.2)",
+            filter: "brightness(1.5) contrast(1.2) drop-shadow(0 0 45px rgba(197, 168, 128, 0.5))",
             maskImage: "radial-gradient(circle, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 75%)",
             WebkitMaskImage: "radial-gradient(circle, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 75%)",
             animation: "ft-spin 60s linear infinite",
@@ -151,7 +151,7 @@ export const Contact: React.FC = () => {
           zIndex: 2,
           maxWidth: "1400px",
           margin: "0 auto",
-          padding: "6rem clamp(24px, 4vw, 80px) 0",
+          padding: "10rem clamp(24px, 4vw, 80px) 6rem",
         }}
       >
 
