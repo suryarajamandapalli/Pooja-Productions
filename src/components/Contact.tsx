@@ -103,9 +103,9 @@ export const Contact: React.FC = () => {
             height: "100%",
             objectFit: "contain",
             display: "block",
-            opacity: 0.10,
+            opacity: 0.28,
             mixBlendMode: "screen",
-            filter: "none",
+            filter: "brightness(1.4) contrast(1.2)",
             animation: "ft-spin 60s linear infinite",
           }}
         />
@@ -132,9 +132,9 @@ export const Contact: React.FC = () => {
             height: "100%",
             objectFit: "contain",
             display: "block",
-            opacity: 0.10,
+            opacity: 0.28,
             mixBlendMode: "screen",
-            filter: "none",
+            filter: "brightness(1.4) contrast(1.2)",
             animation: "ft-spin 60s linear infinite",
           }}
         />
@@ -230,7 +230,7 @@ export const Contact: React.FC = () => {
         {/* â”€â”€ SECTION 4: copyright | links | socials â”€â”€ */}
         <div className="ft-bottom-bar">
           {/* Left */}
-          <span className="ft-copyright">Â©2026 Pooja Productions</span>
+          <span className="ft-copyright">{"\u00a9"}2026 Pooja Productions</span>
 
           {/* Center */}
           <div className="ft-links">
