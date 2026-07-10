@@ -144,14 +144,14 @@ export const Contact: React.FC = () => {
         />
       </div>
 
-      {/* â”€â”€ FOOTER CONTENT â”€â”€ */}
+      {/* ── FOOTER CONTENT ── */}
       <div
         style={{
           position: "relative",
           zIndex: 2,
           maxWidth: "1400px",
           margin: "0 auto",
-          padding: "10rem clamp(24px, 4vw, 80px) 6rem",
+          padding: "5rem clamp(24px, 4vw, 80px) 3rem",
         }}
       >
 
@@ -224,9 +224,6 @@ export const Contact: React.FC = () => {
             </a>
           </div>
         </div>
-
-        {/* â”€â”€ SECTION 2: empty â”€â”€ */}
-        <div style={{ height: "4rem" }} />
 
         {/* â”€â”€ SECTION 3: gold divider â”€â”€ */}
         <div className="ft-divider" />

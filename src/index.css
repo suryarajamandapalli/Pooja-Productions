@@ -983,7 +983,7 @@ form select option {
   width: 100% !important;
   height: 1px !important;
   background: rgba(197, 168, 128, 0.2) !important; /* Thin gold divider */
-  margin: 2rem 0 !important;
+  margin: 1.5rem 0 !important;
 }
 
 .ft-bottom-bar {
@@ -1058,8 +1058,8 @@ form select option {
 .ft-made-by {
   display: flex !important;
   justify-content: center !important;
-  margin-top: 4rem !important;
-  padding-bottom: 2rem !important;
+  margin-top: 2.2rem !important;
+  padding-bottom: 0px !important;
 }
 
 .ft-made-by-link {
