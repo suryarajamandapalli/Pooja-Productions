@@ -103,9 +103,11 @@ export const Contact: React.FC = () => {
             height: "100%",
             objectFit: "contain",
             display: "block",
-            opacity: 0.28,
+            opacity: 0.22,
             mixBlendMode: "screen",
             filter: "brightness(1.4) contrast(1.2)",
+            maskImage: "radial-gradient(circle, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 75%)",
+            WebkitMaskImage: "radial-gradient(circle, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 75%)",
             animation: "ft-spin 60s linear infinite",
           }}
         />
@@ -132,9 +134,11 @@ export const Contact: React.FC = () => {
             height: "100%",
             objectFit: "contain",
             display: "block",
-            opacity: 0.28,
+            opacity: 0.22,
             mixBlendMode: "screen",
             filter: "brightness(1.4) contrast(1.2)",
+            maskImage: "radial-gradient(circle, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 75%)",
+            WebkitMaskImage: "radial-gradient(circle, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 75%)",
             animation: "ft-spin 60s linear infinite",
           }}
         />
@@ -275,15 +279,33 @@ export const Contact: React.FC = () => {
           </div>
         </div>
 
-        {/* â”€â”€ SECTION 5: Made by Aranea Den â€” bottom center â”€â”€ */}
-        <div className="ft-made-by">
+        {/* ── SECTION 5: Made by Aranea Den — bottom center ── */}
+        <div className="ft-made-by" style={{ display: "flex", justifyContent: "center", marginTop: "4rem", paddingBottom: "2rem" }}>
           <a
             href="https://araneaden.com"
             target="_blank"
             rel="noopener noreferrer"
             className="ft-made-by-link"
+            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px", textDecoration: "none" }}
           >
-            {about?.araneadenText || "Made by Aranea Den"}
+            <img
+              src={about?.araneadenLogo || "/img/araneaden_logo.png"}
+              alt="Aranea Den Logo"
+              style={{
+                maxWidth: "120px",
+                height: "auto",
+                opacity: 0.4,
+                filter: "grayscale(1) contrast(1.5) brightness(1.2)",
+                mixBlendMode: "screen",
+                display: "block",
+                transition: "opacity 0.3s ease"
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.7"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.4"; }}
+            />
+            <span style={{ fontSize: "1.0rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255, 255, 255, 0.25)" }}>
+              {about?.araneadenText || "MADE BY ARANEA DEN"}
+            </span>
           </a>
         </div>
 
