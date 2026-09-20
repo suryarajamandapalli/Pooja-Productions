@@ -53,10 +53,10 @@ export const Header: React.FC = () => {
   const nav = data?.navigation || {
     home: "Home",
     about: "About",
-    film: "film",
+    film: "Film",
     studio: "Studio",
     divisions: "Divisions",
-    legacy: "legacy",
+    legacy: "Legacy",
     team: "Team",
     letsConnect: "Let's Connect",
     contact: "Contact",

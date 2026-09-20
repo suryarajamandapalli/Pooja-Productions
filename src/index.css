@@ -1390,5 +1390,133 @@ body, section, .page-content {
   max-width: 100vw !important;
 }
 
+/* ══════════════════════════════════════════════════════
+   HERO MARQUEE CARDS — MOBILE RESPONSIVENESS FIXES
+   Ensure cards have consistent height via aspect-ratio
+   ══════════════════════════════════════════════════════ */
 
+/* Base: consistent portrait-style card sizing on all viewports */
+.items .item.image {
+  aspect-ratio: 3 / 4;
+  height: auto !important;
+}
 
+/* Mobile: slightly wider cards for better visibility */
+@media only screen and (max-width: 767px) {
+  .items .item {
+    width: 60vw !important;
+    flex-shrink: 0;
+  }
+  .items .item.image {
+    aspect-ratio: 3 / 4;
+    border-radius: 14px;
+  }
+  /* Ensure images fill the card correctly */
+  .items .item img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+  /* Make sure the media fullwidth container does not overflow horizontally */
+  .media__fullwidth {
+    overflow: hidden !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+}
+
+/* Tablet: balanced card sizing */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  .items .item {
+    width: 38vw !important;
+  }
+  .items .item.image {
+    aspect-ratio: 3 / 4;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   PORTFOLIO / FILMS GALLERY — MOBILE RESPONSIVENESS
+   Better masonry grid on mobile devices
+   ══════════════════════════════════════════════════════ */
+
+/* Single column on small screens — each item fills nicely */
+@media only screen and (max-width: 576px) {
+  .masonry-gallery-grid {
+    column-count: 1 !important;
+    column-gap: 16px !important;
+  }
+  .masonry-gallery-item {
+    margin-bottom: 16px !important;
+  }
+  /* Larger touch-friendly target for gallery lightbox */
+  .gallery__link {
+    min-height: 200px;
+    display: block;
+  }
+}
+
+/* Two-column layout for medium mobile and up */
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+  .masonry-gallery-grid {
+    column-count: 2 !important;
+    column-gap: 16px !important;
+  }
+  .masonry-gallery-item {
+    margin-bottom: 16px !important;
+  }
+}
+
+/* Lightbox nav arrows — smaller on mobile to avoid crowding */
+@media only screen and (max-width: 576px) {
+  /* Tighter lightbox layout on phones */
+  [role="dialog"][aria-label="Film Lightbox Preview"] button[aria-label="Previous Film"],
+  [role="dialog"][aria-label="Film Lightbox Preview"] button[aria-label="Next Film"] {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.8rem !important;
+    left: 10px !important;
+    right: 10px !important;
+  }
+  [role="dialog"][aria-label="Film Lightbox Preview"] button[aria-label="Close Lightbox"] {
+    top: 16px !important;
+    right: 16px !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   MARQUEE CLICKABLE GALLERY CARD — cursor pointer hint
+   ══════════════════════════════════════════════════════ */
+.marquee-gallery-item {
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  transition: transform 0.3s ease;
+}
+.marquee-gallery-item:hover {
+  transform: scale(1.02);
+}
+.marquee-gallery-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.3s ease;
+  pointer-events: none;
+  border-radius: 16px;
+}
+.marquee-gallery-item:hover::after {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* ══════════════════════════════════════════════════════
+   GENERAL SECTION OVERFLOW FIX
+   ══════════════════════════════════════════════════════ */
+section.portfolio,
+section.inner {
+  overflow-x: hidden;
+}

@@ -227,10 +227,10 @@ const defaultWelcomePopup: WelcomePopupContent = {
 const defaultNavigation: NavItemContent = {
   home: "Home",
   about: "About",
-  film: "film",
+  film: "Film",
   studio: "Studio",
   divisions: "Divisions",
-  legacy: "legacy",
+  legacy: "Legacy",
   team: "Team",
   letsConnect: "Let's Connect",
   contact: "Contact",

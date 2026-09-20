@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { Marquee } from "./Marquee";
 import { SplitText } from "./SplitText";
 import { useCMS } from "./CMSContext";
@@ -7,8 +8,35 @@ import { CinematicSequence } from "./CinematicSequence";
 export const Hero: React.FC = () => {
   const { data } = useCMS();
   const hero = data?.hero;
+  const marqueeItems = data?.marqueeItems || [];
   const [youtubeFailed, setYoutubeFailed] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // Marquee gallery lightbox state
+  const [marqueeLight, setMarqueeLight] = useState<number | null>(null);
+
+  const openMarqueeLight = (idx: number) => setMarqueeLight(idx);
+  const closeMarqueeLight = () => setMarqueeLight(null);
+  const prevMarqueeLight = () =>
+    setMarqueeLight((p) => (p !== null && p > 0 ? p - 1 : marqueeItems.length - 1));
+  const nextMarqueeLight = () =>
+    setMarqueeLight((p) => (p !== null && p < marqueeItems.length - 1 ? p + 1 : 0));
+
+  useEffect(() => {
+    if (marqueeLight === null) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeMarqueeLight();
+      if (e.key === "ArrowLeft") prevMarqueeLight();
+      if (e.key === "ArrowRight") nextMarqueeLight();
+    };
+    window.addEventListener("keydown", handler);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handler);
+    };
+  }, [marqueeLight, marqueeItems.length]);
 
   const primaryBtnText = hero?.primaryBtnText || "Scroll for more";
   const videoMode = hero?.videoMode || "default";
@@ -239,55 +267,66 @@ export const Hero: React.FC = () => {
 
             <div className="col-12 col-xl-2" />
 
-            {/* Marquee strip */}
+            {/* Marquee strip — click any card to open gallery lightbox */}
             <div className="media__fullwidth">
               <Marquee speed={80}>
 
-                {(data?.marqueeItems || []).map((item, idx) => (
-                  <div key={item.id} className={`item image image-${(idx % 6) + 1}`} style={{ position: "relative", overflow: "hidden", borderRadius: "16px" }}>
-                    <img 
-                      src={item.src.startsWith("http") || item.src.startsWith("/") ? item.src : `/${item.src}`} 
-                      alt={item.title} 
-                      onError={(e) => {
-                        // Gracefully hide broken image element to prevent broken image UI icon
-                        (e.currentTarget as HTMLImageElement).style.display = 'none';
-                      }}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
-                    />
-                    <div style={{
-                      position: "absolute",
-                      bottom: 0, left: 0, right: 0,
-                      padding: "24px 20px 20px 20px",
-                      background: "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)",
-                      color: "#fff",
-                      fontFamily: '"Urbanist", sans-serif',
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "4px"
-                    }}>
+                {marqueeItems.map((item, idx) => {
+                  const imgSrc = item.src.startsWith("http") || item.src.startsWith("/") ? item.src : `/${item.src}`;
+                  return (
+                    <div
+                      key={item.id}
+                      className={`item image image-${(idx % 6) + 1} marquee-gallery-item`}
+                      style={{ position: "relative", overflow: "hidden", borderRadius: "16px", cursor: "pointer" }}
+                      onClick={() => openMarqueeLight(idx)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`View ${item.title}`}
+                      onKeyDown={(e) => e.key === "Enter" && openMarqueeLight(idx)}
+                    >
+                      <img
+                        src={imgSrc}
+                        alt={item.title}
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).style.display = "none";
+                        }}
+                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                      />
                       <div style={{
-                        fontSize: "calc(1.8rem + 0.5vw)",
-                        fontWeight: 700,
-                        lineHeight: 1.2,
-                        letterSpacing: "0.03em",
-                        textTransform: "uppercase"
+                        position: "absolute",
+                        bottom: 0, left: 0, right: 0,
+                        padding: "24px 20px 20px 20px",
+                        background: "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)",
+                        color: "#fff",
+                        fontFamily: '"Urbanist", sans-serif',
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "4px"
                       }}>
-                        {item.title}
-                      </div>
-                      {item.description && (
                         <div style={{
-                          fontSize: "calc(1.1rem + 0.2vw)",
-                          fontWeight: 400,
-                          lineHeight: 1.4,
-                          color: "#C5A880",
-                          letterSpacing: "0.02em"
+                          fontSize: "calc(1.8rem + 0.5vw)",
+                          fontWeight: 700,
+                          lineHeight: 1.2,
+                          letterSpacing: "0.03em",
+                          textTransform: "uppercase"
                         }}>
-                          {item.description}
+                          {item.title}
                         </div>
-                      )}
+                        {item.description && (
+                          <div style={{
+                            fontSize: "calc(1.1rem + 0.2vw)",
+                            fontWeight: 400,
+                            lineHeight: 1.4,
+                            color: "#C5A880",
+                            letterSpacing: "0.02em"
+                          }}>
+                            {item.description}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
 
               </Marquee>
             </div>
@@ -296,6 +335,118 @@ export const Hero: React.FC = () => {
         </div>
       </div>
       {/* ══ END MAIN MEDIA ══ */}
+
+      {/* Marquee Gallery Lightbox */}
+      {marqueeLight !== null && marqueeItems.length > marqueeLight && createPortal(
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Gallery Preview"
+          style={{
+            position: "fixed",
+            top: 0, left: 0,
+            width: "100vw", height: "100vh",
+            backgroundColor: "rgba(8, 8, 8, 0.97)",
+            backdropFilter: "blur(12px)",
+            zIndex: 999999,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            animation: "fadeIn 0.25s ease",
+            userSelect: "none"
+          }}
+          onClick={closeMarqueeLight}
+        >
+          {/* Close button */}
+          <button
+            onClick={(e) => { e.stopPropagation(); closeMarqueeLight(); }}
+            aria-label="Close Gallery"
+            style={{
+              position: "fixed", top: "30px", right: "30px",
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              borderRadius: "50%", width: "50px", height: "50px",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              color: "#fff", fontSize: "2rem", cursor: "pointer",
+              zIndex: 1000001, transition: "background 0.3s", outline: "none"
+            }}
+          >
+            <i className="ph ph-x" style={{ color: "#fff" }}></i>
+          </button>
+
+          {/* Prev arrow */}
+          <button
+            onClick={(e) => { e.stopPropagation(); prevMarqueeLight(); }}
+            aria-label="Previous"
+            style={{
+              position: "fixed", left: "24px", top: "50%", transform: "translateY(-50%)",
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              borderRadius: "50%", width: "56px", height: "56px",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              color: "#fff", fontSize: "2.4rem", cursor: "pointer",
+              zIndex: 1000001, transition: "background 0.3s", outline: "none"
+            }}
+          >
+            <i className="ph ph-caret-left" style={{ color: "#fff" }}></i>
+          </button>
+
+          {/* Center image */}
+          <div
+            style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: "80vw", maxHeight: "80vh" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={marqueeItems[marqueeLight].src.startsWith("http") || marqueeItems[marqueeLight].src.startsWith("/") ? marqueeItems[marqueeLight].src : `/${marqueeItems[marqueeLight].src}`}
+              alt={marqueeItems[marqueeLight].title}
+              style={{
+                maxHeight: "62vh", maxWidth: "100%",
+                objectFit: "contain",
+                boxShadow: "0 25px 60px rgba(0,0,0,0.85)",
+                borderRadius: "14px",
+                border: "1px solid rgba(255,255,255,0.1)"
+              }}
+            />
+            <div style={{ marginTop: "22px", textAlign: "center" }}>
+              <h4 style={{ color: "#fff", fontSize: "2rem", fontWeight: 600, margin: "0 0 6px 0" }}>
+                {marqueeItems[marqueeLight].title}
+              </h4>
+              {marqueeItems[marqueeLight].description && (
+                <p style={{ color: "#C5A880", fontSize: "1.4rem", maxWidth: "500px", margin: 0, lineHeight: 1.6 }}>
+                  {marqueeItems[marqueeLight].description}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Next arrow */}
+          <button
+            onClick={(e) => { e.stopPropagation(); nextMarqueeLight(); }}
+            aria-label="Next"
+            style={{
+              position: "fixed", right: "24px", top: "50%", transform: "translateY(-50%)",
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              borderRadius: "50%", width: "56px", height: "56px",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              color: "#fff", fontSize: "2.4rem", cursor: "pointer",
+              zIndex: 1000001, transition: "background 0.3s", outline: "none"
+            }}
+          >
+            <i className="ph ph-caret-right" style={{ color: "#fff" }}></i>
+          </button>
+
+          {/* Counter */}
+          <div style={{
+            position: "fixed", bottom: "28px",
+            color: "rgba(255,255,255,0.45)", fontSize: "1.3rem", fontWeight: 500
+          }}>
+            {marqueeLight + 1} / {marqueeItems.length}
+          </div>
+        </div>,
+        document.body
+      )}
 
     </section>
   );
