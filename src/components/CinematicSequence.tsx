@@ -22,15 +22,62 @@ export const CinematicSequence: React.FC = () => {
     const container = containerRef.current;
     if (!canvas || !context || !container) return;
 
-    // 1. Preload Images
-    const preloadImages = () => {
-      for (let i = 1; i <= FRAME_COUNT; i++) {
+    // 1. Progressive on-demand image frame loader
+    imagesRef.current = new Array(FRAME_COUNT);
+
+    const loadFrame = (index: number): HTMLImageElement => {
+      const idx = Math.max(0, Math.min(index, FRAME_COUNT - 1));
+      if (!imagesRef.current[idx]) {
         const img = new Image();
-        img.src = currentFrame(i);
-        imagesRef.current.push(img);
+        img.src = currentFrame(idx + 1);
+        imagesRef.current[idx] = img;
+      }
+      return imagesRef.current[idx];
+    };
+
+    // Preload initial 12 frames immediately for instant rendering
+    for (let i = 0; i < 12; i++) {
+      loadFrame(i);
+    }
+
+    // Progressively background-load subsequent frames in chunks during idle time
+    let backgroundLoaderId: any;
+    let nextChunk = 12;
+    const scheduleNextChunk = () => {
+      if (nextChunk >= FRAME_COUNT) return;
+      const end = Math.min(nextChunk + 10, FRAME_COUNT);
+      for (let i = nextChunk; i < end; i++) {
+        loadFrame(i);
+      }
+      nextChunk = end;
+      if (nextChunk < FRAME_COUNT) {
+        backgroundLoaderId = setTimeout(scheduleNextChunk, 150);
       }
     };
-    preloadImages();
+    backgroundLoaderId = setTimeout(scheduleNextChunk, 800);
+
+    // Helper to draw image cover
+    const drawImageCover = (img: HTMLImageElement) => {
+      const hRatio = canvas.width / img.width;
+      const vRatio = canvas.height / img.height;
+      const ratio = Math.max(hRatio, vRatio);
+      
+      const centerShift_x = (canvas.width - img.width * ratio) / 2;
+      const centerShift_y = (canvas.height - img.height * ratio) / 2;
+      
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(
+        img,
+        0,
+        0,
+        img.width,
+        img.height,
+        centerShift_x,
+        centerShift_y,
+        img.width * ratio,
+        img.height * ratio
+      );
+    };
 
     // 2. Set Canvas Size
     const resizeCanvas = () => {
@@ -43,30 +90,35 @@ export const CinematicSequence: React.FC = () => {
     const render = (index: number) => {
       renderFrameRef.current = index;
       if (!canvas || !context) return;
-      const img = imagesRef.current[index];
       
+      // Lookahead preload window around current scrub frame
+      const windowStart = Math.max(0, index - 5);
+      const windowEnd = Math.min(FRAME_COUNT - 1, index + 15);
+      for (let w = windowStart; w <= windowEnd; w++) {
+        loadFrame(w);
+      }
+
+      const img = loadFrame(index);
       if (img && img.complete && img.naturalHeight !== 0) {
-        const hRatio = canvas.width / img.width;
-        const vRatio = canvas.height / img.height;
-        const ratio = Math.max(hRatio, vRatio);
-        
-        const centerShift_x = (canvas.width - img.width * ratio) / 2;
-        const centerShift_y = (canvas.height - img.height * ratio) / 2;
-        
-        context.fillRect(0, 0, canvas.width, canvas.height); // Black background
-        context.drawImage(
-          img,
-          0,
-          0,
-          img.width,
-          img.height,
-          centerShift_x,
-          centerShift_y,
-          img.width * ratio,
-          img.height * ratio
-        );
+        drawImageCover(img);
       } else if (img) {
-        // If image not yet loaded, draw when it loads
+        // Find nearest loaded frame to avoid any black flicker
+        let fallbackImg: HTMLImageElement | null = null;
+        for (let step = 1; step <= 20; step++) {
+          const prev = imagesRef.current[index - step];
+          if (prev && prev.complete && prev.naturalHeight !== 0) {
+            fallbackImg = prev;
+            break;
+          }
+          const next = imagesRef.current[index + step];
+          if (next && next.complete && next.naturalHeight !== 0) {
+            fallbackImg = next;
+            break;
+          }
+        }
+        if (fallbackImg) {
+          drawImageCover(fallbackImg);
+        }
         img.onload = () => {
           if (renderFrameRef.current === index) {
             render(index);
@@ -111,6 +163,7 @@ export const CinematicSequence: React.FC = () => {
     }, 200);
 
     return () => {
+      clearTimeout(backgroundLoaderId);
       window.removeEventListener("resize", resizeCanvas);
       if (tl.scrollTrigger) tl.scrollTrigger.kill();
       tl.kill();

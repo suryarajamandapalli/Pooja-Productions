@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useCMS } from "./CMSContext";
+import { useCMS, extractYouTubeId } from "./CMSContext";
 import type { FilmItem, TestimonialItem, AwardItem, TeamItem } from "./CMSContext";
 
-export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackToSite }) => {
+export const AdminDashboard: React.FC<{ onBackToSite?: () => void }> = ({ onBackToSite: _onBackToSite }) => {
   const cms = useCMS();
   const [activeTab, setActiveTab] = useState<"general" | "socials" | "films" | "services" | "media" | "testimonials" | "awards" | "team" | "tools" | "submissions">("general");
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
+  const [resetStatus, setResetStatus] = useState<"idle" | "resetting" | "success" | "error">("idle");
   const [mediaFiles, setMediaFiles] = useState<string[]>([]);
   const [mediaLoading, setMediaLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -74,11 +75,13 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
   const {
     data,
     updateField,
+    replaceSection,
     addListItem,
     updateListItem,
     deleteListItem,
     uploadMedia,
     saveAllChanges,
+    resetToDefaultCMS,
     logout,
     submissions,
     loadSubmissions,
@@ -122,6 +125,23 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
     } else {
       setSaveStatus("error");
       setTimeout(() => setSaveStatus("idle"), 4000);
+    }
+  };
+
+  const handleReset = async () => {
+    const confirmed = window.confirm(
+      "⚠️ RESET CMS TO DEFAULTS?\n\nAre you sure you want to reset all CMS content to the default Pooja Productions configuration?\n\nThis will restore default copy, films, leadership bio, production standards, and awards."
+    );
+    if (!confirmed) return;
+
+    setResetStatus("resetting");
+    const success = await resetToDefaultCMS();
+    if (success) {
+      setResetStatus("success");
+      setTimeout(() => setResetStatus("idle"), 4000);
+    } else {
+      setResetStatus("error");
+      setTimeout(() => setResetStatus("idle"), 4000);
     }
   };
 
@@ -200,8 +220,10 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
-          <button
-            onClick={onBackToSite}
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="btn-line"
             style={{
               padding: "1rem 2rem",
@@ -210,12 +232,51 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
               color: "#FFFFFF",
               border: "1px solid #262626",
               cursor: "pointer",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
               transition: "border-color 0.3s"
             }}
             onMouseOver={(e) => e.currentTarget.style.borderColor = "#C5A880"}
             onMouseOut={(e) => e.currentTarget.style.borderColor = "#262626"}
           >
             View Live Site
+          </a>
+
+          <button
+            onClick={handleReset}
+            disabled={resetStatus === "resetting"}
+            style={{
+              padding: "1rem 2rem",
+              borderRadius: "0.5rem",
+              backgroundColor: resetStatus === "success" ? "#10B981" : resetStatus === "error" ? "#EF4444" : "rgba(239, 68, 68, 0.08)",
+              color: resetStatus === "success" || resetStatus === "error" ? "#FFFFFF" : "#F87171",
+              border: `1px solid ${resetStatus === "success" ? "#10B981" : resetStatus === "error" ? "#EF4444" : "rgba(239, 68, 68, 0.4)"}`,
+              cursor: resetStatus === "resetting" ? "not-allowed" : "pointer",
+              fontWeight: 600,
+              letterSpacing: "0.05em",
+              textTransform: "uppercase",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.8rem",
+              transition: "all 0.3s"
+            }}
+            onMouseOver={(e) => {
+              if (resetStatus === "idle") {
+                e.currentTarget.style.backgroundColor = "rgba(239, 68, 68, 0.15)";
+                e.currentTarget.style.borderColor = "#EF4444";
+              }
+            }}
+            onMouseOut={(e) => {
+              if (resetStatus === "idle") {
+                e.currentTarget.style.backgroundColor = "rgba(239, 68, 68, 0.08)";
+                e.currentTarget.style.borderColor = "rgba(239, 68, 68, 0.4)";
+              }
+            }}
+            title="Reset all CMS content to pristine Pooja Productions defaults"
+          >
+            <i className={`ph ${resetStatus === "resetting" ? "ph-arrows-clockwise" : "ph-arrow-counter-clockwise"}`} style={{ fontSize: "1.6rem" }}></i>
+            {resetStatus === "resetting" ? "Resetting..." : resetStatus === "success" ? "Reset Complete!" : resetStatus === "error" ? "Reset Failed" : "Reset CMS"}
           </button>
 
           <button
@@ -224,16 +285,16 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
             style={{
               padding: "1rem 2.5rem",
               borderRadius: "0.5rem",
-              backgroundColor: saveStatus === "success" ? "#10B981" : "#C5A880",
-              color: "#000000",
+              backgroundColor: saveStatus === "success" ? "#10B981" : saveStatus === "error" ? "#EF4444" : "#C5A880",
+              color: saveStatus === "error" ? "#FFFFFF" : "#000000",
               border: "none",
-              cursor: "pointer",
+              cursor: saveStatus === "saving" ? "not-allowed" : "pointer",
               fontWeight: 600,
               letterSpacing: "0.05em",
               textTransform: "uppercase"
             }}
           >
-            {saveStatus === "saving" ? "Publishing..." : saveStatus === "success" ? "Published!" : "Publish Changes"}
+            {saveStatus === "saving" ? "Publishing..." : saveStatus === "success" ? "Published!" : saveStatus === "error" ? "Save Failed" : "Publish Changes"}
           </button>
 
           <button
@@ -323,6 +384,19 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
           {saveStatus === "error" && (
             <div style={{ position: "fixed", bottom: "3rem", right: "3rem", padding: "1.5rem 2.5rem", backgroundColor: "#EF4444", color: "#FFF", borderRadius: "0.5rem", boxShadow: "0 10px 15px -3px rgba(239, 68, 68, 0.3)", zIndex: 10000 }}>
               Synchronization failed. Verify file permissions.
+            </div>
+          )}
+
+          {resetStatus === "success" && (
+            <div style={{ position: "fixed", bottom: "3rem", right: "3rem", padding: "1.5rem 2.5rem", backgroundColor: "#10B981", color: "#FFF", borderRadius: "0.5rem", boxShadow: "0 10px 15px -3px rgba(16, 185, 129, 0.3)", zIndex: 10000, display: "flex", alignItems: "center", gap: "1rem" }}>
+              <i className="ph ph-check-circle" style={{ fontSize: "2rem" }}></i>
+              CMS has been successfully restored to default configuration!
+            </div>
+          )}
+          {resetStatus === "error" && (
+            <div style={{ position: "fixed", bottom: "3rem", right: "3rem", padding: "1.5rem 2.5rem", backgroundColor: "#EF4444", color: "#FFF", borderRadius: "0.5rem", boxShadow: "0 10px 15px -3px rgba(239, 68, 68, 0.3)", zIndex: 10000, display: "flex", alignItems: "center", gap: "1rem" }}>
+              <i className="ph ph-warning-circle" style={{ fontSize: "2rem" }}></i>
+              Failed to reset CMS defaults. Please verify network connection.
             </div>
           )}
 
@@ -568,8 +642,141 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                   />
                 </div>
 
-                 <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
-                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Background Video URL (Link / Uploaded)</label>
+                {/* HERO BACKGROUND VIDEO */}
+                <div style={{ gridColumn: "1 / -1", display: "flex", flexDirection: "column", gap: "1.2rem", padding: "2rem", backgroundColor: "#0A0A0A", border: "1px solid #262626", borderRadius: "0.8rem" }}>
+                  <label style={{ fontSize: "1.4rem", color: "#C5A880", textTransform: "uppercase", fontWeight: 700, margin: 0, letterSpacing: "0.05em" }}>
+                    Hero Background Video
+                  </label>
+                  <p style={{ color: "#AEB5C5", fontSize: "1.2rem", margin: 0 }}>
+                    Choose between the preset cinematic video or streaming a YouTube background video.
+                  </p>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem", marginTop: "0.5rem" }}>
+                    {/* Option 1: Default Video */}
+                    <label style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "1.2rem",
+                      cursor: "pointer",
+                      padding: "1.2rem",
+                      borderRadius: "0.6rem",
+                      backgroundColor: (data.hero.videoMode || "default") === "default" ? "rgba(197, 168, 128, 0.08)" : "transparent",
+                      border: `1px solid ${(data.hero.videoMode || "default") === "default" ? "#C5A880" : "#222222"}`
+                    }}>
+                      <input
+                        type="radio"
+                        name="heroVideoMode"
+                        value="default"
+                        checked={(data.hero.videoMode || "default") === "default"}
+                        onChange={() => {
+                          updateField("hero", "videoMode", "default");
+                        }}
+                        style={{ marginTop: "0.3rem", accentColor: "#C5A880", cursor: "pointer" }}
+                      />
+                      <div>
+                        <span style={{ color: "#FFF", fontWeight: 600, fontSize: "1.4rem", display: "block" }}>
+                          Default Video
+                        </span>
+                        <span style={{ color: "#AEB5C5", fontSize: "1.2rem" }}>
+                          Use the existing Pooja Productions hero video.
+                        </span>
+                      </div>
+                    </label>
+
+                    {/* Option 2: YouTube Video */}
+                    <label style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "1.2rem",
+                      cursor: "pointer",
+                      padding: "1.2rem",
+                      borderRadius: "0.6rem",
+                      backgroundColor: data.hero.videoMode === "youtube" ? "rgba(197, 168, 128, 0.08)" : "transparent",
+                      border: `1px solid ${data.hero.videoMode === "youtube" ? "#C5A880" : "#222222"}`
+                    }}>
+                      <input
+                        type="radio"
+                        name="heroVideoMode"
+                        value="youtube"
+                        checked={data.hero.videoMode === "youtube"}
+                        onChange={() => {
+                          updateField("hero", "videoMode", "youtube");
+                        }}
+                        style={{ marginTop: "0.3rem", accentColor: "#C5A880", cursor: "pointer" }}
+                      />
+                      <div style={{ flex: 1 }}>
+                        <span style={{ color: "#FFF", fontWeight: 600, fontSize: "1.4rem", display: "block" }}>
+                          YouTube Video
+                        </span>
+                        <span style={{ color: "#AEB5C5", fontSize: "1.2rem" }}>
+                          Paste a YouTube video URL to stream as a looping background video.
+                        </span>
+
+                        {data.hero.videoMode === "youtube" && (
+                          <div style={{ marginTop: "1.2rem", display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                            <input
+                              type="text"
+                              id="heroYoutubeUrl"
+                              placeholder="e.g. https://www.youtube.com/watch?v=XXXXXXXXXXX or https://youtu.be/XXXXXXXXXXX"
+                              value={data.hero.youtubeUrl || ""}
+                              onChange={(e) => {
+                                const url = e.target.value;
+                                updateField("hero", "youtubeUrl", url);
+                                const id = extractYouTubeId(url);
+                                updateField("hero", "youtubeVideoId", id || "");
+                              }}
+                              style={{
+                                width: "100%",
+                                padding: "1.2rem",
+                                backgroundColor: "#121212",
+                                border: `1px solid ${data.hero.youtubeUrl && !data.hero.youtubeVideoId ? "#EF4444" : "#262626"}`,
+                                borderRadius: "0.6rem",
+                                color: "#FFF",
+                                fontSize: "1.3rem",
+                                boxSizing: "border-box"
+                              }}
+                            />
+
+                            {/* Validation Message */}
+                            {data.hero.youtubeUrl && !data.hero.youtubeVideoId ? (
+                              <p style={{ color: "#EF4444", fontSize: "1.2rem", margin: 0 }}>
+                                ⚠️ Please enter a valid YouTube video URL.
+                              </p>
+                            ) : data.hero.youtubeVideoId ? (
+                              <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", color: "#10B981", fontSize: "1.2rem" }}>
+                                <i className="ph ph-check-circle" style={{ fontSize: "1.6rem" }}></i>
+                                <span>Valid YouTube ID: <strong>{data.hero.youtubeVideoId}</strong></span>
+                              </div>
+                            ) : null}
+
+                            {/* Optional small preview if ID valid */}
+                            {data.hero.youtubeVideoId && (
+                              <div style={{ marginTop: "0.5rem", width: "240px", aspectRatio: "16/9", borderRadius: "0.6rem", overflow: "hidden", border: "1px solid #333", backgroundColor: "#000" }}>
+                                <img
+                                  src={`https://img.youtube.com/vi/${data.hero.youtubeVideoId}/mqdefault.jpg`}
+                                  alt="YouTube Video Preview"
+                                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                                />
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </label>
+                  </div>
+
+                  {/* Current Active Mode indicator */}
+                  <div style={{ borderTop: "1px solid #1E1E1E", paddingTop: "1rem", marginTop: "0.5rem", fontSize: "1.2rem", color: "#AEB5C5" }}>
+                    Current: <strong style={{ color: "#C5A880" }}>
+                      {(data.hero.videoMode || "default") === "youtube" && data.hero.youtubeVideoId
+                        ? `YouTube [${data.hero.youtubeVideoId}]`
+                        : "Default Video"}
+                    </strong>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  <label style={{ fontSize: "1.3rem", color: "#AEB5C5", textTransform: "uppercase" }}>Custom MP4 Video (Optional Preset Override)</label>
                   <div style={{ display: "flex", gap: "1rem" }}>
                     <input
                       type="text"
@@ -946,6 +1153,58 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                     onChange={(e) => updateField("leadership", "bio2", e.target.value)}
                     style={{ minHeight: "10rem", padding: "1.2rem", backgroundColor: "#0C0C0C", border: "1px solid #262626", borderRadius: "0.8rem", color: "#FFF", resize: "vertical" }}
                   />
+                </div>
+              </div>
+
+              {/* SYSTEM RESTORATION & DEFAULT CMS */}
+              <div style={{
+                marginTop: "4rem",
+                padding: "3rem",
+                backgroundColor: "rgba(239, 68, 68, 0.04)",
+                border: "1px solid rgba(239, 68, 68, 0.3)",
+                borderRadius: "1.2rem",
+                display: "flex",
+                flexDirection: "column",
+                gap: "1.5rem"
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                  <i className="ph ph-arrow-counter-clockwise" style={{ fontSize: "2.4rem", color: "#EF4444" }}></i>
+                  <div>
+                    <h3 style={{ color: "#FFF", fontSize: "2rem", margin: 0, fontWeight: 700 }}>RESTORE DEFAULT CMS CONFIGURATION</h3>
+                    <p style={{ color: "#AEB5C5", fontSize: "1.3rem", margin: "0.4rem 0 0 0" }}>
+                      Reset the entire website copy, film catalogue, leadership bios, production standards, and awards back to the pristine Pooja Productions defaults.
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "2rem", paddingTop: "1rem", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                  <p style={{ color: "#FCA5A5", fontSize: "1.2rem", margin: 0, maxWidth: "600px" }}>
+                    ⚠️ Caution: This will replace all customized text and section lists in both your local cache and live database with the factory default configuration.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleReset}
+                    disabled={resetStatus === "resetting"}
+                    style={{
+                      padding: "1.2rem 2.4rem",
+                      backgroundColor: resetStatus === "success" ? "#10B981" : resetStatus === "error" ? "#EF4444" : "#EF4444",
+                      color: "#FFFFFF",
+                      border: "none",
+                      borderRadius: "0.6rem",
+                      fontWeight: 700,
+                      fontSize: "1.3rem",
+                      letterSpacing: "0.05em",
+                      textTransform: "uppercase",
+                      cursor: resetStatus === "resetting" ? "not-allowed" : "pointer",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "0.8rem",
+                      transition: "all 0.3s"
+                    }}
+                  >
+                    <i className={`ph ${resetStatus === "resetting" ? "ph-arrows-clockwise" : "ph-arrow-counter-clockwise"}`} style={{ fontSize: "1.6rem" }}></i>
+                    {resetStatus === "resetting" ? "Resetting..." : resetStatus === "success" ? "Reset Complete!" : "Reset CMS to Default"}
+                  </button>
                 </div>
               </div>
             </div>
@@ -1769,9 +2028,7 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                     if (!newTool.name) return alert("Please enter a tool name.");
                     const currentTools: any[] = (data.tools || []) as any[];
                     const updated = [...currentTools, { name: newTool.name, icon: newTool.icon }];
-                    updateField("tools" as any, "__array__", updated);
-                    // Use addListItem workaround — tools don't have ids so use direct state update
-                    cms.addListItem("tools" as any, { name: newTool.name, icon: newTool.icon, id: Date.now() });
+                    replaceSection("tools", updated);
                     setNewTool({ name: "", icon: "" });
                   }}
                   style={{ padding: "1.2rem 3rem", backgroundColor: "#C5A880", color: "#000", border: "none", borderRadius: "0.8rem", cursor: "pointer", fontWeight: 700, fontSize: "1.5rem" }}
@@ -1821,19 +2078,9 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                           <div style={{ display: "flex", gap: "1rem" }}>
                             <button
                               onClick={() => {
-                                const currentTools = [...(data.tools || [])];
-                                currentTools[idx] = { name: editToolData.name, icon: editToolData.icon };
-                                // Update via deleteListItem + addListItem workaround for index-based tools
-                                // We update the whole array by rebuilding data.tools
-                                for (let i = currentTools.length - 1; i >= 0; i--) {
-                                  if ((currentTools[i] as any).id !== undefined) delete (currentTools[i] as any).id;
-                                }
-                                // Use a direct approach: update each tool that has a matching index
-                                setEditToolIndex(null);
-                                alert("Tool updated! Click 'Publish Changes' to save.");
-                                // Rebuild tools array in data
                                 const updatedTools = (data.tools || []).map((t, i) => i === idx ? { name: editToolData.name, icon: editToolData.icon } : t);
-                                updateField("tools" as any, "__replace__", updatedTools);
+                                replaceSection("tools", updatedTools);
+                                setEditToolIndex(null);
                               }}
                               style={{ flex: 1, padding: "0.8rem", backgroundColor: "#10B981", color: "#FFF", border: "none", borderRadius: "0.5rem", cursor: "pointer", fontWeight: 600 }}
                             >
@@ -1871,7 +2118,7 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                               onClick={() => {
                                 if (!confirm(`Remove "${tool.name}"?`)) return;
                                 const updatedTools = (data.tools || []).filter((_, i) => i !== idx);
-                                updateField("tools" as any, "__replace__", updatedTools);
+                                replaceSection("tools", updatedTools);
                               }}
                               style={{ padding: "0.8rem", backgroundColor: "#EF4444", color: "#FFF", border: "none", borderRadius: "0.5rem", cursor: "pointer" }}
                             >
@@ -1922,7 +2169,14 @@ export const AdminDashboard: React.FC<{ onBackToSite: () => void }> = ({ onBackT
                     const isContact = sub.type === "contact";
                     const isExpanded = expandedSubmission === idx;
                     const d = sub.data;
-                    const date = new Date(sub.timestamp).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+                    const rawDate = sub.created_at || sub.timestamp;
+                    let date = "Recent";
+                    if (rawDate) {
+                      const parsed = new Date(rawDate);
+                      if (!isNaN(parsed.getTime())) {
+                        date = parsed.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+                      }
+                    }
                     return (
                       <div key={sub.id || idx} style={{ backgroundColor: "#0A0A0A", border: `1px solid ${isContact ? "rgba(197,168,128,0.3)" : "rgba(99,102,241,0.3)"}`, borderRadius: "1rem", overflow: "hidden" }}>
                         {/* Header row */}

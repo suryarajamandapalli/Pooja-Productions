@@ -80,7 +80,7 @@ export const Resume: React.FC = () => {
                 {/* Content Block - My Education Start */}
                 <div className="content__block pre-text-items">
                   <div className="block__subtitle">
-                    <p className="tagline-chapter animate-in-up">Major Awards & Honours</p>
+                    <h3 className="tagline-chapter animate-in-up">Major Awards & Honours</h3>
                   </div>
 
                   <div className="container-fluid p-0 resume-lines">
@@ -118,7 +118,7 @@ export const Resume: React.FC = () => {
                 {/* Content Block - Tools Cards Start */}
                 <div className="content__block grid-block pre-text-items">
                   <div className="block__subtitle grid-block-subtitle">
-                    <p className="tagline-chapter animate-in-up">Our Production Standards</p>
+                    <h3 className="tagline-chapter animate-in-up">Our Production Standards</h3>
                   </div>
 
                   <div className="tools-cards d-flex justify-content-start flex-wrap">
@@ -126,7 +126,7 @@ export const Resume: React.FC = () => {
                       <div className="tools-cards__item d-flex grid-item animate-card-4" key={index}>
                         <div className="tools-cards__card">
                           <img className="tools-cards__icon animate-in-up" src={tool.icon.startsWith("http") || tool.icon.startsWith("/") ? tool.icon : `/${tool.icon}`} alt={tool.name} />
-                          <h6 className="tools-cards__caption tagline-tool animate-in-up">{tool.name}</h6>
+                          <h4 className="tools-cards__caption tagline-tool animate-in-up">{tool.name}</h4>
                         </div>
                       </div>
                     ))}
@@ -137,7 +137,7 @@ export const Resume: React.FC = () => {
                 {/* Content Block - Testimonials Start */}
                 <div className="content__block pre-offcanvas-text-block" style={{ position: "relative" }}>
                   <div className="block__subtitle" style={{ position: "relative", zIndex: 5 }}>
-                    <p className="tagline-chapter animate-in-up">Voices of Directors & Partners</p>
+                    <h3 className="tagline-chapter animate-in-up">Voices of Directors & Partners</h3>
                   </div>
 
                   <div className="testimonials-slider">

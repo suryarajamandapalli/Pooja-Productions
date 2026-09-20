@@ -15,6 +15,25 @@ export interface MarqueeItem {
   description?: string;
 }
 
+export function extractYouTubeId(url: string): string | null {
+  if (!url || typeof url !== "string") return null;
+  const trimmed = url.trim();
+  if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) {
+    return trimmed;
+  }
+  const patterns = [
+    /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/i,
+    /^[a-zA-Z0-9_-]{11}$/
+  ];
+  for (const pattern of patterns) {
+    const match = trimmed.match(pattern);
+    if (match && match[1]) {
+      return match[1];
+    }
+  }
+  return null;
+}
+
 export interface HeroContent {
   headline: string;
   subheadline: string;
@@ -24,6 +43,9 @@ export interface HeroContent {
   bgVideoUrl?: string;
   heroImageUrl?: string;
   blockquote?: string;
+  videoMode?: "default" | "youtube";
+  youtubeUrl?: string;
+  youtubeVideoId?: string;
 }
 
 export interface AboutContent {
@@ -171,11 +193,13 @@ interface CMSContextType {
   login: (password: string) => Promise<boolean>;
   logout: () => void;
   updateField: (section: keyof WebsiteData, key: string, value: any) => void;
+  replaceSection: (section: keyof WebsiteData, newSectionData: any) => void;
   addListItem: (section: keyof WebsiteData, item: any) => void;
   updateListItem: (section: keyof WebsiteData, id: number, updatedFields: any) => void;
   deleteListItem: (section: keyof WebsiteData, id: number) => void;
   uploadMedia: (file: File) => Promise<string>;
   saveAllChanges: () => Promise<boolean>;
+  resetToDefaultCMS: () => Promise<boolean>;
 
   // Submissions API
   submissions: any[];
@@ -212,7 +236,7 @@ const defaultNavigation: NavItemContent = {
   contact: "Contact",
 };
 
-const defaultHero = {
+const defaultHero: HeroContent = {
   headline: "Pooja\nProductions",
   heroSubtitle: "HELLO !\nMr. MK Presents",
   subheadline: "HELLO !\nMr. MK Presents",
@@ -221,6 +245,16 @@ const defaultHero = {
   bgVideoUrl: "",
   heroImageUrl: "/img/backgrounds/1200x1200_bg01.png",
   blockquote: "Stories that stir the soul, visuals that capture the imagination, and cinema that stands the test of time.",
+  videoMode: "default",
+  youtubeUrl: "",
+  youtubeVideoId: "",
+};
+
+const defaultFooter: FooterContent = {
+  copyright: "© 2026 Pooja Productions. All rights reserved.",
+  links: [
+    { label: "Admin Login", url: "/admin" }
+  ]
 };
 
 const ensureDefaults = (loaded: WebsiteData): WebsiteData => {
@@ -230,6 +264,9 @@ const ensureDefaults = (loaded: WebsiteData): WebsiteData => {
     hero: {
       ...defaultHero,
       ...(loaded.hero || {}),
+      videoMode: (loaded.hero?.videoMode) || "default",
+      youtubeUrl: (loaded.hero?.youtubeUrl) || "",
+      youtubeVideoId: (loaded.hero?.youtubeVideoId) || "",
       // heroSubtitle must always default to "HELLO ! / Mr. MK Presents" if not set
       heroSubtitle: (loaded.hero?.heroSubtitle) || defaultHero.heroSubtitle,
     },
@@ -245,6 +282,10 @@ const ensureDefaults = (loaded: WebsiteData): WebsiteData => {
       araneadenText: loaded.about?.araneadenText || "MADE BY ARANEA DEN",
     },
     navigation: loaded.navigation || defaultNavigation,
+    showTeam: loaded.showTeam !== undefined ? loaded.showTeam : false,
+    legacy: loaded.legacy || [],
+    gallery: loaded.gallery || [],
+    footer: loaded.footer || defaultFooter,
   };
 };
 
@@ -309,10 +350,32 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     loadData();
     loadSubmissions();
 
-    // Check secure admin login token
+    // Verify admin login session token with server
     const token = localStorage.getItem("pooja_admin_token");
-    if (token === "local_dev_secure_session_token_2026") {
-      setIsAdmin(true);
+    if (token) {
+      fetch("/api/verify-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.valid) {
+            setIsAdmin(true);
+          } else {
+            localStorage.removeItem("pooja_admin_token");
+            setIsAdmin(false);
+          }
+        })
+        .catch(() => {
+          // If network is offline but token has valid prefix
+          if (token.startsWith("pp_sess_")) {
+            setIsAdmin(true);
+          } else {
+            localStorage.removeItem("pooja_admin_token");
+            setIsAdmin(false);
+          }
+        });
     }
   }, []);
 
@@ -341,18 +404,40 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setIsAdmin(false);
   };
 
-  // Modify text field values
+  // Replace entire section or list array
+  const replaceSection = (section: keyof WebsiteData, newSectionData: any) => {
+    setData((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        [section]: newSectionData,
+      };
+    });
+  };
+
+  // Modify text or primitive field values
   const updateField = (section: keyof WebsiteData, key: string, value: any) => {
     setData((prev) => {
       if (!prev) return null;
-      const sectionData = prev[section];
-      if (typeof sectionData !== "object" || sectionData === null) {
+
+      // Handle explicit replace or top-level primitive (e.g. showTeam)
+      if (key === "__replace__" || typeof prev[section] !== "object" || prev[section] === null) {
         return {
           ...prev,
           [section]: value,
         };
       }
-      if (Array.isArray(sectionData)) return prev;
+
+      const sectionData = prev[section];
+      if (Array.isArray(sectionData)) {
+        if (Array.isArray(value)) {
+          return {
+            ...prev,
+            [section]: value,
+          };
+        }
+        return prev;
+      }
 
       return {
         ...prev,
@@ -472,37 +557,102 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  // Save layout state to Supabase cms_content table
+  // Save layout state to Supabase cms_content table AND local dev endpoint
   const saveAllChanges = async (): Promise<boolean> => {
     if (!data) return false;
-    try {
-      // 1. Save locally for immediate feedback
-      localStorage.setItem("pooja_cmsData", JSON.stringify(data));
-      
-      // 2. Try to update local server during dev
-      try {
-        await fetch("/api/save-content", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-      } catch (devErr) {
-        // Ignore dev uploader failures on production
-      }
+    let localSaved = false;
+    let cloudSaved = false;
 
-      // 3. Upsert to Supabase
+    // 1. Cache to localStorage for client-side resilience
+    try {
+      localStorage.setItem("pooja_cmsData", JSON.stringify(data));
+    } catch (e) {}
+    
+    // 2. Try to update local server during dev
+    const token = localStorage.getItem("pooja_admin_token") || "";
+    try {
+      const res = await fetch("/api/save-content", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(data),
+      });
+      if (res.ok) {
+        localSaved = true;
+      }
+    } catch (devErr) {
+      // Ignore dev uploader failures on production
+    }
+
+    // 3. Upsert to Supabase
+    try {
       const { error } = await supabase
         .from("cms_content")
         .upsert({ id: 1, data: data, updated_at: new Date().toISOString() });
 
-      if (error) {
-        throw error;
+      if (!error) {
+        cloudSaved = true;
+      } else {
+        console.error("Supabase upsert error:", error);
       }
-      
+    } catch (sbErr) {
+      console.error("Supabase upsert exception:", sbErr);
+    }
+
+    // Return true ONLY if persistence to either Cloud database or Local server succeeded
+    if (cloudSaved || localSaved) {
       return true;
-    } catch (e) {
-      console.warn("Save content database request failed, changes saved locally:", e);
-      return true; // Return true to prevent UI blocking
+    }
+
+    console.error("Critical: Failed to persist changes to both Supabase and Local server.");
+    return false;
+  };
+
+  // Reset CMS to system pristine default content
+  const resetToDefaultCMS = async (): Promise<boolean> => {
+    try {
+      const res = await fetch("/data/default_content.json");
+      if (!res.ok) {
+        throw new Error("Could not load default content file");
+      }
+      const defaultJson = await res.json();
+      const cleanData = ensureDefaults(defaultJson);
+
+      setData(cleanData);
+      localStorage.setItem("pooja_cmsData", JSON.stringify(cleanData));
+
+      const token = localStorage.getItem("pooja_admin_token") || "";
+      let localSaved = false;
+      try {
+        const localRes = await fetch("/api/save-content", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(cleanData)
+        });
+        if (localRes.ok) localSaved = true;
+      } catch (devErr) {
+        console.warn("Could not sync reset to local server:", devErr);
+      }
+
+      let cloudSaved = false;
+      try {
+        const { error } = await supabase
+          .from("cms_content")
+          .upsert({ id: 1, data: cleanData, updated_at: new Date().toISOString() });
+        if (!error) cloudSaved = true;
+      } catch (sbErr) {
+        console.warn("Could not sync reset to Supabase:", sbErr);
+      }
+
+      return cloudSaved || localSaved;
+    } catch (err) {
+      console.error("Failed to reset CMS to defaults:", err);
+      return false;
     }
   };
 
@@ -697,11 +847,13 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         login,
         logout,
         updateField,
+        replaceSection,
         addListItem,
         updateListItem,
         deleteListItem,
         uploadMedia,
         saveAllChanges,
+        resetToDefaultCMS,
         submissions,
         loadingSubmissions,
         loadSubmissions,

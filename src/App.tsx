@@ -12,7 +12,6 @@ import { Loader } from "./components/Loader";
 import { Header } from "./components/Header";
 import { Logo } from "./components/Logo";
 import { ScrollToTop } from "./components/ScrollToTop";
-import { BottomBackground } from "./components/BottomBackground";
 import { Hero } from "./components/Hero";
 import { Portfolio } from "./components/Portfolio";
 import { About, Studio } from "./components/About";
@@ -404,8 +403,6 @@ const MainAppContent: React.FC = () => {
         <Resume />
         <Team />
         <Contact />
-        {/* 6. Page-bottom decorative backdrops */}
-        <BottomBackground />
       </main>
 
       {/* Mobile Menu Bottom Placeholder */}

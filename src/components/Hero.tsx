@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Marquee } from "./Marquee";
 import { SplitText } from "./SplitText";
 import { useCMS } from "./CMSContext";
@@ -7,8 +7,67 @@ import { CinematicSequence } from "./CinematicSequence";
 export const Hero: React.FC = () => {
   const { data } = useCMS();
   const hero = data?.hero;
+  const [youtubeFailed, setYoutubeFailed] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const primaryBtnText = hero?.primaryBtnText || "Scroll for more";
+  const videoMode = hero?.videoMode || "default";
+  const youtubeVideoId = hero?.youtubeVideoId;
+  const useYouTube = videoMode === "youtube" && Boolean(youtubeVideoId) && !youtubeFailed;
+
+  const disableCaptions = useCallback(() => {
+    if (!iframeRef.current?.contentWindow) return;
+    const target = iframeRef.current.contentWindow;
+    const commands = [
+      { event: "command", func: "unloadModule", args: ["captions"] },
+      { event: "command", func: "unloadModule", args: ["cc"] },
+      { event: "command", func: "setOption", args: ["captions", "track", {}] },
+      { event: "command", func: "setOption", args: ["cc", "track", {}] },
+      { event: "command", func: "setOption", args: ["captions", "fontSize", 0] },
+      { event: "command", func: "setOption", args: ["captions", "track", { languageCode: "" }] }
+    ];
+    commands.forEach((cmd) => {
+      try {
+        target.postMessage(JSON.stringify(cmd), "*");
+      } catch {
+        // ignore cross-origin error
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!useYouTube || !youtubeVideoId) return;
+
+    // Send immediately and at staggered intervals as YouTube player boots up
+    const delays = [300, 600, 1000, 1500, 2000, 2500, 3000, 4000, 5000];
+    const timers = delays.map((d) => setTimeout(disableCaptions, d));
+
+    // Listen to messages from YouTube player to react whenever it delivers events or state changes
+    const onMessage = (e: MessageEvent) => {
+      try {
+        if (typeof e.data === "string") {
+          const parsed = JSON.parse(e.data);
+          if (
+            parsed.event === "onReady" ||
+            parsed.event === "onApiChange" ||
+            parsed.event === "infoDelivery" ||
+            parsed.event === "initialDelivery"
+          ) {
+            disableCaptions();
+          }
+        }
+      } catch {
+        // Non-JSON message from other sources
+      }
+    };
+
+    window.addEventListener("message", onMessage);
+
+    return () => {
+      timers.forEach(clearTimeout);
+      window.removeEventListener("message", onMessage);
+    };
+  }, [useYouTube, youtubeVideoId, disableCaptions]);
 
   return (
     <section id="home" className="main home">
@@ -18,25 +77,63 @@ export const Hero: React.FC = () => {
 
         {/* Intro Background Start */}
         <div className="intro__background intro-bg-01" style={{ zIndex: "auto", position: "absolute", top: 0, left: 0, width: "100%", height: "100%", overflow: "hidden" }}>
-          <video 
-            autoPlay 
-            muted 
-            loop 
-            playsInline 
-            key={hero?.bgVideoUrl || "/img/backgrounds/introl_video_1.mp4"}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              zIndex: 0,
-              opacity: 0.35,
-            }}
-          >
-            <source src={hero?.bgVideoUrl || "/img/backgrounds/introl_video_1.mp4"} type="video/mp4" />
-          </video>
+          {useYouTube ? (
+            <div
+              key={youtubeVideoId}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                overflow: "hidden",
+                pointerEvents: "none",
+                zIndex: 0,
+                opacity: 0.35,
+              }}
+            >
+              <iframe
+                ref={iframeRef}
+                src={`https://www.youtube-nocookie.com/embed/${youtubeVideoId}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=${youtubeVideoId}&playsinline=1&modestbranding=1&disablekb=1&fs=0&iv_load_policy=3&cc_load_policy=0&cc_lang_pref=none&enablejsapi=1`}
+                title="Hero Background Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                onError={() => setYoutubeFailed(true)}
+                onLoad={disableCaptions}
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  width: "100vw",
+                  height: "56.25vw",
+                  minHeight: "100%",
+                  minWidth: "177.77vh",
+                  transform: "translate(-50%, -50%) scale(1.1)",
+                  pointerEvents: "none",
+                  border: "none"
+                }}
+              />
+            </div>
+          ) : (
+            <video 
+              autoPlay 
+              muted 
+              loop 
+              playsInline 
+              key={hero?.bgVideoUrl || "/img/backgrounds/introl_video_1.mp4"}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                zIndex: 0,
+                opacity: 0.35,
+              }}
+            >
+              <source src={hero?.bgVideoUrl || "/img/backgrounds/introl_video_1.mp4"} type="video/mp4" />
+            </video>
+          )}
           <div className="intro-bg-01__01" data-speed="0.6" style={{ zIndex: 2 }}>
             <img src="img/backgrounds/cinematic_reel.png" alt="Background Objects" />
           </div>
@@ -148,7 +245,15 @@ export const Hero: React.FC = () => {
 
                 {(data?.marqueeItems || []).map((item, idx) => (
                   <div key={item.id} className={`item image image-${(idx % 6) + 1}`} style={{ position: "relative", overflow: "hidden", borderRadius: "16px" }}>
-                    <img src={item.src.startsWith("http") || item.src.startsWith("/") ? item.src : `/${item.src}`} alt={item.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    <img 
+                      src={item.src.startsWith("http") || item.src.startsWith("/") ? item.src : `/${item.src}`} 
+                      alt={item.title} 
+                      onError={(e) => {
+                        // Gracefully hide broken image element to prevent broken image UI icon
+                        (e.currentTarget as HTMLImageElement).style.display = 'none';
+                      }}
+                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
+                    />
                     <div style={{
                       position: "absolute",
                       bottom: 0, left: 0, right: 0,

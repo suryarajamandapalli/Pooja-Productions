@@ -360,7 +360,7 @@ html {
 body {
   position: relative;
   width: 100%;
-  min-width: 360px;
+  min-width: 320px;
   overflow-x: hidden !important;
   font: normal 400 var(--_size)/1.4 var(--_font-default);
   text-rendering: optimizeLegibility;
@@ -370,7 +370,7 @@ body {
 
 section {
   position: relative;
-  min-width: 360px;
+  min-width: 320px;
 }
 
 a {
@@ -3478,7 +3478,7 @@ form textarea:required:valid {
 .page-content {
   position: relative;
   width: 100%;
-  min-width: 360px;
+  min-width: 320px;
   height: auto;
   z-index: 3;
 }

@@ -17,6 +17,17 @@ export const Portfolio: React.FC = () => {
     return () => clearTimeout(timer);
   }, [films]);
 
+  // Lock body scroll when lightbox is active
+  useEffect(() => {
+    if (lightboxIndex !== null) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [lightboxIndex]);
+
   const openLightbox = (index: number, e: React.MouseEvent) => {
     e.preventDefault();
     setLightboxIndex(index);
@@ -51,7 +62,7 @@ export const Portfolio: React.FC = () => {
   }, [lightboxIndex, films]);
 
   return (
-    <section id="portfolio" className="inner inner-grid-bottom portfolio" style={{ position: "relative" }}>
+    <section id="portfolio" className="inner inner-grid-bottom portfolio" style={{ position: "relative", overflow: "hidden" }}>
       {/* Circular Gradient Glow (Left Bottom) */}
       <div style={{
         position: "absolute",
@@ -138,10 +149,10 @@ export const Portfolio: React.FC = () => {
                               </div>
                             </a>
                             <figcaption className="sr-only" style={{ display: "none" }}>
-                              <h5>
+                              <h4>
                                 {item.title}
                                 <small>{item.category}</small>
-                              </h5>
+                              </h4>
                               <p>{item.description}</p>
                             </figcaption>
                           </figure>
@@ -177,7 +188,11 @@ export const Portfolio: React.FC = () => {
 
       {/* Lightbox / Custom Premium Lightbox Modal via Portal */}
       {lightboxIndex !== null && films.length > lightboxIndex && createPortal(
-        <div style={{
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Film Lightbox Preview"
+          style={{
           position: "fixed",
           top: 0,
           left: 0,
@@ -192,11 +207,12 @@ export const Portfolio: React.FC = () => {
           justifyContent: "center",
           animation: "fadeIn 0.3s ease",
           userSelect: "none"
-        }} role="dialog">
+        }}>
           
           {/* Close button in top-right */}
           <button
             onClick={closeLightbox}
+            aria-label="Close Lightbox"
             style={{
               position: "fixed",
               top: "30px",
@@ -232,6 +248,7 @@ export const Portfolio: React.FC = () => {
           {/* Navigation - Left Arrow */}
           <button
             onClick={showPrev}
+            aria-label="Previous Film"
             style={{
               position: "fixed",
               left: "30px",
@@ -297,6 +314,7 @@ export const Portfolio: React.FC = () => {
           {/* Navigation - Right Arrow */}
           <button
             onClick={showNext}
+            aria-label="Next Film"
             style={{
               position: "fixed",
               right: "30px",
